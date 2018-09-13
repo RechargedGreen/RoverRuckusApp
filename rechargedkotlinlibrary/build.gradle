@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 26
+        multiDexEnabled true
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            postprocessing {
+                removeUnusedCode false
+                removeUnusedResources false
+                obfuscate false
+                optimizeCode false
+                proguardFile 'proguard-rules.pro'
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    flatDir {
+        dirs rootProject.file('libs')
+    }
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+    google()
+    maven {
+        url  "https://dl.bintray.com/acmerobotics/maven"
+    }
+}
+
+dependencies {
+    compile project(':FtcRobotController')
+    compile(name: 'RobotCore-release', ext: 'aar') // RobotCore
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" // Kotlin
+    implementation 'com.acmerobotics.roadrunner:core:0.1.0' // road runner
+    implementation 'com.android.support:multidex:1.0.3' // multi dex architecture
+    compile 'org.openftc:ftc-opmode-tuner-common:0.22' // OpMode tuner
+    //compile 'com.android.support:appcompat-v7:26.0.0'
+}

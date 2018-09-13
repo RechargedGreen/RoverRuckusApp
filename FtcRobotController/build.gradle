@@ -19,6 +19,9 @@ android {
 }
 
 repositories {
+    mavenCentral()
+    jcenter()
+    google()
     flatDir {
         dirs '../libs'
     }
