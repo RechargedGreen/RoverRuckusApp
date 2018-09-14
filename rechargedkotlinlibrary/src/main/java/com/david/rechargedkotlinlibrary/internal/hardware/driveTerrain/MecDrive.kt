@@ -39,14 +39,13 @@ abstract class MecDrive(
         var MAX_VEL: Double = 1.0 / kV,
         val MAX_ACCEL: Double,
         val MAX_TURN_ACCEL: Double,
-        localizer: Localizer? = null,
+        localizerArg: Localizer? = null,
         TRACK_WIDTH: Double,
         WHEEL_BASE: Double)
     : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem, Localizer {
-    private val localizer: Localizer = localizer ?: this
-
     private val HARD_MAX_VEL: Double = 1.0 / kV
     var posBias = Pose2d(Vector2d(0.0, 0.0), 0.0)
+    private val localizerArg = localizerArg ?: this
 
     init {
         MAX_VEL = Math.min(HARD_MAX_VEL, MAX_VEL)
@@ -67,7 +66,7 @@ abstract class MecDrive(
 
     fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
         while (robot.opMode.opModeIsActive() && follower.isFollowing() && condition()) {
-            follower.update(localizer.getPos())
+            follower.update(localizerArg.getPos())
             action?.run()
         }
     }
@@ -77,7 +76,7 @@ abstract class MecDrive(
         waitOnFollower(condition, action)
     }
 
-    fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
+    fun trajectoryBuilder(pos: Pose2d = localizerArg.getPos(), constraints: MecanumConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
 
     fun powerTranslation(forward: Double, strafeRight: Double, turnClockwise: Double) = setMotorPowers(forward + strafeRight + turnClockwise, forward - strafeRight + turnClockwise, forward + strafeRight - turnClockwise, forward - strafeRight - turnClockwise)
@@ -129,7 +128,7 @@ abstract class MecDrive(
     fun rfRawRadians() = rf.getRawRadians()
     fun rbRawRadians() = rb.getRawRadians()
 
-    override fun update() = localizer.updatePos()
+    override fun update() = localizerArg.updatePos()
     override fun start() {
     }
 

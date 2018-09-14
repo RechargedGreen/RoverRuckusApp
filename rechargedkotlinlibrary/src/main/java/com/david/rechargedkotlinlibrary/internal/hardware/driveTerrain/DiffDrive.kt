@@ -42,13 +42,12 @@ abstract class DiffDrive(
         MAX_TURN_ACCEL: Double,
         var followerType: Follower = Follower.PIDVA,
         TRACK_WIDTH: Double,
-        localizer: Localizer? = null)
+        localizerArg: Localizer? = null)
     : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
-    private val localizer = localizer ?: this
     private val HARD_MAX_VEL: Double = 1.0 / kV
     override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
     private var controlState = ControlLoopStates.OPEN
-
+    private val localizerArg = localizerArg ?: this
     init {
         leftMotors.forEach {
             it.mode = mode
@@ -73,7 +72,7 @@ abstract class DiffDrive(
         waitOnFollower(condition, action)
     }
 
-    fun trajectoryBuilder(pos: Pose2d = localizer.getPos(), constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
+    fun trajectoryBuilder(pos: Pose2d = localizerArg.getPos(), constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
     private val followerPIDVA = TankPIDVAFollower(drive = this, displacementCoeffs = DISPLACEMENT_PID_COEFFICIENTS, crossTrackCoeffs = CROSSTRACK_PID_COEFFICIENTS, kV = kV, kA = kA, kStatic = kStatic)
     private val followerRamsete = RamseteFollower(drive = this, b = ramseteConstraints.b, zeta = ramseteConstraints.zeta, kV = kV, kA = kA, kStatic = kStatic)
@@ -115,11 +114,11 @@ abstract class DiffDrive(
     private var activeTrajectoryFollower: TrajectoryFollower? = null
 
     override fun update() {
-        localizer.updatePos()
+        localizerArg.updatePos()
         when (controlState) {
             ControlLoopStates.CLOSED -> {
                 val follower = activeTrajectoryFollower
-                follower?.update(localizer.getPos())
+                follower?.update(localizerArg.getPos())
             }
             ControlLoopStates.OPEN   -> {
                 val powers = openLoopWheelPowers.copy()
