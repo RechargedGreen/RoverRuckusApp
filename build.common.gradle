@@ -33,6 +33,8 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true // added by David of 7236
+
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 19
         targetSdkVersion 19
