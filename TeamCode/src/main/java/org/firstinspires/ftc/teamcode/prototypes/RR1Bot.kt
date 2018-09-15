@@ -13,5 +13,8 @@ class RR1Bot(opmode:RechargedLinearOpMode<RR1Bot>) : RobotTemplate(opmode, array
     val drive = RR1Drive(robot = this)
     override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, RR1Tele.NAME)
     override fun getDrive():Drive = drive
-    override fun getGyro():BNO055IMU = hMap.get(BNO055IMU::class.java, "imu")
+    override fun getMaxWheelMotorRPM() = drive.MOTOR_TYPE.maxRPM
+    override fun getGyro() = hMap.get(BNO055IMU::class.java, "imu")
+    override fun getWheelRadius() = drive.RADIUS
+    override fun getWheelGearRatio() = drive.WHEEL_GEAR_RATIO
 }

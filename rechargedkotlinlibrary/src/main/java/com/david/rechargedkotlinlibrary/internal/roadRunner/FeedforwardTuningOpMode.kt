@@ -21,11 +21,14 @@ abstract class FeedforwardTuningOpMode<rt:RobotTemplate>
  * @param wheelDiameter wheel diameter
  * @param wheelGearRatio wheel gear ratio (output / input)
  */
-@JvmOverloads constructor(createRobot:(RechargedLinearOpMode<rt>)->rt, private val distance: Double, private val wheelMotorRpm: Double, private val wheelDiameter: Double, private val wheelGearRatio: Double = 1.0) : FluidAuto<rt>(createRobot) {
-
+@JvmOverloads constructor(createRobot:(RechargedLinearOpMode<rt>)->rt, private val distance: Double) : FluidAuto<rt>(createRobot) {
     @Throws(InterruptedException::class)
     override fun run() {
         val drive = initDrive()
+
+        var wheelMotorRpm = robot.getMaxWheelMotorRPM()
+        var wheelDiameter = robot.getWheelRadius() * 2.0
+        val wheelGearRatio = robot.getWheelGearRatio()
 
         telemetry.log().add("Press play to begin the feedforward tuning routine")
         telemetry.update()

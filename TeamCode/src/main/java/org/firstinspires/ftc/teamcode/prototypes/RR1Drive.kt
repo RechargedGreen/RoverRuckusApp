@@ -18,22 +18,22 @@ class RR1Drive(robot:RobotTemplate) : DiffDrive(
         DISPLACEMENT_PID_COEFFICIENTS = DISPLACEMENT_PID_COEFFICIENTS,
         TRACK_WIDTH = TRACK_WIDTH,
         RADIUS = RADIUS,
-        ENCODER_SCALER = ENCODER_SCALER,
+        WHEEL_GEAR_RATIO = GEAR_RATIO,
         kV = kV,
         MAX_ACCEL = MAX_ACCEL,
         MAX_TURN_ACCEL = MAX_TURN_ACCEL,
         MAX_VEL = 1.0 / kV,
-        leftMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "lf"), mode = runMode),
-                             OptimumDcMotorEx(ConfigData(robot, 0, "lb"), mode = runMode)),
-        rightMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "rf"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE),
-                              OptimumDcMotorEx(ConfigData(robot, 0, "rb"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
+        leftMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_front"), mode = runMode),
+                             OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_back"), mode = runMode)),
+        rightMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_front"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE),
+                              OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_bacl"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
         robot = robot
 ){
     companion object Config{
         const val kV = 1.0
         const val MAX_ACCEL = 1.0
         const val MAX_TURN_ACCEL = 1.0
-        const val ENCODER_SCALER = 1.0
+        const val GEAR_RATIO = 1.0
         const val RADIUS = 2.0
         const val TRACK_WIDTH = 0.0
         val CROSSTRACK_PID_COEFFICIENTS = PIDCoefficients(0.0, 0.0, 0.0)

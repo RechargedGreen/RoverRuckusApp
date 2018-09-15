@@ -29,8 +29,8 @@ abstract class DiffDrive(
         private val rightMotors: Array<OptimumDcMotorEx>,
         mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
         zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
-        private val ENCODER_SCALER: Double = 1.0,
-        private val RADIUS: Double = 2.0,
+        val WHEEL_GEAR_RATIO: Double = 1.0,
+        val RADIUS: Double = 2.0,
         DISPLACEMENT_PID_COEFFICIENTS: PIDCoefficients,
         CROSSTRACK_PID_COEFFICIENTS: PIDCoefficients,
         ramseteConstraints: RamseteConstraints = RamseteConstraints(),
@@ -45,6 +45,10 @@ abstract class DiffDrive(
         localizerArg: Localizer? = null)
     : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
     private val HARD_MAX_VEL: Double = 1.0 / kV
+
+    val MOTOR_TYPE = leftMotors[0].motorType
+    val ENCODER_SCALER = 1.0 / WHEEL_GEAR_RATIO
+
     override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
     private var controlState = ControlLoopStates.OPEN
     private val localizerArg = localizerArg ?: this

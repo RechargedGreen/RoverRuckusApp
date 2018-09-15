@@ -4,4 +4,4 @@ import com.david.rechargedkotlinlibrary.internal.roadRunner.FeedforwardTuningOpM
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 @TeleOp
-class RR1FFTuner:FeedforwardTuningOpMode<RR1Bot>({ opMode -> RR1Bot(opMode) }, distance = 100.0, wheelDiameter = 4.0, wheelMotorRpm = 340.0)
+class RR1FFTuner:FeedforwardTuningOpMode<RR1Bot>({ opMode -> RR1Bot(opMode) }, distance = 70.0)
