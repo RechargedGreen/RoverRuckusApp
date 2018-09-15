@@ -11,7 +11,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU
  */
 class RR1Bot(opmode:RechargedLinearOpMode<RR1Bot>) : RobotTemplate(opmode, arrayOf("hub1")){
     val drive = RR1Drive(robot = this)
-    override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, RR1Tele.NAME)
+    override fun autoPostInit(){}// = AutoTransitionerKotlin.transitionOnStop(opMode, RR1Tele.NAME)
     override fun getDrive():Drive = drive
     override fun getMaxWheelMotorRPM() = drive.MOTOR_TYPE.maxRPM
     override fun getGyro() = hMap.get(BNO055IMU::class.java, "imu")

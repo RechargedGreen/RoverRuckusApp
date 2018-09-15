@@ -26,7 +26,7 @@ class RR1Drive(robot:RobotTemplate) : DiffDrive(
         leftMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_front"), mode = runMode),
                              OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_back"), mode = runMode)),
         rightMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_front"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE),
-                              OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_bacl"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
+                              OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_back"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
         robot = robot
 ){
     companion object Config{
