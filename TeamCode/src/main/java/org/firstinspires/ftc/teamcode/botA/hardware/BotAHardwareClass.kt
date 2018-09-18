@@ -11,7 +11,7 @@ class BotAHardwareClass(opMode:RechargedLinearOpMode<BotAHardwareClass>) : Robot
     val superSystem = BotASuperSystem(this)
 
     override fun autoPostInit() = null!!
-    override fun getMaxWheelMotorRPM(): Double = drive.MOTOR_TYPE.ticksPerRev / drive.WHEEL_GEAR_RATIO
+    override fun getMaxWheelMotorRPM(): Double = drive.MOTOR_TYPE.ticksPerRev
     override fun getWheelRadius(): Double = drive.RADIUS
     override fun getWheelGearRatio(): Double = drive.WHEEL_GEAR_RATIO
     override fun getDrive(): Drive  = drive
