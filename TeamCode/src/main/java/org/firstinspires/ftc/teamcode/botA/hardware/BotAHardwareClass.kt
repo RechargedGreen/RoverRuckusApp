@@ -9,6 +9,8 @@ class BotAHardwareClass(opMode:RechargedLinearOpMode<BotAHardwareClass>) : Robot
     val imu = hMap.get(BNO055IMU::class.java, "imu")
     val drive = BotADrive(this)
     val superSystem = BotASuperSystem(this)
+    val dumper = Dumper(this)
+    val intake = Intake(this)
 
     override fun autoPostInit() = null!!
     override fun getMaxWheelMotorRPM(): Double = drive.MOTOR_TYPE.ticksPerRev
