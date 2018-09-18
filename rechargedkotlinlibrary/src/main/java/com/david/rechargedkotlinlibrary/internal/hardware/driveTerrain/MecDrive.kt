@@ -33,15 +33,15 @@ abstract class MecDrive(
         private val RADIUS: Double = 2.0,
         AXIAL_PID_COEFFICIENTS: PIDCoefficients = PIDCoefficients(),
         TURN_PID_COEFFICIENTS: PIDCoefficients = PIDCoefficients(),
-        kA: Double,
-        kV: Double,
-        kStatic: Double,
+        kA: Double = 0.0,
+        kV: Double = 0.0,
+        kStatic: Double = 0.0,
         var MAX_VEL: Double = 1.0 / kV,
-        val MAX_ACCEL: Double,
-        val MAX_TURN_ACCEL: Double,
+        val MAX_ACCEL: Double = 0.0,
+        val MAX_TURN_ACCEL: Double = 0.0,
         localizerArg: Localizer? = null,
-        TRACK_WIDTH: Double,
-        WHEEL_BASE: Double)
+        TRACK_WIDTH: Double = 0.0,
+        WHEEL_BASE: Double = 0.0)
     : MecanumDrive(TRACK_WIDTH, WHEEL_BASE), MTSubsystem, Localizer {
     private val HARD_MAX_VEL: Double = 1.0 / kV
     var posBias = Pose2d(Vector2d(0.0, 0.0), 0.0)
