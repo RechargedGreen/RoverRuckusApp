@@ -40,4 +40,7 @@ class Intake(val robot: BotAHardwareClass) : MTSubsystem {
 
     override fun start() {
     }
+    init {
+        robot.thread.addSubsystem(this)
+    }
 }
