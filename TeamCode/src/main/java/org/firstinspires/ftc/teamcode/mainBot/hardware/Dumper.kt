@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.botA.hardware
+package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 
-class Dumper(val robot: BotAHardwareClass) : MTSubsystem {
+class Dumper(val robot: HardwareClass) : MTSubsystem {
     enum class FlipState {
         FRONT,
         MID,

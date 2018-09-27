@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.botA.hardware
+package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
@@ -7,7 +7,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 
-class BotADrive(robot:RobotTemplate):DiffDrive(
+class DriveTerrain(robot:RobotTemplate): DiffDrive(
         robot = robot,
         leftMotors = arrayOf(
                 OptimumDcMotorEx(ConfigData(robot, 0,"lf")),

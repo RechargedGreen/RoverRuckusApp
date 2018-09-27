@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.botA.hardware
+package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import org.firstinspires.ftc.teamcode.MineralType
 
-class Intake(val robot: BotAHardwareClass) : MTSubsystem {
+class Intake(val robot: HardwareClass) : MTSubsystem {
     enum class State {
         STOPPED,
         BLIND_IN,

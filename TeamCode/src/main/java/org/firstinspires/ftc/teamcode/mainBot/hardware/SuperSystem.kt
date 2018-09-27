@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.botA.hardware
+package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 
-class BotASuperSystem(val robot:BotAHardwareClass) : MTSubsystem {
+class SuperSystem(val robot:HardwareClass) : MTSubsystem {
     enum class State{
         RESET
     }

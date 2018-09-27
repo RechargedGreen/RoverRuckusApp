@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.botA.hardware
+package org.firstinspires.ftc.teamcode.mainBot.hardware
 
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumAnalogInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 
-class Lift(val robot: BotAHardwareClass) : MTSubsystem {
+class Lift(val robot: HardwareClass) : MTSubsystem {
     private var state: State
         set(value) {
             controlState = ControlState.AUTO
