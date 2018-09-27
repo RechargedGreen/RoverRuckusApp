@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.mainBot.auto
 
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.hardware.SuperSystem
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
+@TeleOp(name = "ParkOnly", group = OpModeGroups.FLUID_AUTO)
 class ParkOnlyAuto : FluidAuto<HardwareClass>({ opMode-> HardwareClass(opMode) }){
     override fun run() {
         robot.drive.openLoopPowerWheels(0.5, 0.5)

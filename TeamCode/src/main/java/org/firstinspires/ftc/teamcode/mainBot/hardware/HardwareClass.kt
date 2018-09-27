@@ -5,6 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
 import com.david.rechargedkotlinlibrary.internal.util.AutoTransitionerKotlin
 import com.qualcomm.hardware.bosch.BNO055IMU
+import org.firstinspires.ftc.teamcode.mainBot.teleOp.Competition
 import org.firstinspires.ftc.teamcode.mainBot.teleOp.Practice
 
 class HardwareClass(opMode:RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub")){
@@ -14,7 +15,8 @@ class HardwareClass(opMode:RechargedLinearOpMode<HardwareClass>) : RobotTemplate
     val dumper = Dumper(this)
     val intake = Intake(this)
 
-    override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, Practice.NAME)
+    override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
+
     override fun getMaxWheelMotorRPM(): Double = drive.MOTOR_TYPE.ticksPerRev
     override fun getWheelRadius(): Double = drive.RADIUS
     override fun getWheelGearRatio(): Double = drive.WHEEL_GEAR_RATIO
