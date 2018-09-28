@@ -25,4 +25,6 @@ dependencies {
     implementation 'com.acmerobotics.roadrunner:core:0.2.0'
     implementation project(':rechargedkotlinlibrary')
     compile 'com.android.support:multidex:1.0.3'
+    implementation project(':DogeCV')
+    implementation project(':openCVLibrary3')
 }
