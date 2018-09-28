@@ -10,8 +10,9 @@ import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
-@TeleOp(name = OrangeRR1.NAME)
+@TeleOp(name = OrangeRR1.NAME, group = OpModeGroups.TELE_MISC)
 class OrangeRR1 : PracticeTeleOp<OrangeRR1Bot>( {opMode-> OrangeRR1Bot(opMode) } ){
     override fun onLoop() = robot.drive.powerTranslation(forward = c1.ly, strafeRight = c1.lx, turnClockwise = c1.rx)
     companion object {

@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.prototypes
 import com.david.rechargedkotlinlibrary.internal.opMode.CompetetionTele
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 /**
  * Created by David Lukens on 9/10/2018.
  */
-@TeleOp(name = RR1Tele.NAME)
+@TeleOp(name = RR1Tele.NAME, group = OpModeGroups.TELE_MISC)
 class RR1Tele : PracticeTeleOp<RR1Bot>({ opmode -> RR1Bot(opmode) }) {
     companion object {
         const val NAME = "RR1Tele"
