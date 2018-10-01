@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.acmerobotics.roadrunner.drive.Drive
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
 import com.david.rechargedkotlinlibrary.internal.util.AutoTransitionerKotlin
@@ -10,7 +11,6 @@ import org.firstinspires.ftc.teamcode.mainBot.teleOp.Competition
 import org.firstinspires.ftc.teamcode.mainBot.teleOp.Practice
 
 class HardwareClass(opMode:RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub")){
-    val imu = HardwareMaker.BNO055IMU.make(hMap, "imu", true, BNO055IMU.SensorMode.GYRONLY)
     val drive = DriveTerrain(this)
     val superSystem = SuperSystem(this)
     val dumper = Dumper(this)
@@ -22,5 +22,5 @@ class HardwareClass(opMode:RechargedLinearOpMode<HardwareClass>) : RobotTemplate
     override fun getWheelRadius(): Double = drive.RADIUS
     override fun getWheelGearRatio(): Double = drive.WHEEL_GEAR_RATIO
     override fun getDrive(): Drive  = drive
-    override fun getGyro(): BNO055IMU = imu
+    override fun getGyro(): BNO055IMU = drive.imu
 }
