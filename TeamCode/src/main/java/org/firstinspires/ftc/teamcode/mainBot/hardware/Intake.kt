@@ -12,7 +12,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         OUT
     }
 
-    private enum class InternalState(val power:Double){
+    private enum class InternalState(val power: Double) {
         IN(1.0),
         OUT(-1.0),
         STOP(0.0)
@@ -23,23 +23,24 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private val delegate = robot.hMap.dcMotor.get("intake")
 
     override fun update() {
-        when(state){
-            State.STOPPED -> setInternalState(InternalState.STOP)
-            State.BLIND_IN -> setInternalState(InternalState.IN)
-            State.OUT -> setInternalState(InternalState.OUT)
-            State.GOLD_IN -> setInternalState(if(currentlyInIntake() == MineralType.SILVER) InternalState.OUT else InternalState.IN)
-            State.SILVER_IN -> setInternalState(if(currentlyInIntake() == MineralType.GOLD) InternalState.OUT else InternalState.IN)
+        when (state) {
+            State.STOPPED   -> setInternalState(InternalState.STOP)
+            State.BLIND_IN  -> setInternalState(InternalState.IN)
+            State.OUT       -> setInternalState(InternalState.OUT)
+            State.GOLD_IN   -> setInternalState(if (currentlyInIntake() == MineralType.SILVER) InternalState.OUT else InternalState.IN)
+            State.SILVER_IN -> setInternalState(if (currentlyInIntake() == MineralType.GOLD) InternalState.OUT else InternalState.IN)
         }
     }
 
-    private fun currentlyInIntake():MineralType = MineralType.UNKNOWN
+    private fun currentlyInIntake(): MineralType = MineralType.UNKNOWN
 
-    private fun setInternalState(state:InternalState){
+    private fun setInternalState(state: InternalState) {
         delegate.power = state.power
     }
 
     override fun start() {
     }
+
     init {
         robot.thread.addSubsystem(this)
     }

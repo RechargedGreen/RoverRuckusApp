@@ -1,6 +1,5 @@
 package com.david.rechargedkotlinlibrary.internal.hardware
 
-import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.HardwareMap
 import kotlin.experimental.and
 
@@ -8,11 +7,11 @@ import kotlin.experimental.and
  * Created by David Lukens on 9/30/2018.
  */
 object HardwareMaker {
-    object BNO055IMU{
-        val AXIS_MAP_CONFIG_BYTE:Byte = 0x6 // swap x and z
-        val AXIS_MAP_SIGN_BYTE:Byte = 0x1 // negate z
+    object BNO055IMU {
+        val AXIS_MAP_CONFIG_BYTE: Byte = 0x6 // swap x and z
+        val AXIS_MAP_SIGN_BYTE: Byte = 0x1 // negate z
 
-        fun make(hMap: HardwareMap, name:String, vertical:Boolean, mode:com.qualcomm.hardware.bosch.BNO055IMU.SensorMode):com.qualcomm.hardware.bosch.BNO055IMU {
+        fun make(hMap: HardwareMap, name: String, vertical: Boolean, mode: com.qualcomm.hardware.bosch.BNO055IMU.SensorMode): com.qualcomm.hardware.bosch.BNO055IMU {
             val imu = hMap.get(com.qualcomm.hardware.bosch.BNO055IMU::class.java, name)
 
             val params = com.qualcomm.hardware.bosch.BNO055IMU.Parameters()
@@ -36,8 +35,7 @@ object HardwareMaker {
 
                     Thread.sleep(100)
                 }
-            }
-            catch (e:InterruptedException){
+            } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
             }
             return imu

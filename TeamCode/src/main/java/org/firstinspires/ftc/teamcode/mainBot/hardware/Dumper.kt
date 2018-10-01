@@ -33,7 +33,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     override fun update() {
         when (flipState) {
             FlipState.FRONT -> setInternalFlipState(InternalFlipState.FRONT)
-            FlipState.BACK -> setInternalFlipState(InternalFlipState.BACK)
+            FlipState.BACK  -> setInternalFlipState(InternalFlipState.BACK)
         }
         when (dumpState) {
             DumpState.DUMP -> setInternalDumpState(if (atFlipState()) InternalDumpState.DUMP else InternalDumpState.HOLD)
@@ -54,6 +54,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     override fun start() {
     }
+
     init {
         robot.thread.addSubsystem(this)
     }

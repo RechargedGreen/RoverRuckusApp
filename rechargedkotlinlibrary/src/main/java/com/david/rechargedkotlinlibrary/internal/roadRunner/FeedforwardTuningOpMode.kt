@@ -5,23 +5,20 @@ import com.acmerobotics.roadrunner.drive.Drive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-
 import org.apache.commons.math3.stat.regression.SimpleRegression
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Op mode for computing kV, kStatic, and kA from various drive routines.
  */
-abstract class FeedforwardTuningOpMode<rt:RobotTemplate>
+abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
 /**
  * @param distance allowable forward travel distance
  * @param wheelMotorRpm wheel motor rpm
  * @param wheelDiameter wheel diameter
  * @param wheelGearRatio wheel gear ratio (output / input)
  */
-@JvmOverloads constructor(createRobot:(RechargedLinearOpMode<rt>)->rt, private val distance: Double) : FluidAuto<rt>(createRobot) {
+@JvmOverloads constructor(createRobot: (RechargedLinearOpMode<rt>) -> rt, private val distance: Double) : FluidAuto<rt>(createRobot) {
     @Throws(InterruptedException::class)
     override fun run() {
         val drive = initDrive()

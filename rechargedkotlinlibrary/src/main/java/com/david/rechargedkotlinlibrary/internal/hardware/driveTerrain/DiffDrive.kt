@@ -52,6 +52,7 @@ abstract class DiffDrive(
     override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
     private var controlState = ControlLoopStates.OPEN
     private val localizerArg = localizerArg ?: this
+
     init {
         leftMotors.forEach {
             it.mode = mode

@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.*
 /**
  * Created by David Lukens on 10/1/2018.
  */
-class SimplifiedBNO055(private val delegate:BNO055IMU) : BNO055IMU{
+class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     private val params = parameters
     private var useAngleCache = false
 
@@ -14,12 +14,12 @@ class SimplifiedBNO055(private val delegate:BNO055IMU) : BNO055IMU{
     private var xCache = 0.0
     private var yCache = 0.0
 
-    fun clearCaches(){
+    fun clearCaches() {
         useAngleCache = false
     }
 
-    fun checkAngleCache(){
-        if(!useAngleCache){
+    fun checkAngleCache() {
+        if (!useAngleCache) {
             val angle = getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES)
             xCache = angle.firstAngle.toDouble()
             yCache = angle.secondAngle.toDouble()
@@ -27,23 +27,25 @@ class SimplifiedBNO055(private val delegate:BNO055IMU) : BNO055IMU{
         }
     }
 
-    fun getZ(angleUnit:AngleUnit = AngleUnit.DEGREES):Double{
+    fun getZ(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         checkAngleCache()
-        return when(angleUnit){
+        return when (angleUnit) {
             AngleUnit.DEGREES -> zCache
             AngleUnit.RADIANS -> Math.toRadians(zCache)
         }
     }
-    fun getX(angleUnit:AngleUnit = AngleUnit.DEGREES):Double{
+
+    fun getX(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         checkAngleCache()
-        return when(angleUnit){
+        return when (angleUnit) {
             AngleUnit.DEGREES -> xCache
             AngleUnit.RADIANS -> Math.toRadians(xCache)
         }
     }
-    fun getY(angleUnit:AngleUnit = AngleUnit.DEGREES):Double{
+
+    fun getY(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         checkAngleCache()
-        return when(angleUnit){
+        return when (angleUnit) {
             AngleUnit.DEGREES -> yCache
             AngleUnit.RADIANS -> Math.toRadians(yCache)
         }

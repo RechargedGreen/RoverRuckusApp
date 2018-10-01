@@ -13,14 +13,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(name = OrangeRR1.NAME, group = OpModeGroups.TELE_MISC)
-class OrangeRR1 : PracticeTeleOp<OrangeRR1Bot>( {opMode-> OrangeRR1Bot(opMode) } ){
+class OrangeRR1 : PracticeTeleOp<OrangeRR1Bot>({ opMode -> OrangeRR1Bot(opMode) }) {
     override fun onLoop() = robot.drive.powerTranslation(forward = c1.ly, strafeRight = c1.lx, turnClockwise = c1.rx)
+
     companion object {
         const val NAME = "OrangeRR1"
     }
 }
 
-class OrangeRR1Bot(opMode:RechargedLinearOpMode<OrangeRR1Bot>):RobotTemplate(opMode = opMode, revHubNames = arrayOf("revHub")){
+class OrangeRR1Bot(opMode: RechargedLinearOpMode<OrangeRR1Bot>) : RobotTemplate(opMode = opMode, revHubNames = arrayOf("revHub")) {
     val drive = RR1OrangeDrive(this)
     override fun autoPostInit() {}
     override fun getMaxWheelMotorRPM(): Double = 0.0
@@ -30,7 +31,7 @@ class OrangeRR1Bot(opMode:RechargedLinearOpMode<OrangeRR1Bot>):RobotTemplate(opM
     override fun getGyro(): BNO055IMU = hMap.get(BNO055IMU::class.java, "imu")
 }
 
-class RR1OrangeDrive(robot:RobotTemplate):MecDrive(
+class RR1OrangeDrive(robot: RobotTemplate) : MecDrive(
         robot = robot,
         lf = OptimumDcMotorEx(ConfigData(robot, 0, "lf"), direction = DcMotorSimple.Direction.REVERSE),
         lb = OptimumDcMotorEx(ConfigData(robot, 0, "lb"), direction = DcMotorSimple.Direction.REVERSE),

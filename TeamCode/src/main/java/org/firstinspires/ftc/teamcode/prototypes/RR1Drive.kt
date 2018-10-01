@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
  */
 
 
-class RR1Drive(robot:RobotTemplate) : DiffDrive(
+class RR1Drive(robot: RobotTemplate) : DiffDrive(
         CROSSTRACK_PID_COEFFICIENTS = CROSSTRACK_PID_COEFFICIENTS,
         DISPLACEMENT_PID_COEFFICIENTS = DISPLACEMENT_PID_COEFFICIENTS,
         TRACK_WIDTH = TRACK_WIDTH,
@@ -28,8 +28,8 @@ class RR1Drive(robot:RobotTemplate) : DiffDrive(
         rightMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_front"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE),
                               OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_back"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
         robot = robot
-){
-    companion object Config{
+) {
+    companion object Config {
         const val kV = 1.0
         const val MAX_ACCEL = 1.0
         const val MAX_TURN_ACCEL = 1.0

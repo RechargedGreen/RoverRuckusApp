@@ -8,11 +8,12 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
  */
 
 @TeleOp(name = Competition.NAME, group = OpModeGroups.TELEOP)
-class Competition : Practice(){
+class Competition : Practice() {
     override fun onStart() {
         practice = false
         super.onStart()
     }
+
     companion object {
         const val NAME = "Competition"
     }

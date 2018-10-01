@@ -32,9 +32,9 @@ abstract class RobotTemplate(val opMode: RechargedLinearOpMode<out RobotTemplate
         onStart()
     }
 
-    abstract fun getMaxWheelMotorRPM():Double
-    abstract fun getWheelRadius():Double
-    abstract fun getWheelGearRatio():Double
-    abstract fun getDrive():Drive
-    abstract fun getGyro():BNO055IMU
+    abstract fun getMaxWheelMotorRPM(): Double
+    abstract fun getWheelRadius(): Double
+    abstract fun getWheelGearRatio(): Double
+    abstract fun getDrive(): Drive
+    abstract fun getGyro(): BNO055IMU
 }
