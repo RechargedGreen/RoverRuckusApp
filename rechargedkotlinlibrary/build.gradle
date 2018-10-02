@@ -48,6 +48,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.acmerobotics.dashboard:dashboard:0.2.0'
+    implementation project(':FtcRobotController')
     compile project(':FtcRobotController')
     compile(name: 'RobotCore-release', ext: 'aar') // RobotCore
     implementation fileTree(include: ['*.jar'], dir: 'libs')
