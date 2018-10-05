@@ -24,8 +24,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         DUMP(0.0)
     }
 
-    private val dump1 = robot.hMap.servo.get("dump1")
-    private val flip1 = robot.hMap.servo.get("flip1")
+    //private val dump1 = robot.hMap.servo.get("dump1")
+    //private val flip1 = robot.hMap.servo.get("flip1")
 
     var flipState = FlipState.FRONT
     var dumpState = DumpState.HOLD
@@ -43,11 +43,11 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
 
     private fun setInternalFlipState(state: InternalFlipState) {
-        flip1.position = state.pos1
+        //flip1.position = state.pos1
     }
 
     private fun setInternalDumpState(state: InternalDumpState) {
-        dump1.position = state.pos1
+        //dump1.position = state.pos1
     }
 
     fun atFlipState(): Boolean = true

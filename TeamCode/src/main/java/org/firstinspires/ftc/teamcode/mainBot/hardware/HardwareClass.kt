@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.mainBot.teleOp.Competition
 
 class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub")) {
     val drive = DriveTerrain(this)
-    val superSystem:SuperSystem = null!!//SuperSystem(this)
-    val dumper:Dumper = null!!//Dumper(this)
-    val intake:Intake = null!!//Intake(this)
+    val superSystem:SuperSystem = SuperSystem(this)
+    val dumper:Dumper = Dumper(this)
+    val intake:Intake = Intake(this)
 
     override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
 

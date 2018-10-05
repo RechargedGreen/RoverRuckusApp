@@ -20,7 +20,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     var state = State.STOPPED
 
-    private val delegate = robot.hMap.dcMotor.get("intake")
+    //private val delegate = robot.hMap.dcMotor.get("intake")
 
     override fun update() {
         when (state) {
@@ -35,7 +35,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private fun currentlyInIntake(): MineralType = MineralType.UNKNOWN
 
     private fun setInternalState(state: InternalState) {
-        delegate.power = state.power
+        //delegate.power = state.power
     }
 
     override fun start() {

@@ -14,10 +14,11 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
 
     val runtime: ElapsedTime = ElapsedTime()
 
-    val dash = FtcDashboard.getInstance()
+    lateinit var dash:FtcDashboard
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
+        dash = FtcDashboard.getInstance()
         robot = createRobot(this)
         if (autonomous)
             robot.start()
