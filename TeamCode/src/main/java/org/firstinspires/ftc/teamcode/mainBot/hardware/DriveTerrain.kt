@@ -31,7 +31,7 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         MAX_VEL = 0.0
 ) {
 
-    val imu = HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.GYRONLY) as SimplifiedBNO055
+    val imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.GYRONLY))
     override fun update() {
         super.update()
         imu.clearCaches()
