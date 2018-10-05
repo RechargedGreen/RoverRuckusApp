@@ -1,5 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.opMode
 
+import com.acmerobotics.dashboard.FtcDashboard
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -12,6 +13,8 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
     fun isAutonomous(): Boolean = autonomous
 
     val runtime: ElapsedTime = ElapsedTime()
+
+    val dash = FtcDashboard.getInstance()
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
