@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.prototypes
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
+import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 
@@ -27,7 +29,8 @@ class RR1Drive(robot: RobotTemplate) : DiffDrive(
                              OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_back"), mode = runMode)),
         rightMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_front"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE),
                               OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_back"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
-        robot = robot
+        robot = robot,
+        imu = SimplifiedBNO055(robot.hMap.get(BNO055IMU::class.java, "imu"))
 ) {
     companion object Config {
         const val kV = 1.0

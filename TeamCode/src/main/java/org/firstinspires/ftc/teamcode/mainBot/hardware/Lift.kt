@@ -11,16 +11,22 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         }
         get() = state
 
+    fun deploy(){
+        state = State.UP
+        robot.opMode.loopWhile(action = {}, condition = {!isFullyUp()})
+        state = State.DOWN
+        robot.opMode.loopWhile(action = {}, condition = {!isFullyDown()})
+    }
 
     private val downSensor = RevTouchSensor(robot.getHub(0), 0)
     private val upSensor = RevTouchSensor(robot.getHub(0), 0)
 
-    private val motor1 = robot.hMap.dcMotor.get("lift1")
-    private val motor2 = robot.hMap.dcMotor.get("lift1")
+    //private val motor1 = robot.hMap.dcMotor.get("lift1")
+    //private val motor2 = robot.hMap.dcMotor.get("lift1")
 
     private fun internalSetMotorPowers(power: Double) {
-        motor1.power = power
-        motor2.power = power
+        //motor1.power = power
+        //motor2.power = power
     }
 
     private var openLoop = 0.0
@@ -40,17 +46,14 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     enum class State {
         DOWN,
-        CARGO_SCORING,
-        HANG,
-        DEPLOY,
-        LATCH,
+        UP
     }
 
     override fun update() {
     }
 
-    fun isFullyDown() = downSensor.pressed()
-    fun isFullyUp() = upSensor.pressed()
+    fun isFullyDown():Boolean = downSensor.pressed()
+    fun isFullyUp():Boolean = upSensor.pressed()
 
     override fun start() {
     }

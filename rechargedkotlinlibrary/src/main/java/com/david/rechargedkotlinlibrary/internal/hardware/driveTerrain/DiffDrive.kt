@@ -11,14 +11,17 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.TankConstraints
+import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry.Localizer
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
-import com.david.rechargedkotlinlibrary.internal.hardware.states.ControlLoopStates
 import com.david.rechargedkotlinlibrary.internal.roadRunner.RamseteConstraints
+import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotor
 import java.util.*
+import kotlin.math.absoluteValue
 
 /**
  * Created by David Lukens on 8/7/2018.
@@ -42,15 +45,30 @@ abstract class DiffDrive(
         MAX_TURN_ACCEL: Double,
         var followerType: Follower = Follower.PIDVA,
         TRACK_WIDTH: Double,
-        localizerArg: Localizer? = null)
+        localizerArg: Localizer? = null,
+        val imu:SimplifiedBNO055)
     : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
+    enum class ControlLoopStates {
+        FOLLOW_TRAJECTORY,
+        OPEN_LOOP,
+        DRIVING_AT_ANGLE
+    }
+
+    private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0)
+    data class FollowAngleData(val controller:PIDController, val power:Double, val angle:Double)
+
+    fun startFollowingAngle(controller: PIDController, power:Double = 0.0, angle:Double){
+        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle)
+        controlState = ControlLoopStates.DRIVING_AT_ANGLE
+    }
+
     private val HARD_MAX_VEL: Double = 1.0 / kV
 
     val MOTOR_TYPE = leftMotors[0].motorType
     val ENCODER_SCALER = 1.0 / WHEEL_GEAR_RATIO
 
     override var biasPose = Pose2d(Vector2d(0.0, 0.0), 0.0)
-    private var controlState = ControlLoopStates.OPEN
+    private var controlState = ControlLoopStates.OPEN_LOOP
     private val localizerArg = localizerArg ?: this
 
     init {
@@ -119,20 +137,35 @@ abstract class DiffDrive(
     private var activeTrajectoryFollower: TrajectoryFollower? = null
 
     override fun update() {
+        imu.clearCaches()
         localizerArg.updatePos()
         when (controlState) {
-            ControlLoopStates.CLOSED -> {
+            ControlLoopStates.FOLLOW_TRAJECTORY -> {
                 val follower = activeTrajectoryFollower
                 follower?.update(localizerArg.getPos())
             }
-            ControlLoopStates.OPEN   -> {
+            ControlLoopStates.OPEN_LOOP   -> {
                 val powers = openLoopWheelPowers.copy()
                 setMotorPowers(powers.l, powers.r)
+            }
+            ControlLoopStates.DRIVING_AT_ANGLE -> {
+                val turn = followAngleData.controller.update(followAngleData.angle - imu.getZ())
+                val left = followAngleData.power + turn
+                val right = followAngleData.power - turn
+                val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
+                setMotorPowers(left / max, right / max)
             }
         }
     }
 
     override fun start() {
+    }
+
+    fun stop() = openLoopPowerWheels(0.0, 0.0)
+
+    fun startDrivingAtAngle(controller:PIDController = PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), power:Double = 1.0, angle: Double){
+        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle)
+        controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }
 
     fun startFollowingTrajectory(trajectory: Trajectory, followType: Follower = followerType) {
@@ -144,12 +177,12 @@ abstract class DiffDrive(
     fun followingTrajectory(): Boolean = activeTrajectoryFollower?.isFollowing() ?: false
 
     fun setActiveTrajectoryFollower(follower: TrajectoryFollower) {
-        controlState = ControlLoopStates.CLOSED
+        controlState = ControlLoopStates.FOLLOW_TRAJECTORY
         activeTrajectoryFollower = follower
     }
 
     fun openLoopPowerWheels(l: Double, r: Double) {
-        controlState = ControlLoopStates.OPEN
+        controlState = ControlLoopStates.OPEN_LOOP
         openLoopWheelPowers = SidePowers(l = l, r = r)
     }
 

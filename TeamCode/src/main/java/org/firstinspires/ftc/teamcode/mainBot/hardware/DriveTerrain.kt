@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
@@ -28,12 +29,14 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         kV = 0.0,
         MAX_ACCEL = 0.0,
         MAX_TURN_ACCEL = 0.0,
-        MAX_VEL = 0.0
+        MAX_VEL = 0.0,
+        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.GYRONLY))
 ) {
+    enum class AngleFollowSpeeds(val controller:PIDController, val speed:Double) {
+        FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0, 0.0, 0.0)), 1.0),
+    }
 
-    val imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.GYRONLY))
-    override fun update() {
-        super.update()
-        imu.clearCaches()
+    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle:Double) {
+        startFollowingAngle(angleFollowSpeed.controller, angleFollowSpeed.speed, angle)
     }
 }
