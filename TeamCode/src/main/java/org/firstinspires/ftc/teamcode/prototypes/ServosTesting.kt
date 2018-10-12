@@ -11,8 +11,10 @@ import java.util.*
 @Config
 class ServosTesting : LinearOpMode() {
     companion object {
-        @JvmField var position: Double = 0.0
+        @JvmField
+        var position: Double = 0.0
     }
+
     private val servos = LinkedList<Servo>()
     private var lastBState = false
     private var lastAState = false
@@ -25,12 +27,14 @@ class ServosTesting : LinearOpMode() {
             telemetry.addData("servo count", servos.size)
             telemetry.update()
             if (gamepad1.a) {
-                if (!lastAState)
+                if (!lastAState) try {
                     servos.add(hardwareMap.servo.get("s${servos.size}"))
+                } catch (ex: IllegalArgumentException) {
+                }
                 lastAState = true
             } else lastAState = false
             if (gamepad1.b) {
-                if (!lastBState)
+                if (!lastBState && !servos.isEmpty())
                     servos.removeLast()
                 lastBState = true
             } else lastBState = false
