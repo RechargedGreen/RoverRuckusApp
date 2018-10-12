@@ -10,8 +10,9 @@ import java.util.*
 @TeleOp(name = "ServoTester", group = OpModeGroups.TELE_DIAGNOSTICS)
 @Config
 class ServosTesting : LinearOpMode() {
-    @JvmField
-    var position: Double? = null
+    companion object {
+        @JvmField var position: Double = 0.0
+    }
     private val servos = LinkedList<Servo>()
     private var lastBState = false
     private var lastAState = false
