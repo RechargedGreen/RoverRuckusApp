@@ -17,6 +17,12 @@ class ServosTesting : LinearOpMode() {
     private var lastAState = false
     override fun runOpMode() {
         while (!(isStarted || isStopRequested)) {
+            telemetry.addLine("a adds servo")
+            telemetry.addLine("b removes servo")
+            telemetry.addLine("x reverses servo")
+            telemetry.addLine("y sets servo forward")
+            telemetry.addData("servo count", servos.size)
+            telemetry.update()
             if (gamepad1.a) {
                 if (!lastAState)
                     servos.add(hardwareMap.servo.get("s${servos.size}"))
@@ -35,6 +41,8 @@ class ServosTesting : LinearOpMode() {
             val pos = position
             if (pos != null)
                 servos.forEach { it.position = pos }
+            telemetry.addData("position", position)
+            telemetry.update()
         }
     }
 }
