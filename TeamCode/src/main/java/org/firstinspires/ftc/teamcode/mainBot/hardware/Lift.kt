@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 
 class Lift(val robot: HardwareClass) : MTSubsystem {
@@ -18,15 +19,15 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         robot.opMode.loopWhile(action = {}, condition = {!isFullyDown()})
     }
 
-    private val downSensor = RevTouchSensor(robot.getHub(0), 0)
-    private val upSensor = RevTouchSensor(robot.getHub(0), 0)
+    private val downSensor = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(0), 0))
+    private val upSensor = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(0), 1))
 
-    //private val motor1 = robot.hMap.dcMotor.get("lift1")
-    //private val motor2 = robot.hMap.dcMotor.get("lift1")
+    private val motorL = robot.hMap.dcMotor.get("liftL")
+    private val motorR = robot.hMap.dcMotor.get("liftR")
 
     private fun internalSetMotorPowers(power: Double) {
-        //motor1.power = power
-        //motor2.power = power
+        motorL.power = power
+        motorR.power = power
     }
 
     private var openLoop = 0.0
@@ -50,7 +51,22 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     }
 
     override fun update() {
+        when(controlState) {
+            ControlState.AUTO -> when(state){
+                State.UP -> setInternalState(if(isFullyUp()) InternalState.STOP else InternalState.GO_UP)
+                State.DOWN -> setInternalState(if(isFullyDown()) InternalState.STOP else InternalState.GO_DOWN)
+            }
+            ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop)
+            ControlState.MANUAL_SAFE -> internalSetMotorPowers(if(isFullyDown() || isFullyUp()) InternalState.STOP.power else openLoop)
+        }
     }
+
+    private enum class InternalState(val power:Double){
+        GO_UP(1.0),
+        STOP(0.0),
+        GO_DOWN(-1.0)
+    }
+    private fun setInternalState(state:InternalState) = internalSetMotorPowers(state.power)
 
     fun isFullyDown():Boolean = downSensor.pressed()
     fun isFullyUp():Boolean = upSensor.pressed()
