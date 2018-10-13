@@ -14,9 +14,9 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     fun deploy(){
         state = State.UP
-        robot.opMode.loopWhile(action = {}, condition = {!isFullyUp()})
+        robot.opMode.waitTill { isFullyUp() }
         state = State.DOWN
-        robot.opMode.loopWhile(action = {}, condition = {!isFullyDown()})
+        robot.opMode.waitTill { isFullyDown() }
     }
 
     private val downSensor = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(0), 0))

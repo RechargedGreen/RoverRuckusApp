@@ -38,8 +38,17 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
         loopWhile({ true }, action)
     }
 
-    fun loopWhile(condition: () -> Boolean, action: () -> Unit) {
+    fun loopWhile(condition: () -> Boolean = {true}, action: () -> Unit = {}) {
         while (condition() && opModeIsActive())
             action()
     }
+
+    fun waitWhile(condition: () -> Boolean) = loopWhile(condition = condition)
+
+    fun loopTill(condition: () -> Boolean = {true}, action: () -> Unit = {}){
+        while (!condition() && opModeIsActive())
+            action()
+    }
+
+    fun waitTill(condition: () -> Boolean) = loopTill(condition)
 }
