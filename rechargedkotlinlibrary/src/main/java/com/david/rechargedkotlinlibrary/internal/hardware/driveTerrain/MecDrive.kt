@@ -107,26 +107,26 @@ abstract class MecDrive(
         resetRBEncoder()
     }
 
-    fun resetLFEncoder() = lf.resetEncoder()
-    fun resetLBEncoder() = lb.resetEncoder()
-    fun resetRFEncoder() = rf.resetEncoder()
-    fun resetRBEncoder() = rb.resetEncoder()
+    fun resetLFEncoder() = lf.encoder.reset()
+    fun resetLBEncoder() = lb.encoder.reset()
+    fun resetRFEncoder() = rf.encoder.reset()
+    fun resetRBEncoder() = rb.encoder.reset()
     fun lfTicks() = lf.currentPosition
     fun lbTicks() = lb.currentPosition
     fun rfTicks() = rf.currentPosition
     fun rbTicks() = rb.currentPosition
-    fun lfRawTicks() = lf.getRawPosition()
-    fun lbRawTicks() = lb.getRawPosition()
-    fun rfRawTicks() = rf.getRawPosition()
-    fun rbRawTicks() = rb.getRawPosition()
-    fun lfRadians() = lf.getRadians()
-    fun lbRadians() = lb.getRadians()
-    fun rfRadians() = rf.getRadians()
-    fun rbRadians() = rb.getRadians()
-    fun lfRawRadians() = lf.getRawRadians()
-    fun lbRawRadians() = lb.getRawRadians()
-    fun rfRawRadians() = rf.getRawRadians()
-    fun rbRawRadians() = rb.getRawRadians()
+    fun lfRawTicks() = lf.encoder.getRawTicks()
+    fun lbRawTicks() = lb.encoder.getRawTicks()
+    fun rfRawTicks() = rf.encoder.getRawTicks()
+    fun rbRawTicks() = rb.encoder.getRawTicks()
+    fun lfRadians() = lf.encoder.getRadians()
+    fun lbRadians() = lb.encoder.getRadians()
+    fun rfRadians() = rf.encoder.getRadians()
+    fun rbRadians() = rb.encoder.getRadians()
+    fun lfRawRadians() = lf.encoder.getRawRadians()
+    fun lbRawRadians() = lb.encoder.getRawRadians()
+    fun rfRawRadians() = rf.encoder.getRawRadians()
+    fun rbRawRadians() = rb.encoder.getRawRadians()
 
     override fun update() = localizerArg.updatePos()
     override fun start() {

@@ -16,12 +16,7 @@ class CachedDcMotorEx(private val delegate:DcMotorEx, private val HUB:RevHub) : 
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
     val encoder = Encoder(HUB, delegate.portNumber, TICKS_PER_REV.toInt())
 
-    fun ticksToRadians(ticks: Int) = encoder.toRadians(ticks)
-    fun getRawRadians() = encoder.getRawRadians()
-    fun getRawPosition() = encoder.getRawTicks()
-    fun getRadians() = encoder.getRadians()
     override fun getCurrentPosition() = encoder.getTicks()
-    fun resetEncoder() = encoder.reset()
 
     override fun isBusy(): Boolean = HUB.isAtTarget(PORT)
     override fun getPortNumber() = PORT

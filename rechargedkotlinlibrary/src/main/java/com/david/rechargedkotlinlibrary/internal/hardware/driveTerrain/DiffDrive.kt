@@ -111,15 +111,71 @@ abstract class DiffDrive(
         }
     }
 
-    override fun getWheelPositions(): List<Double> {
-        var lSum = 0.0
-        leftMotors.forEach { lSum += it.getRawRadians() }
-        var rSum = 0.0
-        rightMotors.forEach { rSum += it.getRawRadians() }
+    fun leftRawTicks():Int{
+        var sum = 0
+        leftMotors.forEach { sum += it.encoder.getRawTicks() }
+        return sum / 2
+    }
 
+    fun rightRawTicks():Int{
+        var sum = 0
+        rightMotors.forEach { sum += it.encoder.getRawTicks() }
+        return sum / 2
+    }
+
+    fun leftRawRadians():Double{
+        var sum = 0.0
+        leftMotors.forEach { sum += it.encoder.getRawRadians() }
+        return sum / 2
+    }
+
+    fun rightRawRadians():Double{
+        var sum = 0.0
+        leftMotors.forEach { sum += it.encoder.getRawRadians() }
+        return sum / 2
+    }
+
+    fun leftTicks():Int{
+        var sum = 0
+        leftMotors.forEach { sum += it.encoder.getTicks() }
+        return sum / 2
+    }
+
+    fun rightTicks():Int{
+        var sum = 0
+        rightMotors.forEach { sum += it.encoder.getTicks() }
+        return sum / 2
+    }
+
+    fun leftRadians():Double{
+        var sum = 0.0
+        leftMotors.forEach { sum += it.encoder.getRadians() }
+        return sum / 2
+    }
+
+    fun rightRadians():Double{
+        var sum = 0.0
+        leftMotors.forEach { sum += it.encoder.getRadians() }
+        return sum / 2
+    }
+
+
+    fun resetRightEncoders(){
+        rightMotors.forEach { it.encoder.reset() }
+    }
+    fun resetLeftEncoders(){
+        leftMotors.forEach { it.encoder.reset() }
+    }
+
+    fun resetEncoders(){
+        resetLeftEncoders()
+        resetRightEncoders()
+    }
+
+    override fun getWheelPositions(): List<Double> {
         val positions = LinkedList<Double>()
-        positions.add(radiansToInches(lSum / leftMotors.size))
-        positions.add(radiansToInches(rSum / rightMotors.size))
+        positions.add(radiansToInches(leftRawRadians()))
+        positions.add(radiansToInches(rightRawRadians()))
         return positions
     }
 
