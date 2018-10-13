@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.prototypes
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
@@ -25,10 +26,10 @@ class RR1Drive(robot: RobotTemplate) : DiffDrive(
         MAX_ACCEL = MAX_ACCEL,
         MAX_TURN_ACCEL = MAX_TURN_ACCEL,
         MAX_VEL = 1.0 / kV,
-        leftMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_front"), mode = runMode),
-                             OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_left_back"), mode = runMode)),
-        rightMotors = arrayOf(OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_front"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE),
-                              OptimumDcMotorEx(ConfigData(robot, 0, "motor_drive_right_back"), mode = runMode, direction = DcMotorSimple.Direction.REVERSE)),
+        leftMotors = arrayOf(CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "motor_drive_left_front", mode = runMode), robot.getHub(0)),
+                             CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "motor_drive_left_back", mode = runMode), robot.getHub(0))),
+        rightMotors = arrayOf(CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "motor_drive_right_front", mode = runMode), robot.getHub(0)),
+                             CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "motor_drive_right_back", mode = runMode), robot.getHub(0))),
         robot = robot,
         imu = SimplifiedBNO055(robot.hMap.get(BNO055IMU::class.java, "imu"))
 ) {

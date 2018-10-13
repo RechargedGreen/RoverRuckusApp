@@ -1,5 +1,7 @@
 package com.david.rechargedkotlinlibrary.internal.hardware
 
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import kotlin.experimental.and
 
@@ -7,6 +9,15 @@ import kotlin.experimental.and
  * Created by David Lukens on 9/30/2018.
  */
 object HardwareMaker {
+    object DcMotorEx{
+        fun make(hMap: HardwareMap, config:String, direction:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD, zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE, mode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER):com.qualcomm.robotcore.hardware.DcMotorEx{
+            val motor = hMap.get(com.qualcomm.robotcore.hardware.DcMotorEx::class.java, config)
+            motor.direction = direction
+            motor.zeroPowerBehavior = zeroPowerBehavior
+            motor.mode = mode
+            return motor
+        }
+    }
     object BNO055IMU {
         val AXIS_MAP_CONFIG_BYTE: Byte = 0x6 // swap x and z
         val AXIS_MAP_SIGN_BYTE: Byte = 0x1 // negate z

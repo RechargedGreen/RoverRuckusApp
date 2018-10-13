@@ -10,22 +10,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 /**
  * Created by David Lukens on 8/7/2018.
  */
-class OptimumDcMotorEx(configData: ConfigData,
-                       mode: DcMotor.RunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER,
-                       zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
-                       direction: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD) : DcMotorEx, ThreadedSubsystem(configData.robot) {
-    val delegate = hMap.get(DcMotorEx::class.java, configData.config)
+class CachedDcMotorEx(private val delegate:DcMotorEx, private val HUB:RevHub) : DcMotorEx {
     val PORT = delegate.portNumber
-    val HUB = configData.robot.getHub(configData.hub)
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
-    val encoder = Encoder(configData.robot.getHub(configData.hub), delegate.portNumber, TICKS_PER_REV.toInt())
-
-    init {
-        setMode(mode)
-        setZeroPowerBehavior(zeroPowerBehavior)
-        setDirection(direction)
-    }
+    val encoder = Encoder(HUB, delegate.portNumber, TICKS_PER_REV.toInt())
 
     fun ticksToRadians(ticks: Int) = encoder.toRadians(ticks)
     fun getRawRadians() = encoder.getRawRadians()
@@ -38,20 +27,16 @@ class OptimumDcMotorEx(configData: ConfigData,
     override fun getPortNumber() = PORT
 
     var powerCache = 0.0
-    var lastPowerCache = 0.0
-    override fun update() {
-        val pc = powerCache
-        if (pc != lastPowerCache)
-            delegate.power = pc
-        lastPowerCache = pc
-    }
 
     override fun setMotorType(motorType: MotorConfigurationType?) {
         delegate.motorType = motorType
     }
 
     override fun setPower(power: Double) {
-        powerCache = power
+        if(powerCache != power){
+            delegate.power = power
+            powerCache = power
+        }
     }
 
     override fun getPower(): Double = powerCache

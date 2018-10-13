@@ -9,7 +9,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry.Localizer
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
@@ -23,10 +23,10 @@ import kotlin.math.abs
  */
 abstract class MecDrive(
         private val robot: RobotTemplate,
-        private val lf: OptimumDcMotorEx,
-        private val lb: OptimumDcMotorEx,
-        private val rf: OptimumDcMotorEx,
-        private val rb: OptimumDcMotorEx,
+        private val lf: CachedDcMotorEx,
+        private val lb: CachedDcMotorEx,
+        private val rf: CachedDcMotorEx,
+        private val rb: CachedDcMotorEx,
         mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
         zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
         private val ENCODER_SCALER: Double = 1.0,

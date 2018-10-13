@@ -12,13 +12,12 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.TankConstraints
 import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odometry.Localizer
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.roadRunner.RamseteConstraints
-import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotor
 import java.util.*
 import kotlin.math.absoluteValue
@@ -28,8 +27,8 @@ import kotlin.math.absoluteValue
  */
 abstract class DiffDrive(
         private val robot: RobotTemplate,
-        private val leftMotors: Array<OptimumDcMotorEx>,
-        private val rightMotors: Array<OptimumDcMotorEx>,
+        private val leftMotors: Array<CachedDcMotorEx>,
+        private val rightMotors: Array<CachedDcMotorEx>,
         mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
         zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
         val WHEEL_GEAR_RATIO: Double = 1.0,

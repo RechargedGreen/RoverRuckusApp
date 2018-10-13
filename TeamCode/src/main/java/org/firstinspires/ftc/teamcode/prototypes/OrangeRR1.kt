@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.prototypes
 
 import com.acmerobotics.roadrunner.drive.Drive
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
+import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.MecDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
@@ -33,8 +33,8 @@ class OrangeRR1Bot(opMode: RechargedLinearOpMode<OrangeRR1Bot>) : RobotTemplate(
 
 class RR1OrangeDrive(robot: RobotTemplate) : MecDrive(
         robot = robot,
-        lf = OptimumDcMotorEx(ConfigData(robot, 0, "lf"), direction = DcMotorSimple.Direction.REVERSE),
-        lb = OptimumDcMotorEx(ConfigData(robot, 0, "lb"), direction = DcMotorSimple.Direction.REVERSE),
-        rf = OptimumDcMotorEx(ConfigData(robot, 0, "rf")),
-        rb = OptimumDcMotorEx(ConfigData(robot, 0, "rb"))
+        lf = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "lf", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(0)),
+        lb = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "lb", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(0)),
+        rf = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rf"), robot.getHub(0)),
+        rb = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rb"), robot.getHub(0))
 )

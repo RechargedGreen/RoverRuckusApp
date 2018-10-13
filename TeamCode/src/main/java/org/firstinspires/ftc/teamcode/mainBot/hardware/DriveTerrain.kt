@@ -3,23 +3,26 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.OptimumDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-
+private val autoRunMode = DcMotor.RunMode.RUN_USING_ENCODER
+private val teleRunMode = DcMotor.RunMode.RUN_USING_ENCODER
 class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         robot = robot,
         leftMotors = arrayOf(
-                OptimumDcMotorEx(ConfigData(robot, 0, "lf")),
-                OptimumDcMotorEx(ConfigData(robot, 0, "lb"))
+                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "lf", mode = if (robot.opMode.isAutonomous()) autoRunMode else teleRunMode), robot.getHub(0)),
+                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "lb", mode = if (robot.opMode.isAutonomous()) autoRunMode else teleRunMode), robot.getHub(0))
         ),
         rightMotors = arrayOf(
-                OptimumDcMotorEx(ConfigData(robot, 0, "rf"), direction = DcMotorSimple.Direction.REVERSE),
-                OptimumDcMotorEx(ConfigData(robot, 0, "rb"), direction = DcMotorSimple.Direction.REVERSE)
+                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rf", direction = DcMotorSimple.Direction.REVERSE, mode = if (robot.opMode.isAutonomous()) autoRunMode else teleRunMode), robot.getHub(0)),
+                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rb", direction = DcMotorSimple.Direction.REVERSE, mode = if (robot.opMode.isAutonomous()) autoRunMode else teleRunMode), robot.getHub(0))
         ),
         RADIUS = 2.0,
         WHEEL_GEAR_RATIO = 42.0 / 40.0,
