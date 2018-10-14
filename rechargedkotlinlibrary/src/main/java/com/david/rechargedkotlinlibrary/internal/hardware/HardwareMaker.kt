@@ -1,6 +1,8 @@
 package com.david.rechargedkotlinlibrary.internal.hardware
 
-import com.qualcomm.robotcore.hardware.*
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.HardwareMap
 import kotlin.experimental.and
 
 /**
@@ -18,16 +20,18 @@ object HardwareMaker {
     }
 
     object Servo {
-        fun make(hMap: HardwareMap, config: String, direction:com.qualcomm.robotcore.hardware.Servo.Direction = com.qualcomm.robotcore.hardware.Servo.Direction.FORWARD) {
+        fun make(hMap: HardwareMap, config: String, direction: com.qualcomm.robotcore.hardware.Servo.Direction = com.qualcomm.robotcore.hardware.Servo.Direction.FORWARD): com.qualcomm.robotcore.hardware.Servo {
             val servo = hMap.servo.get(config)
             servo.direction = direction
+            return servo
         }
     }
 
-    object CRServo{
-        fun make(hMap: HardwareMap, config: String, direction:DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD){
+    object CRServo {
+        fun make(hMap: HardwareMap, config: String, direction: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD): com.qualcomm.robotcore.hardware.CRServo {
             val servo = hMap.crservo.get(config)
             servo.direction = direction
+            return servo
         }
     }
 
