@@ -1,5 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu
 
+import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.hardware.bosch.BNO055IMU
 import org.firstinspires.ftc.robotcore.external.navigation.*
 
@@ -14,6 +15,28 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     private var xCache = 0.0
     private var yCache = 0.0
 
+    private var zBias:Double = 0.0
+    private var xBias:Double = 0.0
+    private var yBias:Double = 0.0
+    fun setZBias(bias:Double, angleUnit: AngleUnit = AngleUnit.DEGREES){
+        zBias = if(angleUnit == AngleUnit.DEGREES) bias else Math.toDegrees(bias)
+    }
+    fun setXBias(bias:Double, angleUnit: AngleUnit = AngleUnit.DEGREES) {
+        xBias = if (angleUnit == AngleUnit.DEGREES) bias else Math.toDegrees(bias)
+    }
+    fun setYBias(bias:Double, angleUnit: AngleUnit = AngleUnit.DEGREES){
+        yBias = if(angleUnit == AngleUnit.DEGREES) bias else Math.toDegrees(bias)
+    }
+    fun getZBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
+        return if(angleUnit == AngleUnit.DEGREES) zBias else Math.toDegrees(zBias)
+    }
+    fun getXBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
+        return if(angleUnit == AngleUnit.DEGREES) xBias else Math.toDegrees(xBias)
+    }
+    fun getYBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
+        return if(angleUnit == AngleUnit.DEGREES) yBias else Math.toDegrees(yBias)
+    }
+
     fun clearCaches() {
         useAngleCache = false
     }
@@ -27,7 +50,7 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
         }
     }
 
-    fun getZ(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
+    fun getRawZ(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         checkAngleCache()
         return when (angleUnit) {
             AngleUnit.DEGREES -> zCache
@@ -35,7 +58,7 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
         }
     }
 
-    fun getX(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
+    fun getRawX(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         checkAngleCache()
         return when (angleUnit) {
             AngleUnit.DEGREES -> xCache
@@ -43,13 +66,17 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
         }
     }
 
-    fun getY(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
+    fun getRawY(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         checkAngleCache()
         return when (angleUnit) {
             AngleUnit.DEGREES -> yCache
             AngleUnit.RADIANS -> Math.toRadians(yCache)
         }
     }
+
+    fun getZ(angleUnit: AngleUnit = AngleUnit.DEGREES) = MathUtil.norm(getRawZ(angleUnit) + getZBias(angleUnit), angleUnit)
+    fun getX(angleUnit: AngleUnit = AngleUnit.DEGREES) = MathUtil.norm(getRawX(angleUnit) + getXBias(angleUnit), angleUnit)
+    fun getY(angleUnit: AngleUnit = AngleUnit.DEGREES) = MathUtil.norm(getRawY(angleUnit) + getYBias(angleUnit), angleUnit)
 
     override fun writeCalibrationData(data: BNO055IMU.CalibrationData?) = delegate.writeCalibrationData(data)
     override fun isGyroCalibrated(): Boolean = delegate.isGyroCalibrated
