@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
+import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 
 class Dumper(val robot: HardwareClass) : MTSubsystem {
@@ -24,8 +26,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         DUMP(0.0)
     }
 
-    //private val dump1 = robot.hMap.servo.get("dump1")
-    //private val flip1 = robot.hMap.servo.get("flip1")
+    //private val dump1 = CachedServo(HardwareMaker.Servo.make(robot.hMap, "dump1"))
+    //private val flip1 = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flip1"))
 
     var flipState = FlipState.FRONT
     var dumpState = DumpState.HOLD
