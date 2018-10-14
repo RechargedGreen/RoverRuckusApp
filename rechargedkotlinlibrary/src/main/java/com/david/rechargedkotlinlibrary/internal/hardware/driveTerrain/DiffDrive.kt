@@ -18,7 +18,9 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.odomet
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.roadRunner.RamseteConstraints
+import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -204,7 +206,7 @@ abstract class DiffDrive(
                 setMotorPowers(powers.l, powers.r)
             }
             ControlLoopStates.DRIVING_AT_ANGLE -> {
-                val turn = followAngleData.controller.update(followAngleData.angle - imu.getZ())
+                val turn = followAngleData.controller.update(MathUtil.norm(followAngleData.angle - imu.getZ(), AngleUnit.DEGREES))
                 val left = followAngleData.power + turn
                 val right = followAngleData.power - turn
                 val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
@@ -219,7 +221,7 @@ abstract class DiffDrive(
     fun stop() = openLoopPowerWheels(0.0, 0.0)
 
     fun startDrivingAtAngle(controller:PIDController = PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), power:Double = 1.0, angle: Double){
-        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle)
+        followAngleData = FollowAngleData(controller = controller, power = power, angle = MathUtil.norm(angle, AngleUnit.DEGREES))
         controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }
 
