@@ -26,7 +26,8 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     private val motorL = robot.hMap.dcMotor.get("liftL")
     private val motorR = robot.hMap.dcMotor.get("liftR")
 
-    private fun internalSetMotorPowers(power: Double) {
+    private fun internalSetMotorPowers(power: Double, safe:Boolean) {
+        val power = if(safe) Range.clip(power, if(isFullyDown()) 0.0 else -1.0, if(isFullyUp()) 0.0 else 1.0) else power
         motorL.power = power
         motorR.power = power
     }
@@ -57,8 +58,8 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
                 State.UP -> setInternalState(if(isFullyUp()) InternalState.STOP else InternalState.GO_UP)
                 State.DOWN -> setInternalState(if(isFullyDown()) InternalState.STOP else InternalState.GO_DOWN)
             }
-            ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop)
-            ControlState.MANUAL_SAFE -> internalSetMotorPowers(Range.clip(openLoop, if(isFullyDown()) 0.0 else -1.0, if(isFullyUp()) 0.0 else 1.0))
+            ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop, false)
+            ControlState.MANUAL_SAFE -> internalSetMotorPowers(openLoop, true)
         }
     }
 
@@ -67,7 +68,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         STOP(0.0),
         GO_DOWN(-1.0)
     }
-    private fun setInternalState(state:InternalState) = internalSetMotorPowers(state.power)
+    private fun setInternalState(state:InternalState) = internalSetMotorPowers(state.power, true)
 
     fun isFullyDown():Boolean = downSensor.pressed()
     fun isFullyUp():Boolean = upSensor.pressed()
