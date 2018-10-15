@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
+import com.qualcomm.robotcore.util.Range
 
 class Lift(val robot: HardwareClass) : MTSubsystem {
     private var state: State
@@ -57,7 +58,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
                 State.DOWN -> setInternalState(if(isFullyDown()) InternalState.STOP else InternalState.GO_DOWN)
             }
             ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop)
-            ControlState.MANUAL_SAFE -> internalSetMotorPowers(if(isFullyDown() || isFullyUp()) InternalState.STOP.power else openLoop)
+            ControlState.MANUAL_SAFE -> internalSetMotorPowers(Range.clip(openLoop, if(isFullyDown()) 0.0 else -1.0, if(isFullyUp()) 0.0 else 1.0))
         }
     }
 
