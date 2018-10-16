@@ -65,6 +65,8 @@ abstract class DiffDrive(
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
 
+    var lastAngleFollowerError = 0.0
+
     val MOTOR_TYPE = leftMotors[0].motorType
     val ENCODER_SCALER = 1.0 / WHEEL_GEAR_RATIO
 
@@ -206,7 +208,9 @@ abstract class DiffDrive(
                 setMotorPowers(powers.l, powers.r)
             }
             ControlLoopStates.DRIVING_AT_ANGLE -> {
-                val turn = followAngleData.controller.update(MathUtil.norm(followAngleData.angle - imu.getZ(), AngleUnit.DEGREES))
+                val err = MathUtil.norm(followAngleData.angle - imu.getZ(), AngleUnit.DEGREES)
+                lastAngleFollowerError = err
+                val turn = followAngleData.controller.update(err)
                 val left = followAngleData.power + turn
                 val right = followAngleData.power - turn
                 val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
