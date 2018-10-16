@@ -1,5 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.opMode
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 
 /**
@@ -10,6 +11,7 @@ abstract class CompetetionTele<rt : RobotTemplate>(createRobot: (RechargedLinear
     var practice = false
     lateinit var c1: SimpleController
     lateinit var c2: SimpleController
+    val packet = TelemetryPacket()
 
     @Throws(InterruptedException::class)
     override fun run() {
@@ -19,6 +21,7 @@ abstract class CompetetionTele<rt : RobotTemplate>(createRobot: (RechargedLinear
             c2 = SimpleController(gamepad2)
             onLoop()
             telemetry.update()
+            dash.sendTelemetryPacket(packet)
         })
     }
 

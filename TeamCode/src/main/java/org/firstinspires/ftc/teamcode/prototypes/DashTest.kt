@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_MISC)
 class DashTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
-    val packet = TelemetryPacket()
     override fun onLoop() {
         packet.put("lt", c1.lt)
         packet.put("rt", c1.rt)
@@ -16,6 +15,5 @@ class DashTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode)
         packet.put("rx", c1.rx)
         packet.put("ly", c1.ly)
         packet.put("ry", c1.ry)
-        dash.sendTelemetryPacket(packet)
     }
 }
