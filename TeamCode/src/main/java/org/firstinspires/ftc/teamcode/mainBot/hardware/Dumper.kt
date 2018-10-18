@@ -5,11 +5,6 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 
 class Dumper(val robot: HardwareClass) : MTSubsystem {
-    enum class FlipState {
-        FRONT,
-        MID,
-        BACK
-    }
 
     enum class DumpState {
         HOLD,
@@ -17,8 +12,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     }
 
     private enum class InternalFlipState(val pos1: Double) {
-        FRONT(0.0),
-        BACK(0.0)
+        DUMP(0.0),
+        LOAD(0.0)
     }
 
     private enum class InternalDumpState(val pos1: Double) {
@@ -29,18 +24,14 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     //private val dump1 = CachedServo(HardwareMaker.Servo.make(robot.hMap, "dump1"))
     //private val flip1 = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flip1"))
 
-    var flipState = FlipState.FRONT
     var dumpState = DumpState.HOLD
 
     override fun update() {
-        when (flipState) {
-            FlipState.FRONT -> setInternalFlipState(InternalFlipState.FRONT)
-            FlipState.BACK  -> setInternalFlipState(InternalFlipState.BACK)
-        }
-        when (dumpState) {
-            DumpState.DUMP -> setInternalDumpState(if (atFlipState()) InternalDumpState.DUMP else InternalDumpState.HOLD)
-            DumpState.HOLD -> setInternalDumpState(InternalDumpState.HOLD)
-        }
+        setInternalFlipState(if(robot.lift.isFullyUp() && robot.lift.state == Lift.State.UP) InternalFlipState.DUMP else InternalFlipState.LOAD)
+        setInternalDumpState(when(dumpState){
+            DumpState.HOLD -> InternalDumpState.HOLD
+            DumpState.DUMP -> InternalDumpState.DUMP
+        })
     }
 
 
@@ -52,7 +43,9 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         //dump1.position = state.pos1
     }
 
-    fun atFlipState(): Boolean = true
+    fun clearingLift() = true
+
+    fun readyToLoad() = true
 
     override fun start() {
     }

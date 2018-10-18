@@ -56,7 +56,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         when(controlState) {
             ControlState.AUTO -> when(state){
                 State.UP -> setInternalState(if(isFullyUp()) InternalState.STOP else InternalState.GO_UP)
-                State.DOWN -> setInternalState(if(isFullyDown()) InternalState.STOP else InternalState.GO_DOWN)
+                State.DOWN -> setInternalState(if(isFullyDown() || !robot.dumper.clearingLift()) InternalState.STOP else InternalState.GO_DOWN)
             }
             ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop, false)
             ControlState.MANUAL_SAFE -> internalSetMotorPowers(openLoop, true)
