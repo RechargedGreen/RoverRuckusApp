@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 
 class SuperSystem(val robot: HardwareClass) : MTSubsystem {
+    val blinken = robot.hMap.get(RevBlinkinLedDriver::class.java, "blinken")
+    val normalPattern = RevBlinkinLedDriver.BlinkinPattern.GREEN
+    val hangTimePattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED
+
     enum class State {
         RESET
     }
@@ -17,6 +22,6 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
         }
     }
 
-    override fun update() {}
+    override fun update() = blinken.setPattern(if (120.0 - robot.opMode.runtime.seconds() < 10.0) hangTimePattern else normalPattern)
     override fun start() {}
 }
