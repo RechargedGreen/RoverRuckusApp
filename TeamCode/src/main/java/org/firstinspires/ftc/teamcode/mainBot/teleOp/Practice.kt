@@ -10,7 +10,8 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     override fun onLoop() {
         robot.drive.openLoopPowerWheels(c1.ly, c1.ry)
-        robot.lift.state = if(gamepad1.right_bumper) Lift.State.UP else Lift.State.DOWN
+        robot.lift.setOpenLoopPower(c1.rt - c1.lt)
+        //robot.lift.state = if(gamepad1.right_bumper) Lift.State.UP else Lift.State.DOWN
     }
 
     companion object {

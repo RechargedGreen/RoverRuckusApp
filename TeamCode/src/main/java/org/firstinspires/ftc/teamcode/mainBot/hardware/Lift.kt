@@ -42,7 +42,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     private var controlState = ControlState.AUTO
 
-    private fun setOpenLoopPower(power: Double, useFailSafes: Boolean = true) {
+    fun setOpenLoopPower(power: Double, useFailSafes: Boolean = true) {
         openLoop = power
         controlState = if (useFailSafes) ControlState.MANUAL_SAFE else ControlState.MANUAL_DANGER
     }
