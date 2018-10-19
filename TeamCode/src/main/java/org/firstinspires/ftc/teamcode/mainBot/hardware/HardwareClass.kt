@@ -7,7 +7,7 @@ import com.david.rechargedkotlinlibrary.internal.util.AutoTransitionerKotlin
 import com.qualcomm.hardware.bosch.BNO055IMU
 import org.firstinspires.ftc.teamcode.mainBot.teleOp.Competition
 
-class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub")) {
+class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub", "rightHub")) {
     val drive = DriveTerrain(this)
     val superSystem = SuperSystem(this)
     val dumper = Dumper(this)
