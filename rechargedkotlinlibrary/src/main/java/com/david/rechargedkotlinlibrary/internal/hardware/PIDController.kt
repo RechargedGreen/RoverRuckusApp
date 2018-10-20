@@ -5,16 +5,20 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients
 class PIDController(val coeffs:PIDCoefficients) {
     var integral = 0.0
     var lastTime:Long? = null
+    var lastError:Double? = null
 
     var u = 0.0
 
     fun update(error:Double):Double{
         val currTime = System.currentTimeMillis()
         val lastTimeCache = lastTime
+        val lastErrorCache = lastError
         if(lastTimeCache != null) {
             val dt: Double = (currTime - lastTimeCache).toDouble() / 1000
             integral += error
-            u = error * coeffs.p + integral * coeffs.i + error / dt * coeffs.d
+            val derivative = if(lastErrorCache != null) (lastErrorCache - error) / dt else 0.0
+            u = error * coeffs.p + integral * coeffs.i + derivative * coeffs.d
+            lastError = error
         }
         lastTime = currTime
         return u
