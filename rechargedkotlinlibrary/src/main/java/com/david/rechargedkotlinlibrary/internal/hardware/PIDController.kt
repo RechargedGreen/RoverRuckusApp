@@ -16,7 +16,7 @@ class PIDController(val coeffs:PIDCoefficients) {
         if(lastTimeCache != null) {
             val dt: Double = (currTime - lastTimeCache).toDouble() / 1000
             integral += error
-            val derivative = if(lastErrorCache != null) (lastErrorCache - error) / dt else 0.0
+            val derivative = if(lastErrorCache != null) (error - lastErrorCache) / dt else 0.0
             u = error * coeffs.p + integral * coeffs.i + derivative * coeffs.d
             lastError = error
         }
