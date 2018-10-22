@@ -6,10 +6,10 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.robotcore.util.Range
 
 class Lift(val robot: HardwareClass) : MTSubsystem {
-    var state: State
+    var state: State = State.DOWN
         set(value) {
             controlState = ControlState.AUTO
-            state = value
+            field = value
         }
         get() = state
 
