@@ -61,6 +61,8 @@ abstract class DiffDrive(
         robot.thread.addSubsystem(this)
     }
 
+    override fun getHeading(): Double? = imu.getZ(AngleUnit.RADIANS)
+
     private val HARD_MAX_VEL: Double = 1.0 / kV
 
     val MOTOR_TYPE = leftMotors[0].motorType
