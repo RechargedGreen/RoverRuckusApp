@@ -9,7 +9,7 @@ import kotlin.math.absoluteValue
 @TeleOp
 class DriveTest : LinearOpMode() {
     val deadBand = 0.05
-    val turnSensitivity = 0.5
+    val turnSensitivity = 1.0
     override fun runOpMode() {
         val lf = hardwareMap.dcMotor.get("lf")
         val lb = hardwareMap.dcMotor.get("lb")
