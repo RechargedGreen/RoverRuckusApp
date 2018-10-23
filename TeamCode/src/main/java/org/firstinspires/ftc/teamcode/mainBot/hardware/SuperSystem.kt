@@ -24,4 +24,24 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
 
     override fun update() = blinken.setPattern(if (120.0 - robot.opMode.runtime.seconds() < 10.0) hangTimePattern else normalPattern)
     override fun start() {}
+
+    enum class SampleSituation{
+        LANDER_SILVER,
+        LANDER_GOLD,
+        DEPOT_GOLD
+    }
+
+    fun sample(situation:SampleSituation){
+        when(situation){
+            SampleSituation.LANDER_SILVER -> {
+
+            }
+            SampleSituation.LANDER_GOLD -> {
+
+            }
+            SampleSituation.DEPOT_GOLD -> {
+
+            }
+        }
+    }
 }
