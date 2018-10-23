@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainBot.auto
 
 import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.data.FIELD_POSITIONS
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
@@ -15,12 +16,13 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 @Config
 @Autonomous(group = OpModeGroups.MAIN_AUTO)
 class Deploy_DoubleSample_TeamMarker_Park_105pts : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+    val sampleOrder = SamplingOrderDetector.GoldLocation.UNKNOWN
     override fun run() {
         robot.drive.imu.setZBias(FIELD_POSITIONS.SILVER_HANG_ANGLE)
         robot.drive.poseEstimate = FIELD_POSITIONS.SILVER_DEPLOY
         robot.lift.deploy()
 
-        robot.superSystem.sample(SuperSystem.SampleSituation.LANDER_SILVER)
+        robot.superSystem.sample(SuperSystem.SampleSituation.LANDER_SILVER, sampleOrder)
 
         robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
                 .turnTo(FIELD_POSITIONS.ANGLE_BEFORE_WALL_ALIGN_SPLINE_SILVER_SAMPLE_TO_DEPOT)
@@ -29,7 +31,7 @@ class Deploy_DoubleSample_TeamMarker_Park_105pts : FluidAuto<HardwareClass>({ op
         robot.drive.followWall(DriveTerrain.WallFollows.OWN_CRATER_TO_DEPOT)
         sleep(1000)
 
-        robot.superSystem.sample(SuperSystem.SampleSituation.DEPOT_GOLD)
+        robot.superSystem.sample(SuperSystem.SampleSituation.DEPOT_GOLD, sampleOrder)
 
         robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
                 .turnTo(FIELD_POSITIONS.ANGLE_BEFORE_WALL_ALIGN_SPLINE_DEPOT_SAMPLE_TO_CRATER)
