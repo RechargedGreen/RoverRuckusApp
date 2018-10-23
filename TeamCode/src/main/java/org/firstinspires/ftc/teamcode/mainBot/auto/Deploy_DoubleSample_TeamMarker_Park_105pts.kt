@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 class Deploy_DoubleSample_TeamMarker_Park_105pts : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     override fun run() {
         robot.drive.imu.setZBias(FIELD_POSITIONS.SILVER_HANG_ANGLE)
+        robot.drive.poseEstimate = FIELD_POSITIONS.SILVER_DEPLOY
         robot.lift.deploy()
 
         robot.superSystem.sample(SuperSystem.SampleSituation.LANDER_SILVER)
@@ -25,7 +26,7 @@ class Deploy_DoubleSample_TeamMarker_Park_105pts : FluidAuto<HardwareClass>({ op
                 .turnTo(FIELD_POSITIONS.ANGLE_BEFORE_WALL_ALIGN_SPLINE_SILVER_SAMPLE_TO_DEPOT)
                 .splineTo(FIELD_POSITIONS.ALIGN_WALL_FOLLOW_SILVER_SAMPLE_TO_DEPOT)
                 .build())
-        robot.drive.followWall(DriveTerrain.WALL_FOLLOWS.OWN_CRATER_TO_DEPOT)
+        robot.drive.followWall(DriveTerrain.WallFollows.OWN_CRATER_TO_DEPOT)
         sleep(1000)
 
         robot.superSystem.sample(SuperSystem.SampleSituation.DEPOT_GOLD)
@@ -34,6 +35,6 @@ class Deploy_DoubleSample_TeamMarker_Park_105pts : FluidAuto<HardwareClass>({ op
                 .turnTo(FIELD_POSITIONS.ANGLE_BEFORE_WALL_ALIGN_SPLINE_DEPOT_SAMPLE_TO_CRATER)
                 .splineTo(FIELD_POSITIONS.ALIGN_WALL_FOLLOW_DEPOT_SAMPLE_TO_CRATER)
                 .build())
-        robot.drive.followWall(DriveTerrain.WALL_FOLLOWS.DEPOT_TO_OWN_CRATER)
+        robot.drive.followWall(DriveTerrain.WallFollows.DEPOT_TO_OWN_CRATER)
     }
 }

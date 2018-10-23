@@ -4,7 +4,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.acmerobotics.dashboard:dashboard:0.2.1'
     implementation project(':FtcRobotController')
     implementation (name: 'RobotCore-release', ext: 'aar')
     implementation (name: 'Hardware-release', ext: 'aar')

@@ -8,7 +8,8 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 class SilverSampleTest : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     @JvmField var sampleOrder:SamplingOrderDetector.GoldLocation = SamplingOrderDetector.GoldLocation.LEFT
     override fun run() {
-        robot.drive.setPos(FIELD_POSITIONS.SILVER_DEPLOY)
+        robot.drive.imu.setZBias(FIELD_POSITIONS.SILVER_HANG_ANGLE)
+        robot.drive.poseEstimate = FIELD_POSITIONS.SILVER_DEPLOY
         robot.drive.startFollowingTrajectory(robot.drive.trajectoryBuilder().
                 splineTo(FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_GENERAL).
                 splineTo(when(sampleOrder){

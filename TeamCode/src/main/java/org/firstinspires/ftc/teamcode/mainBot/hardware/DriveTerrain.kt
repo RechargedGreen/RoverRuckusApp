@@ -27,8 +27,8 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         RADIUS = 2.0,
         WHEEL_GEAR_RATIO = 42.0 / 40.0,
         TRACK_WIDTH = 0.0,
-        CROSSTRACK_PID_COEFFICIENTS = PIDCoefficients(0.0, 0.0, 0.0),
-        DISPLACEMENT_PID_COEFFICIENTS = PIDCoefficients(0.0, 0.0, 0.0),
+        CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
+        DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
         kV = 0.0,
         MAX_ACCEL = 0.0,
         MAX_TURN_ACCEL = 0.0,
@@ -43,14 +43,14 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         startFollowingAngle(angleFollowSpeed.controller, angleFollowSpeed.speed, angle)
     }
 
-    enum class WALL_FOLLOWS(){
+    enum class WallFollows(){
         OWN_CRATER_TO_DEPOT,
         OPPOSING_CRATER_TO_DEPOT,
         DEPOT_TO_OPPOSING_CRATER,
         DEPOT_TO_OWN_CRATER
     }
 
-    fun followWall(type:WALL_FOLLOWS){
+    fun followWall(type:WallFollows){
 
     }
 }

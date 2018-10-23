@@ -21,8 +21,9 @@ repositories {
     jcenter()
 }
 dependencies {
+    implementation 'com.acmerobotics.roadrunner:core:0.2.1'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.2.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.acmerobotics.roadrunner:core:0.2.0'
     implementation project(':rechargedkotlinlibrary')
     compile 'com.android.support:multidex:1.0.3'
     implementation project(':DogeCV')
