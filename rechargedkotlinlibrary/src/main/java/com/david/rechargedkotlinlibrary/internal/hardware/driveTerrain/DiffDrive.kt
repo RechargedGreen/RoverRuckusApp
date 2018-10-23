@@ -43,12 +43,6 @@ abstract class DiffDrive(
         val DISPLACEMENT_PID: PIDCoefficients,
         val CROSSTRACK_PID: PIDCoefficients
 ) : TankDrive(TRACK_WIDTH), MTSubsystem {
-    enum class ControlLoopStates {
-        FOLLOW_TRAJECTORY,
-        OPEN_LOOP,
-        DRIVING_AT_ANGLE
-    }
-
     init {
         leftMotors.forEach {
             it.mode = mode
@@ -61,31 +55,46 @@ abstract class DiffDrive(
         robot.thread.addSubsystem(this)
     }
 
-    override fun getHeading(): Double? = imu.getZ(AngleUnit.DEGREES)
+    enum class ControlLoopStates {
+        FOLLOW_TRAJECTORY,
+        OPEN_LOOP,
+        DRIVING_AT_ANGLE
+    }
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
-
     val MOTOR_TYPE = leftMotors[0].motorType
     val ENCODER_SCALER = 1.0 / WHEEL_GEAR_RATIO
-
+    val hardConstraints = TankConstraints(DriveConstraints(1.0 / kV, MAX_VEL, MAX_ACCEL, MAX_TURN_ACCEL), trackWidth)
+    val follower = TankPIDVAFollower(this, displacementCoeffs = DISPLACEMENT_PID, crossTrackCoeffs = CROSSTRACK_PID, kV = kV, kStatic = kStatic, kA = kA)
     private var controlState = ControlLoopStates.OPEN_LOOP
+    override fun getHeading(): Double? = imu.getZ(AngleUnit.DEGREES)
 
-    private val baseConstraints = DriveConstraints(1.0 / kV, MAX_VEL, MAX_ACCEL, MAX_TURN_ACCEL)
-    val hardConstraints = TankConstraints(baseConstraints, trackWidth)
-
-    fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
-        while (robot.opMode.opModeIsActive() && followingTrajectory() && condition()) action?.run()
-        stop()
+    override fun update() {
+        imu.clearCaches()
+        imu.checkAngleCache()
+        updatePoseEstimate()
+        when (controlState) {
+            ControlLoopStates.FOLLOW_TRAJECTORY -> follower.update(poseEstimate)
+            ControlLoopStates.OPEN_LOOP         -> {
+                val powers = openLoopWheelPowers.copy()
+                setMotorPowers(powers.l, powers.r)
+            }
+            ControlLoopStates.DRIVING_AT_ANGLE  -> {
+                val err = MathUtil.norm(followAngleData.angle - imu.getZ(), AngleUnit.DEGREES)
+                lastAngleFollowerError = err
+                val turn = followAngleData.controller.update(err)
+                val left = followAngleData.power + turn
+                val right = followAngleData.power - turn
+                val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
+                setMotorPowers(left / max, right / max)
+            }
+        }
     }
 
-    fun waitOnTrajectory(condition: () -> Boolean = { true }, action: Runnable? = null, trajectory: Trajectory) {
-        startFollowingTrajectory(trajectory)
-        waitOnFollower(condition, action)
+    override fun setMotorPowers(left: Double, right: Double) {
+        leftMotors.forEach { it.power = left }
+        rightMotors.forEach { it.power = right }
     }
-
-    fun trajectoryBuilder(pos: Pose2d = poseEstimate, constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
-
-    private val follower = TankPIDVAFollower(this, displacementCoeffs = DISPLACEMENT_PID, crossTrackCoeffs = CROSSTRACK_PID, kV = kV, kStatic = kStatic, kA = kA)
 
     fun leftRawTicks(): Int {
         var sum = 0
@@ -158,33 +167,6 @@ abstract class DiffDrive(
 
     fun radiansToInches(radians: Double) = radians * RADIUS * ENCODER_SCALER
 
-    override fun setMotorPowers(left: Double, right: Double) {
-        leftMotors.forEach { it.power = left }
-        rightMotors.forEach { it.power = right }
-    }
-
-    override fun update() {
-        imu.clearCaches()
-        imu.checkAngleCache()
-        updatePoseEstimate()
-        when (controlState) {
-            ControlLoopStates.FOLLOW_TRAJECTORY -> follower.update(poseEstimate)
-            ControlLoopStates.OPEN_LOOP         -> {
-                val powers = openLoopWheelPowers.copy()
-                setMotorPowers(powers.l, powers.r)
-            }
-            ControlLoopStates.DRIVING_AT_ANGLE  -> {
-                val err = MathUtil.norm(followAngleData.angle - imu.getZ(), AngleUnit.DEGREES)
-                lastAngleFollowerError = err
-                val turn = followAngleData.controller.update(err)
-                val left = followAngleData.power + turn
-                val right = followAngleData.power - turn
-                val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
-                setMotorPowers(left / max, right / max)
-            }
-        }
-    }
-
     override fun start() {
     }
 
@@ -201,6 +183,18 @@ abstract class DiffDrive(
     }
 
     fun followingTrajectory(): Boolean = follower.isFollowing()
+
+    fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
+        while (robot.opMode.opModeIsActive() && followingTrajectory() && condition()) action?.run()
+        stop()
+    }
+
+    fun waitOnTrajectory(condition: () -> Boolean = { true }, action: Runnable? = null, trajectory: Trajectory) {
+        startFollowingTrajectory(trajectory)
+        waitOnFollower(condition, action)
+    }
+
+    fun trajectoryBuilder(pos: Pose2d = poseEstimate, constraints: TankConstraints = hardConstraints) = TrajectoryBuilder(pos, constraints)
 
     fun openLoopPowerWheels(l: Double, r: Double) {
         controlState = ControlLoopStates.OPEN_LOOP
