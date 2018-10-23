@@ -91,6 +91,7 @@ abstract class DiffDrive(
 
     fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
         while (robot.opMode.opModeIsActive() && followingTrajectory() && condition()) action?.run()
+        stop()
     }
 
     fun waitOnTrajectory(condition: () -> Boolean = { true }, action: Runnable? = null, trajectory: Trajectory, followType: Follower = followerType) {
