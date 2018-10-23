@@ -20,4 +20,6 @@ object FIELD_POSITIONS {
     @JvmField var GOLD_SAMPLE_FROM_DEPOT_RIGHT = Pose2d(0.0, 0.0, 0.0)// todo change for actual position
 
     @JvmField var ALIGN_WALL_FOLLOW_SILVER_SAMPLE_TO_DEPOT = Pose2d(0.0, 0.0, 0.0)// todo change for actual position
+
+    @JvmField var ANGLE_BEFORE_WALL_ALIGN_SPLINE_SILVER_SAMPLE_TO_DEPOT = 0.0
 }

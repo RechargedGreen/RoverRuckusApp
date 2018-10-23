@@ -19,5 +19,14 @@ class SilverSampleTest : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMo
                 })
                 .build())
         robot.drive.waitOnFollower()
+
+        robot.intake.collectSample()
+        sleep(2000)// sleep for testing until sample collection is done
+
+        robot.drive.startFollowingTrajectory(robot.drive.trajectoryBuilder()
+                                                     .turnTo(FIELD_POSITIONS.ANGLE_BEFORE_WALL_ALIGN_SPLINE_SILVER_SAMPLE_TO_DEPOT)
+                                                     .splineTo(FIELD_POSITIONS.ALIGN_WALL_FOLLOW_SILVER_SAMPLE_TO_DEPOT)
+                                                     .build())
+        robot.drive.waitOnFollower()
     }
 }

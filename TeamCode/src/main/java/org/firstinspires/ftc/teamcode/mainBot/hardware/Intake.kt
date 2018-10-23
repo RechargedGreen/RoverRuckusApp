@@ -44,4 +44,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     init {
         robot.thread.addSubsystem(this)
     }
+
+    fun collectSample(){
+
+    }
 }
