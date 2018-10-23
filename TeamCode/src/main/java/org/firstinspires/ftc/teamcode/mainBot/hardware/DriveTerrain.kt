@@ -42,4 +42,15 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
     fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle:Double) {
         startFollowingAngle(angleFollowSpeed.controller, angleFollowSpeed.speed, angle)
     }
+
+    enum class WALL_FOLLOWS(){
+        OWN_CRATER_TO_DEPOT,
+        OPPOSING_CRATER_TO_DEPOT,
+        DEPOT_TO_OPPOSING_CRATER,
+        DEPOT_TO_OWN_CRATER
+    }
+
+    fun followWall(type:WALL_FOLLOWS){
+
+    }
 }
