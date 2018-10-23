@@ -46,7 +46,6 @@ abstract class DiffDrive(
         MAX_TURN_ACCEL: Double,
         var followerType: Follower = Follower.PIDVA,
         TRACK_WIDTH: Double,
-        localizerArg: Localizer? = null,
         val imu:SimplifiedBNO055)
     : TankDrive(TRACK_WIDTH), MTSubsystem, Localizer {
     enum class ControlLoopStates {
