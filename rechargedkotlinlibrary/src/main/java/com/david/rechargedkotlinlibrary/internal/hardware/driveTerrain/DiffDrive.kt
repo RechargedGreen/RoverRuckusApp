@@ -165,6 +165,7 @@ abstract class DiffDrive(
 
     override fun update() {
         imu.clearCaches()
+        imu.checkAngleCache()
         updatePoseEstimate()
         when (controlState) {
             ControlLoopStates.FOLLOW_TRAJECTORY -> follower.update(poseEstimate)

@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.*
  * Created by David Lukens on 10/1/2018.
  */
 class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
-    private val params = parameters
     private var useAngleCache = false
 
     private var zCache = 0.0
@@ -51,7 +50,6 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     }
 
     fun getRawZ(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
-        checkAngleCache()
         return when (angleUnit) {
             AngleUnit.DEGREES -> zCache
             AngleUnit.RADIANS -> Math.toRadians(zCache)
@@ -59,7 +57,6 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     }
 
     fun getRawX(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
-        checkAngleCache()
         return when (angleUnit) {
             AngleUnit.DEGREES -> xCache
             AngleUnit.RADIANS -> Math.toRadians(xCache)
@@ -67,7 +64,6 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     }
 
     fun getRawY(angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
-        checkAngleCache()
         return when (angleUnit) {
             AngleUnit.DEGREES -> yCache
             AngleUnit.RADIANS -> Math.toRadians(yCache)
