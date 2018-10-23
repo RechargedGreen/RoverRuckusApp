@@ -61,7 +61,7 @@ abstract class DiffDrive(
         robot.thread.addSubsystem(this)
     }
 
-    override fun getHeading(): Double? = imu.getZ(AngleUnit.RADIANS)
+    override fun getHeading(): Double? = imu.getZ(AngleUnit.DEGREES)
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
 
