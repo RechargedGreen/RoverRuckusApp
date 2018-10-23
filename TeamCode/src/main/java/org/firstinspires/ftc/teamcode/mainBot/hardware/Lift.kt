@@ -11,7 +11,6 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
             controlState = ControlState.AUTO
             field = value
         }
-        get() = field
 
     fun deploy(){
         state = State.UP
