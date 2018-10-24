@@ -67,7 +67,7 @@ abstract class DiffDrive(
     val hardConstraints = TankConstraints(DriveConstraints(1.0 / kV, MAX_VEL, MAX_ACCEL, MAX_TURN_ACCEL), trackWidth)
     val follower = TankPIDVAFollower(this, displacementCoeffs = DISPLACEMENT_PID, crossTrackCoeffs = CROSSTRACK_PID, kV = kV, kStatic = kStatic, kA = kA)
     private var controlState = ControlLoopStates.OPEN_LOOP
-    override fun getHeading(): Double? = imu.getZ(AngleUnit.DEGREES)
+    override fun getHeading(): Double? = imu.getZ(AngleUnit.RADIANS) // needs to be radians for roadrunner
 
     override fun update() {
         imu.clearCaches()
