@@ -12,5 +12,10 @@ class DriveEncodersTester : PracticeTeleOp<HardwareClass>({ opMode -> HardwareCl
         telemetry.addData("lb", robot.getHub(0).getEncoder(1))
         telemetry.addData("rf", robot.getHub(0).getEncoder(2))
         telemetry.addData("rb", robot.getHub(0).getEncoder(3))
+        telemetry.addData("left", robot.drive.leftRawTicks())
+        telemetry.addData("right", robot.drive.rightRawTicks())
+        robot.drive.openLoopPowerWheels(c1.ly, c1.ry)
+        telemetry.addData("lp", c1.ly)
+        telemetry.addData("rp", c1.ry)
     }
 }

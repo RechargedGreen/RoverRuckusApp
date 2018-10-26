@@ -30,7 +30,7 @@ open class Encoder(private val HUB: RevHub, private val PORT: Int, private val P
     }
 
     fun setDirection(direction: DcMotorSimple.Direction) {
-        secant = if (direction == DcMotorSimple.Direction.REVERSE) -1 else 0
+        secant = if (direction == DcMotorSimple.Direction.REVERSE) -1 else 1
     }
 
     private var lastTicks: Int? = null

@@ -1,8 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.devices
 
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.ConfigData
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.encoders.Encoder
-import com.david.rechargedkotlinlibrary.internal.hardware.management.ThreadedSubsystem
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
@@ -14,7 +12,11 @@ class CachedDcMotorEx(private val delegate:DcMotorEx, private val HUB:RevHub) : 
     val PORT = delegate.portNumber
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
-    val encoder = Encoder(HUB, delegate.portNumber, TICKS_PER_REV.toInt())
+    // todo investigate this
+    val encoder = Encoder(HUB, delegate.portNumber, TICKS_PER_REV.toInt(), when(delegate.direction){
+        DcMotorSimple.Direction.REVERSE -> DcMotorSimple.Direction.FORWARD
+        DcMotorSimple.Direction.FORWARD -> DcMotorSimple.Direction.REVERSE
+    })
 
     override fun getCurrentPosition() = encoder.getTicks()
 
