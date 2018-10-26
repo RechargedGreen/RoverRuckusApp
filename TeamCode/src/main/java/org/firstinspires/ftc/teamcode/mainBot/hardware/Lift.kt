@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
+import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.Range
 
 class Lift(val robot: HardwareClass) : MTSubsystem {
@@ -24,8 +26,8 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     private val downSensor = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(0), 0))
     private val upSensor = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(0), 1))
 
-    private val motorL = CachedDcMotorEx(robot.hMap.get(DcMotorEx::class.java, "liftL"), robot.getHub(1))
-    private val motorR = CachedDcMotorEx(robot.hMap.get(DcMotorEx::class.java, "liftR"), robot.getHub(1))
+    private val motorL = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftL"), robot.getHub(1))
+    private val motorR = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftR", DcMotorSimple.Direction.REVERSE), robot.getHub(1))
 
     private fun internalSetMotorPowers(power: Double, safe:Boolean) {
         val power = if(safe) Range.clip(power, if(isFullyDown()) 0.0 else -1.0, if(isFullyUp()) 0.0 else 1.0) else power
