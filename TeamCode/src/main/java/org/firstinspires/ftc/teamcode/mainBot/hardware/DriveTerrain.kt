@@ -26,7 +26,7 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         ),
         RADIUS = 2.0,
         WHEEL_GEAR_RATIO = 42.0 / 40.0,
-        TRACK_WIDTH = 0.0,
+        TRACK_WIDTH = 1.0,
         CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
         DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
         kV = 0.0,

@@ -20,5 +20,5 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     override fun getWheelRadius(): Double = drive.RADIUS
     override fun getWheelGearRatio(): Double = drive.WHEEL_GEAR_RATIO
     override fun getDrive(): Drive = drive
-    override fun getGyro(): BNO055IMU = drive.imu
+    override fun getGyro() = drive.imu
 }

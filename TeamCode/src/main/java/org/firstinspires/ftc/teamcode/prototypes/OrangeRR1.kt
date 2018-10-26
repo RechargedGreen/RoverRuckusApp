@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.prototypes
 import com.acmerobotics.roadrunner.drive.Drive
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.MecDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
@@ -28,7 +29,7 @@ class OrangeRR1Bot(opMode: RechargedLinearOpMode<OrangeRR1Bot>) : RobotTemplate(
     override fun getWheelRadius(): Double = 0.0
     override fun getWheelGearRatio(): Double = 0.0
     override fun getDrive(): Drive = drive
-    override fun getGyro(): BNO055IMU = hMap.get(BNO055IMU::class.java, "imu")
+    override fun getGyro() = SimplifiedBNO055(hMap.get(BNO055IMU::class.java, "imu"))
 }
 
 class RR1OrangeDrive(robot: RobotTemplate) : MecDrive(
