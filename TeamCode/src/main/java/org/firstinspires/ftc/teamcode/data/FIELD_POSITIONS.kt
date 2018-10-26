@@ -14,8 +14,8 @@ object FIELD_POSITIONS {
     @JvmField var GOLD_HANG_ANGLE = Math.toRadians(-45.0)
     @JvmField var SILVER_HANG_ANGLE = Math.toRadians(-135.0)
 
-    @JvmField var GOLD_DEPLOY = positionAfterTravel(GOLD_BRACKET_POS.pos(), LENGTH / 2.0, GOLD_HANG_ANGLE)
-    @JvmField var SILVER_DEPLOY = positionAfterTravel(SILVER_BRACKET_POS.pos(), LENGTH / 2.0, SILVER_HANG_ANGLE)
+    @JvmField var GOLD_DEPLOY = Pose2d(positionAfterTravel(GOLD_BRACKET_POS.pos(), LENGTH / 2.0, GOLD_HANG_ANGLE), GOLD_HANG_ANGLE)
+    @JvmField var SILVER_DEPLOY = Pose2d(positionAfterTravel(SILVER_BRACKET_POS.pos(), LENGTH / 2.0, SILVER_HANG_ANGLE), SILVER_HANG_ANGLE)
 
     @JvmField var DEPOT_HARD_ALIGN_FACING_OWN_CRATER = Pose2d(LENGTH / 2, WIDTH / 2, Math.toRadians(180.0))
     @JvmField var DEPOT_HARD_ALIGN_FACING_OPPONENT_CRATER = Pose2d(LENGTH / 2, WIDTH / 2, Math.toRadians(90.0))
