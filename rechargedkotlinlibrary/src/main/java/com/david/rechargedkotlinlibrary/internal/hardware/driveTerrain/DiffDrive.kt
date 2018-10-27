@@ -2,7 +2,9 @@ package com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain
 
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.control.PIDCoefficients
+import com.acmerobotics.roadrunner.drive.Drive
 import com.acmerobotics.roadrunner.drive.TankDrive
+import com.acmerobotics.roadrunner.drive.TankKinematics
 import com.acmerobotics.roadrunner.followers.RamseteFollower
 import com.acmerobotics.roadrunner.followers.TankPIDVAFollower
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower
@@ -42,7 +44,7 @@ abstract class DiffDrive(
         val imu: SimplifiedBNO055,
         val DISPLACEMENT_PID: PIDCoefficients,
         val CROSSTRACK_PID: PIDCoefficients
-) : TankDrive(TRACK_WIDTH), MTSubsystem {
+) : TankDrive(TRACK_WIDTH), MTSubsystem, TunableDrive {
     init {
         leftMotors.forEach {
             it.mode = mode
@@ -69,6 +71,8 @@ abstract class DiffDrive(
     private var controlState = ControlLoopStates.OPEN_LOOP
     override fun getHeading(): Double? = imu.getZ(AngleUnit.RADIANS) // needs to be radians for roadrunner
 
+    override fun getDrive(): Drive = this
+
     override fun update() {
         imu.clearCaches()
         imu.checkAngleCache()
@@ -90,6 +94,15 @@ abstract class DiffDrive(
             }
         }
     }
+
+    override fun setVel(vel: Pose2d) {
+        val powers = TankKinematics.robotToWheelAccelerations(vel, trackWidth)
+        openLoopPowerWheels(powers[0], powers[1])
+    }
+    override fun getMaxWheelMotorRPM() = MOTOR_TYPE.maxRPM
+    override fun getWheelRadius() = RADIUS
+    override fun getWheelGearRatio() = WHEEL_GEAR_RATIO
+    override fun getGyro() = imu
 
     override fun setMotorPowers(left: Double, right: Double) {
         leftMotors.forEach { it.power = left }
