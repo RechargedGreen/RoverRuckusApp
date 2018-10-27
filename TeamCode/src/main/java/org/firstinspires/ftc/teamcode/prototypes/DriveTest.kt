@@ -4,9 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
-@TeleOp
+@TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class DriveTest : LinearOpMode() {
     val deadBand = 0.05
     val turnSensitivity = 1.0
@@ -33,6 +34,13 @@ class DriveTest : LinearOpMode() {
             lb.power = left
             rf.power = right
             rb.power = right
+            telemetry.addData("left power", left)
+            telemetry.addData("right power", right)
+            telemetry.addData("lf", lf.currentPosition)
+            telemetry.addData("lb", lb.currentPosition)
+            telemetry.addData("rf", rf.currentPosition)
+            telemetry.addData("rb", rb.currentPosition)
+            telemetry.update()
         }
     }
 }
