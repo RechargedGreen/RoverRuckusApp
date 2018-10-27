@@ -1,6 +1,7 @@
 package com.david.rechargedkotlinlibrary.internal.roadRunner
 
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.drive.TankKinematics
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
@@ -19,8 +20,14 @@ abstract class TrackWidthCalibrationOpMode<rt : RobotTemplate>
 
     @Throws(InterruptedException::class)
     override fun run() {
-        val drive = initDrive()
-        val imu = initIMU()
+        val d = robot.getDrive()
+        val imu = d.getGyro()
+        val drive = d.getDrive()
+
+        fun setVelocity(vel: Pose2d) {
+            val powers = TankKinematics.robotToWheelVelocities(vel, 0.0)
+            d.setVel(vel)
+        }
 
         telemetry.log().add("Press play to begin the track width calibration routine")
         telemetry.log().add("Make sure your robot has enough clearance to turn smoothly")
@@ -38,17 +45,16 @@ abstract class TrackWidthCalibrationOpMode<rt : RobotTemplate>
         var lastHeading = 0.0
 
         drive.poseEstimate = Pose2d()
-        drive.setVelocity(Pose2d(0.0, 0.0, power))
+        setVelocity(Pose2d(0.0, 0.0, power))
         while (opModeIsActive() && (!startedMoving || revolutions <= totalRevolutions)) {
             var heading = imu.getRawZ(AngleUnit.RADIANS)
             if (heading >= Math.PI / 2.0)
                 startedMoving = true
             if (startedMoving && lastHeading < 0.0 && heading >= 0.0)
                 revolutions++
-            drive.updatePoseEstimate()
             lastHeading = heading
         }
-        drive.setVelocity(Pose2d(0.0, 0.0, 0.0))
+        setVelocity(Pose2d(0.0, 0.0, 0.0))
         val effectiveTrackWidth = drive.poseEstimate.heading / (2.0 * Math.PI * totalRevolutions.toDouble())
 
         telemetry.log().clear()
@@ -58,7 +64,4 @@ abstract class TrackWidthCalibrationOpMode<rt : RobotTemplate>
 
         while (opModeIsActive());
     }
-
-    protected fun initDrive() = robot.getDrive()
-    protected fun initIMU() = robot.getGyro()
 }

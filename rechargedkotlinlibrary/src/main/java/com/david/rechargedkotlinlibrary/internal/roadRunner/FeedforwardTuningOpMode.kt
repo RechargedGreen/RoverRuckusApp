@@ -2,6 +2,7 @@ package com.david.rechargedkotlinlibrary.internal.roadRunner
 
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.drive.Drive
+import com.acmerobotics.roadrunner.drive.TankKinematics
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
@@ -21,11 +22,16 @@ abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
 @JvmOverloads constructor(createRobot: (RechargedLinearOpMode<rt>) -> rt, private val distance: Double) : FluidAuto<rt>(createRobot) {
     @Throws(InterruptedException::class)
     override fun run() {
-        val drive = initDrive()
+        val d = robot.getDrive()
+        var wheelMotorRpm = d.getMaxWheelMotorRPM()
+        var wheelDiameter = d.getWheelRadius() * 2.0
+        val wheelGearRatio = d.getWheelGearRatio()
+        val drive = d.getDrive()
 
-        var wheelMotorRpm = robot.getMaxWheelMotorRPM()
-        var wheelDiameter = robot.getWheelRadius() * 2.0
-        val wheelGearRatio = robot.getWheelGearRatio()
+        fun setVelocity(vel: Pose2d){
+            val powers = TankKinematics.robotToWheelVelocities(vel, 0.0)
+            d.setVel(vel)
+        }
 
         telemetry.log().add("Press play to begin the feedforward tuning routine")
         telemetry.update()
@@ -83,10 +89,10 @@ abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
             powerSamples.add(power)
             positionSamples.add(drive.poseEstimate.x)
 
-            drive.setVelocity(Pose2d(power, 0.0, 0.0))
-            drive.updatePoseEstimate()
+            setVelocity(Pose2d(power, 0.0, 0.0))
+            //drive.updatePoseEstimate()
         }
-        drive.setVelocity(Pose2d(0.0, 0.0, 0.0))
+        setVelocity(Pose2d(0.0, 0.0, 0.0))
 
         var velocitySamples = numericalDerivative(timeSamples, positionSamples)
         val rampRegression = SimpleRegression(fitIntercept)
@@ -137,7 +143,7 @@ abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
             positionSamples.clear()
 
             drive.poseEstimate = Pose2d()
-            drive.setVelocity(Pose2d(MAX_POWER, 0.0, 0.0))
+            setVelocity(Pose2d(MAX_POWER, 0.0, 0.0))
             while (opModeIsActive()) {
                 val elapsedTime = System.nanoTime() / 1e9 - startTime
                 if (elapsedTime > maxPowerTime) {
@@ -147,9 +153,9 @@ abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
                 timeSamples.add(elapsedTime)
                 positionSamples.add(drive.poseEstimate.x)
 
-                drive.updatePoseEstimate()
+                //drive.updatePoseEstimate()
             }
-            drive.setVelocity(Pose2d(0.0, 0.0, 0.0))
+            setVelocity(Pose2d(0.0, 0.0, 0.0))
 
             velocitySamples = numericalDerivative(timeSamples, positionSamples)
             val accelerationSamples = numericalDerivative(timeSamples, velocitySamples)
@@ -178,8 +184,6 @@ abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
         }
     }
 
-    private fun initDrive(): Drive = robot.getDrive()
-
     companion object {
         private val MAX_POWER = 0.7
         private val EPSILON = 1e-2
@@ -194,4 +198,5 @@ abstract class FeedforwardTuningOpMode<rt : RobotTemplate>
             return deriv
         }
     }
+
 }
