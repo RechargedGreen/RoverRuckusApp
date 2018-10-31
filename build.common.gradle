@@ -32,6 +32,10 @@ android {
         }
     }
 
+    aaptOptions {
+        noCompress "tflite"
+    }
+
     defaultConfig {
         multiDexEnabled true // added by David of 7236
 
