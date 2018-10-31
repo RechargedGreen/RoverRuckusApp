@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.vision
  * Created by David Lukens on 10/31/2018.
  */
 
-class MasterVision {
+class MasterVision (private val vuforiaKey:String){
     val tfLite = TFLite(this)
     fun enable(){
         tfLite.enable()
