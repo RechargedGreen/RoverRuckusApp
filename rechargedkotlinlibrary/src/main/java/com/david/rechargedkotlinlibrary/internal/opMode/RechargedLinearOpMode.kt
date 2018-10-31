@@ -25,8 +25,13 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
         if (autonomous)
             robot.autoPostInit()
         waitForStart()
-        if (!autonomous)
+        if (autonomous)
+            robot.onPressingAutoPlay()
+        else {
             robot.start()
+            robot.onPressingTeleOpPlay()
+        }
+
         runtime.reset()
         run()
     }
