@@ -7,4 +7,8 @@ class TFLite(master:MasterVision) {
     fun getLastKnownSampleOrder():SampleRandomizedPositions{
         return SampleRandomizedPositions.UNKNOWN
     }
+
+    fun enable(){}
+    fun disable(){}
+    fun stop(){}
 }

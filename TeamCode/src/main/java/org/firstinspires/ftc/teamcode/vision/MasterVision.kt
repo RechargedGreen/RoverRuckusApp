@@ -6,4 +6,13 @@ package org.firstinspires.ftc.teamcode.vision
 
 class MasterVision {
     val tfLite = TFLite(this)
+    fun enable(){
+        tfLite.enable()
+    }
+    fun disable(){
+        tfLite.disable()
+    }
+    fun stop(){
+        tfLite.stop()
+    }
 }
