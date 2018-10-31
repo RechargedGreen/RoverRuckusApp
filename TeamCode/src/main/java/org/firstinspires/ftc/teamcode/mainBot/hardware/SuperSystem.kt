@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import org.firstinspires.ftc.teamcode.data.FIELD_POSITIONS
+import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     val blinken = robot.hMap.get(RevBlinkinLedDriver::class.java, "blinken")
@@ -33,20 +33,26 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
         DEPOT_GOLD
     }
 
-    fun sample(situation: SampleSituation, sampleOrder: SamplingOrderDetector.GoldLocation) {
+    fun sample(situation: SampleSituation) {
+        val order = robot.vision.tfLite.getLastKnownSampleOrder()
         when (situation) {
             SampleSituation.LANDER_SILVER -> {
                 robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
                         .splineTo(FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_GENERAL)
-                        .splineTo(when (sampleOrder) {
-                                      SamplingOrderDetector.GoldLocation.UNKNOWN -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_CENTER
-                                      SamplingOrderDetector.GoldLocation.LEFT    -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_LEFT
-                                      SamplingOrderDetector.GoldLocation.CENTER  -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_CENTER
-                                      SamplingOrderDetector.GoldLocation.RIGHT   -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_RIGHT
-                                  })
-                        .build())
-                robot.intake.collectSample()
-                robot.opMode.sleep(2000)// sleep for testing until sample collection is done
+                        .build()
+                )
+                if (order != SampleRandomizedPositions.UNKNOWN) {
+                    robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
+                            .splineTo(when (order) {
+                                          SampleRandomizedPositions.UNKNOWN -> throw Exception("Entered unexpected case while sampling $situation")
+                                          SampleRandomizedPositions.LEFT    -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_LEFT
+                                          SampleRandomizedPositions.CENTER  -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_CENTER
+                                          SampleRandomizedPositions.RIGHT   -> FIELD_POSITIONS.SILVER_SAMPLE_FROM_LANDER_RIGHT
+                                      })
+                            .build())
+                    robot.intake.collectSample()
+                    robot.opMode.sleep(2000)// sleep for testing until sample collection is done
+                }
                 robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
                         .turnTo(FIELD_POSITIONS.ANGLE_BEFORE_WALL_ALIGN_SPLINE_SILVER_SAMPLE_TO_DEPOT)
                         .splineTo(FIELD_POSITIONS.ALIGN_WALL_FOLLOW_SILVER_SAMPLE_TO_DEPOT)

@@ -12,6 +12,6 @@ class SilverSampleTest : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMo
         robot.drive.imu.setZBias(FIELD_POSITIONS.SILVER_HANG_ANGLE)
         robot.drive.poseEstimate = FIELD_POSITIONS.SILVER_DEPLOY
 
-        robot.superSystem.sample(SuperSystem.SampleSituation.LANDER_SILVER, sampleOrder)
+        robot.superSystem.sample(SuperSystem.SampleSituation.LANDER_SILVER)
     }
 }

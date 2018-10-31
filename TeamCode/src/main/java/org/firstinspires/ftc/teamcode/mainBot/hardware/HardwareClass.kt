@@ -7,6 +7,7 @@ import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
 import com.david.rechargedkotlinlibrary.internal.util.AutoTransitionerKotlin
 import com.qualcomm.hardware.bosch.BNO055IMU
 import org.firstinspires.ftc.teamcode.mainBot.teleOp.Competition
+import org.firstinspires.ftc.teamcode.vision.MasterVision
 
 class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub", "rightHub")) {
     val drive = DriveTerrain(this)
@@ -14,6 +15,7 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     val dumper = Dumper(this)
     val intake = Intake(this)
     val lift = Lift(this)
+    val vision = MasterVision()
 
     override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
 
