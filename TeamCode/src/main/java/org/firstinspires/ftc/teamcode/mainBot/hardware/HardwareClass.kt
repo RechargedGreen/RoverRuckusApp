@@ -17,7 +17,11 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     val lift = Lift(this)
     val vision = MasterVision()
 
-    override fun autoPostInit() = AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
+    override fun autoPostInit() {
+        AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
+        vision.enable()
+    }
+    override fun onPressingAutoPlay() = vision.stop()
 
     override fun getDrive():TunableDrive = drive
 }
