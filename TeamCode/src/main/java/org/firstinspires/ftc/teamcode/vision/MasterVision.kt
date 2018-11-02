@@ -30,4 +30,8 @@ class MasterVision (parameters:VuforiaLocalizer.Parameters, val hMap: HardwareMa
             Thread.currentThread().interrupt()
         }
     }
+
+    init {
+        start()
+    }
 }
