@@ -34,7 +34,7 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     }
 
     fun sample(situation: SampleSituation) {
-        val order = robot.vision.tfLite.getLastKnownSampleOrder()
+        val order = robot.vision.tfLite.lastKnownSampleOrder
         when (situation) {
             SampleSituation.LANDER_SILVER -> {
                 robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
