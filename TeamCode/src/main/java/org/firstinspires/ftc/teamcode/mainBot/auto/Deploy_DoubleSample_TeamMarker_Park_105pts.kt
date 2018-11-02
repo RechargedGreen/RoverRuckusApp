@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mainBot.auto
 
 import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.data.FIELD_POSITIONS
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
