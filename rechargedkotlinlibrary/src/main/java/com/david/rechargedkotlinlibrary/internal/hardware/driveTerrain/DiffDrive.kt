@@ -84,7 +84,7 @@ abstract class DiffDrive(
                 setMotorPowers(powers.l, powers.r)
             }
             ControlLoopStates.DRIVING_AT_ANGLE  -> {
-                val err = MathUtil.norm(followAngleData.angle - imu.getZ(), AngleUnit.DEGREES)
+                val err = MathUtil.norm(imu.getZ() - followAngleData.angle, AngleUnit.DEGREES)
                 lastAngleFollowerError = err
                 val turn = followAngleData.controller.update(err)
                 val left = followAngleData.power + turn
