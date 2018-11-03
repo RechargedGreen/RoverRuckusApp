@@ -16,7 +16,7 @@ abstract class TrackWidthCalibrationOpMode<rt : RobotTemplate>
  * @param totalRevolutions number of revolutions
  * @param power angular power
  */
-@JvmOverloads constructor(createRobot: (RechargedLinearOpMode<rt>) -> rt, private val totalRevolutions: Int = 4, private val power: Double = 0.5) : FluidAuto<rt>(createRobot) {
+@JvmOverloads constructor(createRobot: (RechargedLinearOpMode<rt>) -> rt, private val totalRevolutions: Int = 1, private val power: Double = 0.3) : FluidAuto<rt>(createRobot) {
 
     @Throws(InterruptedException::class)
     override fun run() {
