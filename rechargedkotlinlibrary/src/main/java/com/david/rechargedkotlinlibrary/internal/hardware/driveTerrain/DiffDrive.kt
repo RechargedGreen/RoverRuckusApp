@@ -65,7 +65,7 @@ abstract class DiffDrive(
 
     private val HARD_MAX_VEL: Double = 1.0 / kV
     val MOTOR_TYPE = leftMotors[0].motorType
-    val ENCODER_SCALER = 1.0 / WHEEL_GEAR_RATIO
+    val ENCODER_SCALER = WHEEL_GEAR_RATIO
     val hardConstraints = TankConstraints(DriveConstraints(1.0 / kV, MAX_VEL, MAX_ACCEL, MAX_TURN_ACCEL), trackWidth)
     val follower = TankPIDVAFollower(this, displacementCoeffs = DISPLACEMENT_PID, crossTrackCoeffs = CROSSTRACK_PID, kV = kV, kStatic = kStatic, kA = kA)
     private var controlState = ControlLoopStates.OPEN_LOOP
