@@ -15,6 +15,7 @@ class MasterVision(private val parameters: VuforiaLocalizer.Parameters, val hMap
     fun init() {
         if (vuforiaLocalizer == null)
             vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters)
+        tfLite.init()
     }
 
     fun enable() {
