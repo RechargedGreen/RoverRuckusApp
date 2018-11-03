@@ -13,10 +13,7 @@ class CachedDcMotorEx(private val delegate:DcMotorEx, private val HUB:RevHub) : 
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
     // todo investigate this
-    val encoder = Encoder(HUB, delegate.portNumber, TICKS_PER_REV.toInt(), when(delegate.direction){
-        DcMotorSimple.Direction.REVERSE -> DcMotorSimple.Direction.FORWARD
-        DcMotorSimple.Direction.FORWARD -> DcMotorSimple.Direction.REVERSE
-    })
+    val encoder = Encoder(HUB, delegate.portNumber, TICKS_PER_REV.toInt(), delegate.direction)
 
     override fun getCurrentPosition() = encoder.getTicks()
 
