@@ -42,10 +42,10 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
 
     fun checkAngleCache() {
         if (!useAngleCache) {
-            val angle = getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES)
-            xCache = angle.firstAngle.toDouble()
-            yCache = angle.secondAngle.toDouble()
-            zCache = angle.thirdAngle.toDouble()
+            val angle = getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES)
+            xCache = angle.secondAngle.toDouble()
+            yCache = angle.thirdAngle.toDouble()
+            zCache = angle.firstAngle.toDouble()
         }
     }
 

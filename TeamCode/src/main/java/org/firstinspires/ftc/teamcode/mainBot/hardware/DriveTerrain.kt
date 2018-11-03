@@ -33,7 +33,7 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         MAX_ACCEL = 0.0,
         MAX_TURN_ACCEL = 0.0,
         MAX_VEL = 0.0,
-        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.GYRONLY))
+        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU))
 ) {
     enum class AngleFollowSpeeds(val controller:PIDController, val speed:Double) {
         FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0, 0.0, 0.0)), 1.0),
