@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.mainBot.tuner
 
 import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
+@TeleOp(group = OpModeGroups.TELE_MISC)
 class PIDCorrectionTest : PracticeTeleOp<HardwareClass>( {opMode -> HardwareClass(opMode) } ){
     override fun onLoop() {
         if(c1.y)
