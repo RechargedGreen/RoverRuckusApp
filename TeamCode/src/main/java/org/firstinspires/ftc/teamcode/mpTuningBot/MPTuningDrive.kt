@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mpTuningBot
 import com.acmerobotics.roadrunner.drive.TankDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -16,6 +17,16 @@ class MPTuningDrive (hMap: HardwareMap) : TankDrive(1.0) {
     init {
         rf.direction = DcMotorSimple.Direction.REVERSE
         rb.direction = DcMotorSimple.Direction.REVERSE
+
+        lf.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        lb.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        rf.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        rb.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+
+        lf.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        lb.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        rf.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        rb.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
     val imu = HardwareMaker.BNO055IMU.make(hMap, "imu", true, BNO055IMU.SensorMode.IMU)
