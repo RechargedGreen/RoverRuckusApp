@@ -33,7 +33,7 @@ public class NewTrackWidthCalibrationOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MPTuningDrive drive = new MPTuningDrive(hardwareMap);
+        MPTuningDrive drive = new MPTuningDrive(this);
         // it's important that the IMU/gyro/heading sensor is not part of the localization
         drive.setLocalizer(new TankDrive.TankLocalizer(drive));
 

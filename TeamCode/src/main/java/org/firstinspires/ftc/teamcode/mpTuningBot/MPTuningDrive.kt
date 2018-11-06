@@ -3,16 +3,17 @@ package org.firstinspires.ftc.teamcode.mpTuningBot
 import com.acmerobotics.roadrunner.drive.TankDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 
-class MPTuningDrive (hMap: HardwareMap) : TankDrive(1.0) {
-    private val lf = hMap.get(DcMotorEx::class.java, "lf")
-    private val lb = hMap.get(DcMotorEx::class.java, "lb")
-    private val rf = hMap.get(DcMotorEx::class.java, "rf")
-    private val rb = hMap.get(DcMotorEx::class.java, "rb")
+class MPTuningDrive (private val opMode: LinearOpMode) : TankDrive(1.0) {
+    private val lf = opMode.hardwareMap.get(DcMotorEx::class.java, "lf")
+    private val lb = opMode.hardwareMap.get(DcMotorEx::class.java, "lb")
+    private val rf = opMode.hardwareMap.get(DcMotorEx::class.java, "rf")
+    private val rb = opMode.hardwareMap.get(DcMotorEx::class.java, "rb")
 
     init {
         rf.direction = DcMotorSimple.Direction.REVERSE
@@ -29,13 +30,15 @@ class MPTuningDrive (hMap: HardwareMap) : TankDrive(1.0) {
         rb.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
-    val imu = HardwareMaker.BNO055IMU.make(hMap, "imu", true, BNO055IMU.SensorMode.IMU)
+    val imu = HardwareMaker.BNO055IMU.make(opMode.hardwareMap, "imu", true, BNO055IMU.SensorMode.IMU)
 
     override fun getWheelPositions() = listOf(
             DriveConstants.encoderTicksToInches(lf.currentPosition),
             DriveConstants.encoderTicksToInches(rf.currentPosition))
 
     override fun setMotorPowers(left: Double, right: Double) {
+        opMode.telemetry.addData("left", left)
+        opMode.telemetry.addData("right", right)
         lf.power = left
         lb.power = left
         rf.power = right

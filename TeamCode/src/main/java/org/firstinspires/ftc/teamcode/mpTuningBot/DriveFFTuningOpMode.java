@@ -32,7 +32,7 @@ public class DriveFFTuningOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MPTuningDrive drive = new MPTuningDrive(hardwareMap);
+        MPTuningDrive drive = new MPTuningDrive(this);
 
         NanoClock clock = NanoClock.system();
 
