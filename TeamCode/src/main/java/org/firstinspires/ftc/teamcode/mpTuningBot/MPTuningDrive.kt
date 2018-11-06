@@ -42,7 +42,6 @@ class MPTuningDrive (hMap: HardwareMap) : TankDrive(1.0) {
         rb.power = right
     }
 
-    fun getExternalHeading() = imu.angularOrientation.firstAngle.toDouble()
 
-    override fun getHeading() = getExternalHeading()
+    override fun getExternalHeading() = imu.angularOrientation.firstAngle.toDouble()
 }

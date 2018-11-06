@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.mpTuningBot.DriveConstants
 
 private val autoRunMode = DcMotor.RunMode.RUN_USING_ENCODER
-private val teleRunMode = DcMotor.RunMode.RUN_USING_ENCODER
+private val teleRunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
 
 class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         robot = robot,
