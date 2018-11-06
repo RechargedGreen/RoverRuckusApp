@@ -78,7 +78,7 @@ public class NewTrackWidthCalibrationOpMode extends LinearOpMode {
                 lastHeading = heading;
 
                 MotionState state = profile.get(elapsedTime);
-                /*drive.setVelocity(new Pose2d(0, 0,
+                drive.setVelocity(new Pose2d(0, 0,
                         Kinematics.calculateMotorFeedforward(
                                 state.getV(),
                                 state.getA(),
@@ -86,7 +86,7 @@ public class NewTrackWidthCalibrationOpMode extends LinearOpMode {
                                 DriveConstants.kA,
                                 DriveConstants.kStatic
                         )
-                ));*///todo fix this ^^
+                ));
 
                 drive.updatePoseEstimate();
             }
