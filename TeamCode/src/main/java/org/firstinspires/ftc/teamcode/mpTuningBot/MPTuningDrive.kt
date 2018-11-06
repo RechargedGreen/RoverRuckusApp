@@ -39,6 +39,7 @@ class MPTuningDrive (private val opMode: LinearOpMode) : TankDrive(1.0) {
     override fun setMotorPowers(left: Double, right: Double) {
         opMode.telemetry.addData("left", left)
         opMode.telemetry.addData("right", right)
+        opMode.telemetry.update()
         lf.power = left
         lb.power = left
         rf.power = right
