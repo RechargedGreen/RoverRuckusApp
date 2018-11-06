@@ -43,7 +43,8 @@ abstract class DiffDrive(
         TRACK_WIDTH: Double = 1.0,
         val imu: SimplifiedBNO055,
         val DISPLACEMENT_PID: PIDCoefficients,
-        val CROSSTRACK_PID: PIDCoefficients
+        val CROSSTRACK_PID: PIDCoefficients,
+        val encoderTicksToInches:(Int)->Double
 ) : TankDrive(TRACK_WIDTH), MTSubsystem, TunableDrive {
     init {
         leftMotors.forEach {
@@ -173,12 +174,10 @@ abstract class DiffDrive(
 
     override fun getWheelPositions(): List<Double> {
         val positions = LinkedList<Double>()
-        positions.add(radiansToInches(leftRawRadians()))
-        positions.add(radiansToInches(rightRawRadians()))
+        positions.add(encoderTicksToInches(leftRawTicks()))
+        positions.add(encoderTicksToInches(rightRawTicks()))
         return positions
     }
-
-    fun radiansToInches(radians: Double) = radians * RADIUS * ENCODER_SCALER
 
     override fun start() {
     }
