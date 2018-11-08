@@ -27,8 +27,8 @@ import java.util.List;
 public class DriveFFTuningOpMode extends LinearOpMode {
     private static final double EPSILON = 1e-2;
 
-    public static final double MAX_POWER = 0.7;
-    public static final double DISTANCE = 100;
+    public static final double MAX_POWER = 1.0;// was 0.7. trying 1.0 for mythbusting
+    public static final double DISTANCE = 70;
 
     @Override
     public void runOpMode() throws InterruptedException {
