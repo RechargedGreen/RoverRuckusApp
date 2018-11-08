@@ -32,9 +32,6 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
         DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
         kV = DriveConstants.kV,
-        MAX_ACCEL = DriveConstants.BASE_CONSTRAINTS.maximumAcceleration,
-        MAX_TURN_ACCEL = DriveConstants.BASE_CONSTRAINTS.maximumAngularAcceleration,
-        MAX_VEL = DriveConstants.BASE_CONSTRAINTS.maximumVelocity,
         imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU)),
         encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) },
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
