@@ -36,7 +36,8 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
         MAX_TURN_ACCEL = DriveConstants.BASE_CONSTRAINTS.maximumAngularAcceleration,
         MAX_VEL = DriveConstants.BASE_CONSTRAINTS.maximumVelocity,
         imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU)),
-        encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) }
+        encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) },
+        baseConstraints = DriveConstants.BASE_CONSTRAINTS
 ) {
     enum class AngleFollowSpeeds(val controller: PIDController, val speed: Double) {
         FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0, 0.0, 0.0)), 1.0),

@@ -30,7 +30,7 @@ public class DriveConstants {
     public static double GEAR_RATIO = 42.0 / 40.0; // output/input
     public static double TRACK_WIDTH = 1; // in
 
-    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(0.0, 0.0, Math.PI / 2, Math.PI / 2);
+    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(35.0, 30.0, Math.PI / 2, Math.PI / 2);
 
     public static double kV = 0.019;
     public static double kA = 0.0;
