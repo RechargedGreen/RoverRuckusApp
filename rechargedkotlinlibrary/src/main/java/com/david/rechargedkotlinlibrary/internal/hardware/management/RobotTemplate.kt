@@ -33,6 +33,4 @@ abstract class RobotTemplate(val opMode: RechargedLinearOpMode<out RobotTemplate
         sameThreadSubsystems.forEach({ it.start() })
         onStart()
     }
-
-    abstract fun getDrive(): TunableDrive
 }

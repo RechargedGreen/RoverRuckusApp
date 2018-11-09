@@ -32,18 +32,16 @@ abstract class DiffDrive(
         private val rightMotors: Array<CachedDcMotorEx>,
         mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
         zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
-        val WHEEL_GEAR_RATIO: Double = 1.0,
-        val RADIUS: Double = 2.0,
-        kA: Double = 0.0,
+        kA: Double,
         kV: Double,
-        kStatic: Double = 0.0,
-        TRACK_WIDTH: Double = 1.0,
+        kStatic: Double,
+        TRACK_WIDTH: Double,
         val imu: SimplifiedBNO055,
         val DISPLACEMENT_PID: PIDCoefficients,
         val CROSSTRACK_PID: PIDCoefficients,
-        val encoderTicksToInches:(Int)->Double,
-        baseConstraints:DriveConstraints
-) : TankDrive(TRACK_WIDTH), MTSubsystem, TunableDrive {
+        val encoderTicksToInches: (Int) -> Double,
+        baseConstraints: DriveConstraints
+) : TankDrive(TRACK_WIDTH), MTSubsystem {
     init {
         leftMotors.forEach {
             it.mode = mode
@@ -62,16 +60,11 @@ abstract class DiffDrive(
         DRIVING_AT_ANGLE
     }
 
-    private val HARD_MAX_VEL: Double = 1.0 / kV
-    val MOTOR_TYPE = leftMotors[0].motorType
-    val ENCODER_SCALER = WHEEL_GEAR_RATIO
     val mainConstraints = TankConstraints(baseConstraints, trackWidth)
     val follower = TankPIDVAFollower(this, displacementCoeffs = DISPLACEMENT_PID, crossTrackCoeffs = CROSSTRACK_PID, kV = kV, kStatic = kStatic, kA = kA)
     private var controlState = ControlLoopStates.OPEN_LOOP
 
-    override fun getExternalHeading() = imu.getZ(AngleUnit.RADIANS)
-
-    override fun getDrive(): Drive = this
+    override fun getExternalHeading() = imu.getZ(AngleUnit.RADIANS) // radians for road runner
 
     override fun update() {
         imu.clearCaches()
@@ -79,11 +72,11 @@ abstract class DiffDrive(
         updatePoseEstimate()
         when (controlState) {
             ControlLoopStates.FOLLOW_TRAJECTORY -> follower.update(poseEstimate)
-            ControlLoopStates.OPEN_LOOP         -> {
+            ControlLoopStates.OPEN_LOOP -> {
                 val powers = openLoopWheelPowers.copy()
                 setMotorPowers(powers.l, powers.r)
             }
-            ControlLoopStates.DRIVING_AT_ANGLE  -> {
+            ControlLoopStates.DRIVING_AT_ANGLE -> {
                 val err = MathUtil.norm(imu.getZ() - followAngleData.angle, AngleUnit.DEGREES)
                 lastAngleFollowerError = err
                 val turn = followAngleData.controller.update(err)
@@ -95,15 +88,6 @@ abstract class DiffDrive(
         }
     }
 
-    override fun setVel(vel: Pose2d) {
-        val powers = TankKinematics.robotToWheelAccelerations(vel, trackWidth)
-        openLoopPowerWheels(powers[0], powers[1])
-    }
-    override fun getMaxWheelMotorRPM() = MOTOR_TYPE.maxRPM
-    override fun getWheelRadius() = RADIUS
-    override fun getWheelGearRatio() = WHEEL_GEAR_RATIO
-    override fun getGyro() = imu
-
     override fun setMotorPowers(left: Double, right: Double) {
         leftMotors.forEach { it.power = left }
         rightMotors.forEach { it.power = right }
@@ -112,71 +96,40 @@ abstract class DiffDrive(
     fun leftRawTicks(): Int {
         var sum = 0
         leftMotors.forEach { sum += it.encoder.getRawTicks() }
-        return sum / 2
+        return sum / leftMotors.size
     }
 
     fun rightRawTicks(): Int {
         var sum = 0
         rightMotors.forEach { sum += it.encoder.getRawTicks() }
-        return sum / 2
+        return sum / rightMotors.size
     }
 
-    fun leftRawRadians(): Double {
-        var sum = 0.0
-        leftMotors.forEach { sum += it.encoder.getRawRadians() }
-        return sum / 2
-    }
-
-    fun rightRawRadians(): Double {
-        var sum = 0.0
-        leftMotors.forEach { sum += it.encoder.getRawRadians() }
-        return sum / 2
-    }
+    fun leftRawInches() = encoderTicksToInches(leftRawTicks())
+    fun rightRawInches() = encoderTicksToInches(rightRawTicks())
 
     fun leftTicks(): Int {
         var sum = 0
         leftMotors.forEach { sum += it.encoder.getTicks() }
-        return sum / 2
+        return sum / leftMotors.size
     }
 
     fun rightTicks(): Int {
         var sum = 0
         rightMotors.forEach { sum += it.encoder.getTicks() }
-        return sum / 2
+        return sum / rightMotors.size
     }
 
-    fun leftRadians(): Double {
-        var sum = 0.0
-        leftMotors.forEach { sum += it.encoder.getRadians() }
-        return sum / 2
-    }
+    fun resetRightEncoders() = rightMotors.forEach { it.encoder.reset() }
 
-    fun rightRadians(): Double {
-        var sum = 0.0
-        leftMotors.forEach { sum += it.encoder.getRadians() }
-        return sum / 2
-    }
-
-
-    fun resetRightEncoders() {
-        rightMotors.forEach { it.encoder.reset() }
-    }
-
-    fun resetLeftEncoders() {
-        leftMotors.forEach { it.encoder.reset() }
-    }
+    fun resetLeftEncoders() = leftMotors.forEach { it.encoder.reset() }
 
     fun resetEncoders() {
         resetLeftEncoders()
         resetRightEncoders()
     }
 
-    override fun getWheelPositions(): List<Double> {
-        val positions = LinkedList<Double>()
-        positions.add(encoderTicksToInches(leftRawTicks()))
-        positions.add(encoderTicksToInches(rightRawTicks()))
-        return positions
-    }
+    override fun getWheelPositions(): List<Double> = listOf(leftRawInches(), rightRawInches())
 
     override fun start() {
     }
@@ -211,12 +164,16 @@ abstract class DiffDrive(
         controlState = ControlLoopStates.OPEN_LOOP
         openLoopWheelPowers = SidePowers(l = l, r = r)
     }
+
     var openLoopWheelPowers = SidePowers(l = 0.0, r = 0.0)
+
     data class SidePowers(val l: Double, val r: Double)
 
     var lastAngleFollowerError = 0.0
     private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0)
+
     data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double)
+
     fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double) {
         followAngleData = FollowAngleData(controller = controller, power = power, angle = angle)
         controlState = ControlLoopStates.DRIVING_AT_ANGLE

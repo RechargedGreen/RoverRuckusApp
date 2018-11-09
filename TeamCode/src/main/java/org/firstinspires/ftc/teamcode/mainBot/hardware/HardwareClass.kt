@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
-import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.TunableDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
 import com.david.rechargedkotlinlibrary.internal.util.AutoTransitionerKotlin
@@ -23,6 +22,4 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     }
 
     override fun onPressingAutoPlay() = vision.shutdown()
-
-    override fun getDrive(): TunableDrive = drive
 }

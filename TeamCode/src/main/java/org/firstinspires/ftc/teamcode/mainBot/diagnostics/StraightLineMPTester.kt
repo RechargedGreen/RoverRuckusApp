@@ -11,7 +11,7 @@ class StraightLineMPTester : FluidAuto<HardwareClass>({ opMode -> HardwareClass(
         robot.drive.waitOnTrajectory(trajectory = robot.drive.trajectoryBuilder()
                 .forward(48.0)
                 .waitFor(5.0)
-                .back(48.0)
+                //.back(48.0)
                 .build()
         )
     }

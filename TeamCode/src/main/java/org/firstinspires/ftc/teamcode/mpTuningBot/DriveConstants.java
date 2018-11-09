@@ -26,13 +26,14 @@ public class DriveConstants {
             MotorConfigurationType.getMotorType(RevRobotics20HdHexMotor.class);
     private static final double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
 
-    public static double WHEEL_RADIUS = 2; // in
+    public static double WHEEL_RADIUS = 2.0; // in
     public static double GEAR_RATIO = 42.0 / 40.0; // output/input
-    public static double TRACK_WIDTH = 1; // in
+    public static double TRACK_WIDTH = 1.0; // in
 
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(35.0, 30.0, Math.PI / 2, Math.PI / 2);
 
-    public static double kV = 0.019;
+    // 0.019 was a value found
+    public static double kV = 0.0;
     public static double kA = 0.0;
     public static double kStatic = 0.0;
 
