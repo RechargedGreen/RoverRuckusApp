@@ -165,9 +165,21 @@ abstract class DiffDrive(
         openLoopWheelPowers = SidePowers(l = l, r = r)
     }
 
-    var openLoopWheelPowers = SidePowers(l = 0.0, r = 0.0)
+    private var openLoopWheelPowers = SidePowers(l = 0.0, r = 0.0)
 
-    data class SidePowers(val l: Double, val r: Double)
+    private data class SidePowers(val l: Double, val r: Double)
+
+    fun openLoopSetVelocity(vel:Pose2d) {
+        val powers = TankKinematics.robotToWheelVelocities(vel, trackWidth)
+        openLoopPowerWheels(l = powers[0], r = powers[1])
+    }
+
+    fun openLoopArcade(x:Double = 0.0, heading:Double = 0.0){
+        val l = x - heading
+        val r = x + heading
+        val max = Collections.max(listOf(l.absoluteValue, r.absoluteValue, 1.0))
+        openLoopPowerWheels(l = l / max, r = r / max)
+    }
 
     var lastAngleFollowerError = 0.0
     private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0)
