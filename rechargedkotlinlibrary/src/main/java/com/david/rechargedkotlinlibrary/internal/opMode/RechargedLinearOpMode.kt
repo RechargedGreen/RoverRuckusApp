@@ -55,5 +55,7 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
             action()
     }
 
+    fun sleepSeconds(seconds:Double) = sleep((seconds * 1000).toLong())
+
     fun waitTill(condition: () -> Boolean) = loopTill(condition)
 }
