@@ -9,11 +9,8 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 class DeployAndPark : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }){
     override fun run() {
         robot.lift.deploy()
-
-        robot.drive.resetEncoders()
-        robot.drive.startFollowingAngle_setConstants(angle = 0.0)
-        waitWhile { robot.drive.leftTicks() + robot.drive.rightTicks() < 5000 }
-
+        robot.drive.openLoopArcade(x = 0.25)
+        sleepSeconds(seconds = 5.0)
         robot.drive.stop()
     }
 }
