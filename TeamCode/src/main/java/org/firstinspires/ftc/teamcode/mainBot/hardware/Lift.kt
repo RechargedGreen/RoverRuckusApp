@@ -59,12 +59,12 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     }
 
     override fun update() {
-        setInternalLatchState(if (state == State.LATCH_ENGAGED && isFullyDown()) InternalLatchState.LATCHED else InternalLatchState.FREE)
+        setInternalLatchState(if (state == State.LATCH_ENGAGED) InternalLatchState.LATCHED else InternalLatchState.FREE)
         when (controlState) {
             ControlState.AUTO -> when (state) {
                 State.UP -> setInternalState(if (isFullyUp()) InternalState.STOP else InternalState.GO_UP)
                 State.DOWN -> setInternalState(if (isFullyDown() || !robot.dumper.clearingLift()) InternalState.STOP else InternalState.GO_DOWN)
-                State.LATCH_ENGAGED -> setInternalState(InternalState.GO_DOWN)
+                State.LATCH_ENGAGED -> setInternalState(InternalState.STOP)
             }
             ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop, false)
             ControlState.MANUAL_SAFE -> internalSetMotorPowers(openLoop, true)
@@ -77,7 +77,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     private enum class InternalLatchState(val pos: Double) {
         LATCHED(1.0),
-        FREE(0.0)
+        FREE(0.70)
     }
 
     private enum class InternalState(val power: Double) {
