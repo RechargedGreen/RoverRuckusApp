@@ -22,8 +22,7 @@ public class DriveConstants {
      * navigate to https://192.168.49.1:8080/dash). Make sure to save the values here after you
      * adjust them in the dashboard; **config variable changes don't persist between app restarts**.
      */
-    public static final MotorConfigurationType MOTOR_CONFIG =
-            MotorConfigurationType.getMotorType(RevRobotics20HdHexMotor.class);
+    public static final MotorConfigurationType MOTOR_CONFIG = MotorConfigurationType.getMotorType(RevRobotics20HdHexMotor.class);
     private static final double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
 
     public static double WHEEL_RADIUS = 2.0; // in
