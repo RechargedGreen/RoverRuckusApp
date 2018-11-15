@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_TUNERS)
 @Config
-class AngleFollowTuner:FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+class AngleFollowTuner : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
 
     companion object {
         @JvmField
@@ -60,10 +60,9 @@ class AngleFollowTuner:FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode
                 following = true
             }
 
-            packet.put("error", if (following) robot.drive.lastAngleFollowerError else 0.0)
-            packet.addLine("Following: $following")
-        }
+            packet.put("error", robot.drive.lastAngleFollowerError)
 
-        dash.sendTelemetryPacket(packet)
+            dash.sendTelemetryPacket(packet)
+        }
     }
 }
