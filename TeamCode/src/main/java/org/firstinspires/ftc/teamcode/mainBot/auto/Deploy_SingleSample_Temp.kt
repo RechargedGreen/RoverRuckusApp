@@ -8,47 +8,66 @@ import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 @Autonomous
 @Config
-class Deploy_SingleSample_Temp : Deploy() {
+open class Deploy_SingleSample_Temp : Deploy() {
     companion object {
         @JvmField
-        var startDistance = 500.0
+        var startDistance = 500
         @JvmField
-        var sideDistance = 0.0
+        var sideDistance = 0
         @JvmField
         var leftAngle = 45.0
         @JvmField
         var rightAngle = -45.0
+        @JvmField
+        var sampleOffSet = 45.0
+        @JvmField
+        var centerDistance = 0
     }
+
+    var ORDER = SampleRandomizedPositions.UNKNOWN
+
+    var park = false
 
     override fun run() {
         val sampleAngle: Double = when (robot.vision.tfLite.lastKnownSampleOrder) {
-            SampleRandomizedPositions.LEFT -> 45.0
+            SampleRandomizedPositions.LEFT -> sampleOffSet
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
-            SampleRandomizedPositions.RIGHT -> -45.0
+            SampleRandomizedPositions.RIGHT -> -sampleOffSet
         }
         //super.run()
+        ORDER = robot.vision.tfLite.lastKnownSampleOrder
 
-        robot.drive.resetEncoders()
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, 0.0)
-        waitWhile { robot.drive.leftTicks() + robot.drive.rightTicks() < startDistance }
-        robot.drive.stop()
+        // line up
+        robot.drive.deadReckonPID(startDistance, 0.0, DriveTerrain.AngleFollowSpeeds.SLOW)
 
-        sleepSeconds(2.0)
+        sleepSeconds(1.0)
 
         robot.drive.pidTurn(sampleAngle)
 
-        /*sleepSeconds(2.0)
+        sleepSeconds(1.0)
 
-        when(robot.vision.tfLite.lastKnownSampleOrder){
+        // knock off and park
+        when(ORDER){
             SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
-                robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, sampleAngle)
-                waitWhile { robot.drive.leftTicks() + robot.drive.rightTicks() < sideDistance }
+                robot.drive.deadReckonPID(sideDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                sleepSeconds(1.0)
+                if(park) {
+                    robot.drive.pidTurn(-sampleAngle)
+                    sleepSeconds(1.0)
+                    robot.drive.runTime(0.3, 2.0)
+                }else {
+                    robot.drive.deadReckonPID(-sideDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                }
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
-                robot.drive.openLoopArcade(x = 0.3)
-                sleepSeconds(3.0)
+                if(park)
+                    robot.drive.runTime(0.3, 3.0)
+                else{
+                    robot.drive.deadReckonPID(centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                    sleepSeconds(1.0)
+                    robot.drive.deadReckonPID(-centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                }
             }
         }
-        robot.drive.stop()*/
     }
 }

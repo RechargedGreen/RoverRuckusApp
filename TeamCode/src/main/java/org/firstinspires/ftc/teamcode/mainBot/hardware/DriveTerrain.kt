@@ -70,4 +70,10 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             robot.opMode.waitTill { (leftTicks() + rightTicks()) > ticks}
         stop()
     }
+
+    fun runTime(power:Double, seconds:Double){
+        openLoopArcade(power)
+        robot.opMode.sleepSeconds(seconds)
+        stop()
+    }
 }
