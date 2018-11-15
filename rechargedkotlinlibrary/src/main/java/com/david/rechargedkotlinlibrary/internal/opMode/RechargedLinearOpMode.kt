@@ -58,4 +58,13 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
     fun sleepSeconds(seconds:Double) = sleep((seconds * 1000).toLong())
 
     fun waitTill(condition: () -> Boolean) = loopTill(condition)
+
+    override fun waitForStart() {
+        while(!isStarted && !isStopRequested){
+            telemetry.addData("Status", "Waiting in Init")
+            telemetry.update()
+        }
+        telemetry.addData("Status","started")
+        telemetry.update()
+    }
 }
