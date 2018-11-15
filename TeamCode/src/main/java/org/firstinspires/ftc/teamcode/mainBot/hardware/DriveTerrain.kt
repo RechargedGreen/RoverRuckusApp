@@ -39,8 +39,8 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.01, 0.0, 0.0013)), 0.0)
     }
 
-    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double) {
-        startFollowingAngle(angleFollowSpeed.controller, angleFollowSpeed.speed, angle)
+    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false) {
+        startFollowingAngle(angleFollowSpeed.controller, angleFollowSpeed.speed, if(reverse) -angle else angle)
     }
 
     enum class WallFollows() {
@@ -57,6 +57,17 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     fun pidTurn(target:Double, threshold:Double = 2.0){
         startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
+        stop()
+    }
+
+    fun deadReckonPID(ticks:Int, angle:Double, speed:AngleFollowSpeeds = AngleFollowSpeeds.FAST){
+        val reverse = ticks < 0
+        resetEncoders()
+        startFollowingAngle_setConstants(speed, angle, reverse)
+        if(reverse)
+            robot.opMode.waitTill { (leftTicks() + rightTicks()) < ticks}
+        else
+            robot.opMode.waitTill { (leftTicks() + rightTicks()) > ticks}
         stop()
     }
 }
