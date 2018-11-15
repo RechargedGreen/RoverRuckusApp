@@ -21,5 +21,8 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
         vision.enable()
     }
 
-    override fun onPressingAutoPlay() = vision.shutdown()
+    override fun onPressingAutoPlay() {
+        vision.shutdown()
+        lift.state = Lift.State.DOWN
+    }
 }
