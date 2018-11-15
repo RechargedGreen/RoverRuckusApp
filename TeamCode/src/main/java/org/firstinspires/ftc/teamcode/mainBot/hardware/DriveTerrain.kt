@@ -9,9 +9,11 @@ import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.mpTuningBot.DriveConstants
+import kotlin.math.absoluteValue
 
-class DriveTerrain(robot: RobotTemplate) : DiffDrive(
+class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         robot = robot,
         leftMotors = arrayOf(
                 CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "lf"), robot.getHub(0)),
@@ -50,5 +52,11 @@ class DriveTerrain(robot: RobotTemplate) : DiffDrive(
 
     fun followWall(type: WallFollows) {
 
+    }
+
+    fun pidTurn(target:Double, threshold:Double = 2.0){
+        startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target)
+        robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES)).absoluteValue - target < threshold }
+        stop()
     }
 }

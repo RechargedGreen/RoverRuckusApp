@@ -70,6 +70,8 @@ abstract class DiffDrive(
         imu.clearCaches()
         imu.checkAngleCache()
         updatePoseEstimate()
+        if(controlState != ControlLoopStates.DRIVING_AT_ANGLE)
+            lastAngleFollowerError = null
         when (controlState) {
             ControlLoopStates.FOLLOW_TRAJECTORY -> follower.update(poseEstimate)
             ControlLoopStates.OPEN_LOOP -> {
@@ -181,7 +183,7 @@ abstract class DiffDrive(
         openLoopPowerWheels(l = l / max, r = r / max)
     }
 
-    var lastAngleFollowerError = 0.0
+    var lastAngleFollowerError:Double? = null
     private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0)
 
     data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double)

@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.mainBot.auto
 
 import com.acmerobotics.dashboard.config.Config
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
-@TeleOp
+@Autonomous
 @Config
 class Deploy_SingleSample_Temp : Deploy() {
     companion object {
         @JvmField
-        var startDistance = 0.0
+        var startDistance = 500.0
         @JvmField
         var sideDistance = 0.0
         @JvmField
@@ -25,7 +26,7 @@ class Deploy_SingleSample_Temp : Deploy() {
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
             SampleRandomizedPositions.RIGHT -> -45.0
         }
-        super.run()
+        //super.run()
 
         robot.drive.resetEncoders()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, 0.0)
@@ -34,11 +35,9 @@ class Deploy_SingleSample_Temp : Deploy() {
 
         sleepSeconds(2.0)
 
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.TURN, sampleAngle)
-        waitTill { robot.drive.lastAngleFollowerError < 2.0 }
-        robot.drive.stop()
+        robot.drive.pidTurn(sampleAngle)
 
-        sleepSeconds(2.0)
+        /*sleepSeconds(2.0)
 
         when(robot.vision.tfLite.lastKnownSampleOrder){
             SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
@@ -50,6 +49,6 @@ class Deploy_SingleSample_Temp : Deploy() {
                 sleepSeconds(3.0)
             }
         }
-        robot.drive.stop()
+        robot.drive.stop()*/
     }
 }
