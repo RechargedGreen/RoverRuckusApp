@@ -56,7 +56,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
 
     fun pidTurn(target:Double, threshold:Double = 2.0){
         startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target)
-        robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES)).absoluteValue - target < threshold }
+        robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
         stop()
     }
 }
