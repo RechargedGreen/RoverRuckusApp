@@ -22,6 +22,8 @@ open class Deploy_SingleSample_Temp : Deploy() {
         var sampleOffSet = 45.0
         @JvmField
         var centerDistance = 0
+        @JvmField
+        var parkPower = 0.15
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -54,19 +56,18 @@ open class Deploy_SingleSample_Temp : Deploy() {
                 if(park) {
                     robot.drive.pidTurn(-sampleAngle)
                     sleepSeconds(1.0)
-                    robot.drive.runTime(0.3, 2.0)
+                    robot.drive.runTime(parkPower, 2.0)
                 }else {
                     robot.drive.deadReckonPID(-sideDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
+                robot.drive.deadReckonPID(centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                sleepSeconds(1.0)
                 if(park)
-                    robot.drive.runTime(0.3, 3.0)
-                else{
-                    robot.drive.deadReckonPID(centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                    sleepSeconds(1.0)
+                    robot.drive.runTime(parkPower, 2.0)
+                else
                     robot.drive.deadReckonPID(-centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                }
             }
         }
     }

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 class DeployAndPark : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }){
     override fun run() {
         robot.lift.deploy()
-        robot.drive.openLoopArcade(x = 0.25)
+        robot.drive.openLoopArcade(x = 0.15)
         sleepSeconds(seconds = 5.0)
         robot.drive.stop()
     }
