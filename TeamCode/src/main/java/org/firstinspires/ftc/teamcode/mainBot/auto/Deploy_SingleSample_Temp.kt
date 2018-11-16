@@ -11,17 +11,15 @@ import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 open class Deploy_SingleSample_Temp : Deploy() {
     companion object {
         @JvmField
-        var startDistance = 500
+        var startDistance = 300
         @JvmField
-        var sideDistance = 0
+        var sideDistance = 2000
         @JvmField
-        var leftAngle = 45.0
+        var sampleOffSet = 40.0
         @JvmField
-        var rightAngle = -45.0
+        var centerDistance = 1400
         @JvmField
-        var sampleOffSet = 45.0
-        @JvmField
-        var centerDistance = 0
+        var parkPower = 0.15
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -34,7 +32,7 @@ open class Deploy_SingleSample_Temp : Deploy() {
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
             SampleRandomizedPositions.RIGHT -> -sampleOffSet
         }
-        //super.run()
+        super.run()
         ORDER = robot.vision.tfLite.lastKnownSampleOrder
 
         // line up
@@ -52,21 +50,20 @@ open class Deploy_SingleSample_Temp : Deploy() {
                 robot.drive.deadReckonPID(sideDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
                 sleepSeconds(1.0)
                 if(park) {
-                    robot.drive.pidTurn(-sampleAngle)
+                    robot.drive.pidTurn(0.0)
                     sleepSeconds(1.0)
-                    robot.drive.runTime(0.3, 2.0)
+                    robot.drive.runTime(parkPower, 2.0)
                 }else {
                     robot.drive.deadReckonPID(-sideDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
+                robot.drive.deadReckonPID(centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                sleepSeconds(1.0)
                 if(park)
-                    robot.drive.runTime(0.3, 3.0)
-                else{
-                    robot.drive.deadReckonPID(centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                    sleepSeconds(1.0)
+                    robot.drive.runTime(parkPower, 2.0)
+                else
                     robot.drive.deadReckonPID(-centerDistance, sampleAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                }
             }
         }
     }
