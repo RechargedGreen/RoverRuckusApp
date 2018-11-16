@@ -40,7 +40,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     }
 
     fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false) {
-        startFollowingAngle(angleFollowSpeed.controller, angleFollowSpeed.speed, if(reverse) -angle else angle)
+        startFollowingAngle(angleFollowSpeed.controller, if(reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle)
     }
 
     enum class WallFollows() {

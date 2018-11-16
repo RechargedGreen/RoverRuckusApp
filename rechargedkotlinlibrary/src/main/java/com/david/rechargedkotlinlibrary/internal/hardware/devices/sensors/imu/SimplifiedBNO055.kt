@@ -36,6 +36,8 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
         return if(angleUnit == AngleUnit.DEGREES) yBias else Math.toDegrees(yBias)
     }
 
+    fun resetZ() = setZBias(-getRawZ(AngleUnit.DEGREES), AngleUnit.DEGREES)
+
     fun clearCaches() {
         useAngleCache = false
     }
