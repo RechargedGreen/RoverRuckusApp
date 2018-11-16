@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedBlinkenLED
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import org.firstinspires.ftc.teamcode.data.FIELD_POSITIONS
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 class SuperSystem(val robot: HardwareClass) : MTSubsystem {
-    val blinken = robot.hMap.get(RevBlinkinLedDriver::class.java, "blinken")
+    val blinken = robot.hMap.get(CachedBlinkenLED::class.java, "blinken")
     val normalPattern = RevBlinkinLedDriver.BlinkinPattern.GREEN
     val hangTimePattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED
 
