@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.data.FIELD_POSITIONS
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 class SuperSystem(val robot: HardwareClass) : MTSubsystem {
-    val blinken = robot.hMap.get(CachedBlinkenLED::class.java, "blinken")
+    val blinken = robot.hMap.get(RevBlinkinLedDriver::class.java, "blinken") //as CachedBlinkenLED
     val normalPattern = RevBlinkinLedDriver.BlinkinPattern.GREEN
     val hangTimePattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED
 
