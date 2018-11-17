@@ -24,7 +24,9 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
             robot.start()
         if (autonomous)
             robot.autoPostInit()
-        waitForStart()
+        while(!isStarted && !isStopRequested)
+            tillStart()
+        telemetry.addData("status", "started")
         if (autonomous)
             robot.onPressingAutoPlay()
         else {
@@ -59,12 +61,10 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
 
     fun waitTill(condition: () -> Boolean) = loopTill(condition)
 
-    override fun waitForStart() {
-        while(!isStarted && !isStopRequested){
-            telemetry.addData("Status", "Waiting in Init")
-            telemetry.update()
-        }
-        telemetry.addData("Status","started")
+    open fun tillStart() = preventTimeOut()
+
+    private fun preventTimeOut() {
+        telemetry.addData("Status", "Waiting in Init")
         telemetry.update()
     }
 }
