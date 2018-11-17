@@ -36,7 +36,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     enum class AngleFollowSpeeds(val controller: PIDController, val speed: Double) {
         FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.01, 0.0, 0.0013)), 1.0),
         SLOW(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.01, 0.0, 0.0013)), 0.3),
-        TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.01, 0.0, 0.0013)), 0.0)
+        TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.0)
     }
 
     fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false) {
