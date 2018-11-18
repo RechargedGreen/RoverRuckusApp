@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision
 
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.vuforia.CameraDevice
 import org.firstinspires.ftc.robotcore.external.ClassFactory
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer
 
@@ -23,6 +24,7 @@ class MasterVision(private val parameters: VuforiaLocalizer.Parameters, val hMap
         if (vuforiaLocalizer == null)
             vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters)
         tfLite.init()
+        CameraDevice.getInstance().setFlashTorchMode(useFlash)
     }
 
     fun enable() {
