@@ -5,9 +5,6 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @Autonomous(group = OpModeGroups.AUTO)
-class DeployOnly : Deploy() {
-    override fun run(){
-        super.run()
-        robot.drive.deadReckonPID(500, 0.0, DriveTerrain.AngleFollowSpeeds.SLOW)
-    }
+class DeployOnly : RR2Auto(0.0) {
+    override fun postDeploy() = robot.drive.deadReckonPID(100, 0.0, DriveTerrain.AngleFollowSpeeds.SLOW)
 }

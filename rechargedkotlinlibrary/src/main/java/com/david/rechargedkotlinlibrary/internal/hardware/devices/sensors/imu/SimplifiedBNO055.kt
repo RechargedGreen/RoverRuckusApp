@@ -35,8 +35,8 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     fun getYBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
         return if(angleUnit == AngleUnit.DEGREES) yBias else Math.toDegrees(yBias)
     }
-
-    fun resetZ() = setZBias(-getRawZ(AngleUnit.DEGREES), AngleUnit.DEGREES)
+    fun resetZ() = setZ(0.0, AngleUnit.DEGREES)
+    fun setZ(z:Double, angleUnit: AngleUnit) = setZBias(z - getRawZ(angleUnit), angleUnit)
 
     fun clearCaches() {
         useAngleCache = false
