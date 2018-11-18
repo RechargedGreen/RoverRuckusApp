@@ -19,7 +19,7 @@ public class VisionJavaExample extends LinearOpMode{
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;// recommended camera direction
         parameters.vuforiaLicenseKey = "Insert your license key here";
 
-        vision = new MasterVision(parameters, hardwareMap);
+        vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
         vision.init();// enables the camera overlay. this will take a couple of seconds
         vision.enable();// enables the tracking algorithms. this might also take a little time
 

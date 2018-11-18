@@ -30,7 +30,7 @@ class TFLite(private val master: MasterVision) {
         if (tfod != null) {
             val updatedRecognitions = tfod?.updatedRecognitions
             if (updatedRecognitions != null) {
-                if (updatedRecognitions.size == 3) {
+                if (updatedRecognitions.size == 3 || updatedRecognitions.size == 2) {
                     var goldMineralX: Int? = null
                     var silverMineral1X: Int? = null
                     var silverMineral2X: Int? = null
@@ -43,14 +43,37 @@ class TFLite(private val master: MasterVision) {
                         else
                             silverMineral2X = recognition.left.toInt()
                     }
-                    if (goldMineralX != null && silverMineral1X != null && silverMineral2X != null)
-                        lastKnownSampleOrder =
-                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X)
-                                    SampleRandomizedPositions.LEFT
-                                else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
-                                    SampleRandomizedPositions.RIGHT
-                                else
-                                    SampleRandomizedPositions.CENTER
+                    when (master.tfLiteAlgorithm) {
+                        MasterVision.TFLiteAlgorithm.INFER_NONE  -> if (goldMineralX != null && silverMineral1X != null && silverMineral2X != null)
+                            if (updatedRecognitions.size == 3)
+                                lastKnownSampleOrder =
+                                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X)
+                                            SampleRandomizedPositions.LEFT
+                                        else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
+                                            SampleRandomizedPositions.RIGHT
+                                        else
+                                            SampleRandomizedPositions.CENTER
+                        MasterVision.TFLiteAlgorithm.INFER_LEFT  -> {
+                            if (goldMineralX == null)
+                                lastKnownSampleOrder = SampleRandomizedPositions.LEFT
+                            else if (silverMineral1X != null)
+                                lastKnownSampleOrder =
+                                        if (goldMineralX < silverMineral1X)
+                                            SampleRandomizedPositions.CENTER
+                                        else
+                                            SampleRandomizedPositions.RIGHT
+                        }
+                        MasterVision.TFLiteAlgorithm.INFER_RIGHT -> {
+                            if (goldMineralX == null)
+                                lastKnownSampleOrder = SampleRandomizedPositions.RIGHT
+                            else if (silverMineral1X != null)
+                                lastKnownSampleOrder =
+                                        if (goldMineralX < silverMineral1X)
+                                            SampleRandomizedPositions.LEFT
+                                        else
+                                            SampleRandomizedPositions.CENTER
+                        }
+                    }
                 }
             }
         }

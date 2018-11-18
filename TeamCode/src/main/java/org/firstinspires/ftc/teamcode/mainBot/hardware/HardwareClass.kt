@@ -13,7 +13,7 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     val dumper = Dumper(this)
     val intake = Intake(this)
     val lift = Lift(this)
-    val vision: MasterVision = MasterVision(VisionConstants.vuforiaLocalizerParameters, hMap)
+    val vision: MasterVision = MasterVision(VisionConstants.vuforiaLocalizerParameters, hMap, opMode.isAutonomous(), MasterVision.TFLiteAlgorithm.INFER_LEFT)
 
     override fun autoPostInit() {
         AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
