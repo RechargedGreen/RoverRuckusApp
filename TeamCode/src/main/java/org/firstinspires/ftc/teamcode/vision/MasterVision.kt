@@ -24,16 +24,17 @@ class MasterVision(private val parameters: VuforiaLocalizer.Parameters, val hMap
         if (vuforiaLocalizer == null)
             vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters)
         tfLite.init()
-        CameraDevice.getInstance().setFlashTorchMode(useFlash)
     }
 
     fun enable() {
         init()
         tfLite.enable()
+        CameraDevice.getInstance().setFlashTorchMode(useFlash)
     }
 
     fun disable() {
         tfLite.disable()
+        CameraDevice.getInstance().setFlashTorchMode(false)
     }
 
     fun shutdown() {
