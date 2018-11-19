@@ -15,7 +15,9 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     fun setState(state: State) {
         when (state) {
             State.RESET -> {
-                robot.intake.state = Intake.State.STOPPED
+                robot.intake.intakeState = Intake.IntakeState.STOP
+                robot.intake.extensionState = Intake.IntakeExtensionState.IN
+                robot.intake.sortState = Intake.SortState.BLIND
                 robot.dumper.dumpState = Dumper.DumpState.HOLD
                 robot.lift.state = Lift.State.DOWN
             }
