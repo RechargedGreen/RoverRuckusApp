@@ -40,6 +40,7 @@ abstract class RR2Auto(val startingPosition:StartingPositions) : FluidAuto<Hardw
     override fun run() {
         robot.drive.imu.setZ(startingPosition.angle, AngleUnit.DEGREES)
         robot.lift.deploy()
+        postDeploy()
     }
 
     abstract fun postDeploy()
@@ -76,7 +77,7 @@ abstract class RR2Auto(val startingPosition:StartingPositions) : FluidAuto<Hardw
                     SampleCollectionType.LANDER_DRIVE_BACKUP -> robot.drive.deadReckonPID(-knockDistance, knockAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
                     SampleCollectionType.LANDER_DRIVE_PARK -> {
                         if(ORDER != SampleRandomizedPositions.CENTER && ORDER != SampleRandomizedPositions.UNKNOWN)
-                            robot.drive.pidTurn(0.0)
+                            robot.drive.pidTurn(-135.0)
                         robot.drive.openLoopArcade(parkPower)
                         sleepSeconds(2.0)
                         robot.drive.stop()
