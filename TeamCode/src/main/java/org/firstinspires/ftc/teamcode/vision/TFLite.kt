@@ -54,24 +54,28 @@ class TFLite(private val master: MasterVision) {
                                         else
                                             SampleRandomizedPositions.CENTER
                         MasterVision.TFLiteAlgorithm.INFER_LEFT  -> {
-                            if (goldMineralX == null)
-                                lastKnownSampleOrder = SampleRandomizedPositions.LEFT
-                            else if (silverMineral1X != null)
-                                lastKnownSampleOrder =
-                                        if (goldMineralX < silverMineral1X)
-                                            SampleRandomizedPositions.CENTER
-                                        else
-                                            SampleRandomizedPositions.RIGHT
+                            if(updatedRecognitions.size == 2) {
+                                if (goldMineralX == null)
+                                    lastKnownSampleOrder = SampleRandomizedPositions.LEFT
+                                else if (silverMineral1X != null)
+                                    lastKnownSampleOrder =
+                                            if (goldMineralX < silverMineral1X)
+                                                SampleRandomizedPositions.CENTER
+                                            else
+                                                SampleRandomizedPositions.RIGHT
+                            }
                         }
                         MasterVision.TFLiteAlgorithm.INFER_RIGHT -> {
-                            if (goldMineralX == null)
-                                lastKnownSampleOrder = SampleRandomizedPositions.RIGHT
-                            else if (silverMineral1X != null)
-                                lastKnownSampleOrder =
-                                        if (goldMineralX < silverMineral1X)
-                                            SampleRandomizedPositions.LEFT
-                                        else
-                                            SampleRandomizedPositions.CENTER
+                            if(updatedRecognitions.size == 2) {
+                                if (goldMineralX == null)
+                                    lastKnownSampleOrder = SampleRandomizedPositions.RIGHT
+                                else if (silverMineral1X != null)
+                                    lastKnownSampleOrder =
+                                            if (goldMineralX < silverMineral1X)
+                                                SampleRandomizedPositions.LEFT
+                                            else
+                                                SampleRandomizedPositions.CENTER
+                            }
                         }
                     }
                 }
