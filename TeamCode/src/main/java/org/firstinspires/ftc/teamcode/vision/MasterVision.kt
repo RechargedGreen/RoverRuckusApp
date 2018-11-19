@@ -38,6 +38,7 @@ class MasterVision(private val parameters: VuforiaLocalizer.Parameters, val hMap
     }
 
     fun shutdown() {
+        disable()
         tfLite.shutdown()
     }
 
