@@ -1,51 +1,92 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
+import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
-import org.firstinspires.ftc.teamcode.MineralType
+import com.qualcomm.robotcore.util.Range
 
 class Intake(val robot: HardwareClass) : MTSubsystem {
-    enum class State {
-        STOPPED,
-        BLIND_IN,
-        GOLD_IN,
-        SILVER_IN,
+    enum class IntakeState(internal val power: Double) {
+        IN(1.0),
+        OUT(0.0),
+        STOP(-1.0)
+    }
+
+    enum class SortState {
+        BLIND,
+        BLOCKS
+    }
+
+    enum class ExtensionState {
+        IN,
         OUT
     }
 
-    private enum class InternalState(val power: Double) {
-        IN(1.0),
-        OUT(-1.0),
-        STOP(0.0)
+    enum class ExtensionControlState {
+        AUTO,
+        MANUAL_DANGER,
+        MANUAL_SAFE
     }
 
-    var state = State.STOPPED
+    enum class IntakeExtensionState(internal val power: Double) {
+        IN(-1.0),
+        OUT(1.0)
+    }
 
-    //private val delegate = robot.hMap.dcMotor.get("intake")
+    var intakeState = IntakeState.STOP
+    var extensionControlState = Intake.ExtensionControlState.AUTO
+    var sortState: SortState = SortState.BLIND
+    var extensionState = IntakeExtensionState.IN
+        set(value) {
+            field = value
+            extensionControlState = ExtensionControlState.AUTO
+        }
+
+    private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake")
+    private val extensionMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "extension")
+
+    private var manualExtensionPower = 0.0
+
+    fun manualPowerExtension(power: Double, useFailSafe: Boolean) {
+        manualExtensionPower = power
+        extensionControlState = if (useFailSafe) ExtensionControlState.MANUAL_SAFE else ExtensionControlState.MANUAL_DANGER
+    }
 
     override fun update() {
-        when (state) {
-            State.STOPPED   -> setInternalState(InternalState.STOP)
-            State.BLIND_IN  -> setInternalState(InternalState.IN)
-            State.OUT       -> setInternalState(InternalState.OUT)
-            State.GOLD_IN   -> setInternalState(if (currentlyInIntake() == MineralType.SILVER) InternalState.OUT else InternalState.IN)
-            State.SILVER_IN -> setInternalState(if (currentlyInIntake() == MineralType.GOLD) InternalState.OUT else InternalState.IN)
-        }
+        internalPowerIntake(intakeState.power)
+        internalPowerExtension(when (extensionControlState) {
+            ExtensionControlState.AUTO -> extensionState.power
+            ExtensionControlState.MANUAL_DANGER, ExtensionControlState.MANUAL_SAFE -> manualExtensionPower
+        }, extensionControlState != ExtensionControlState.MANUAL_DANGER)
+        internalSetSort(sortState)
     }
 
-    private fun currentlyInIntake(): MineralType = MineralType.UNKNOWN
-
-    private fun setInternalState(state: InternalState) {
-        //delegate.power = state.power
-    }
 
     override fun start() {
+    }
+
+    private fun internalPowerIntake(power: Double) {
+        intakeMotor.power = power
+    }
+
+    private fun internalSetSort(state:SortState){
+
+    }
+
+    private fun internalPowerExtension(power: Double, useFailSafe: Boolean) {
+        extensionMotor.power = Range.clip(power, if (useFailSafe && extensionIn()) 0.0 else -1.0, if (useFailSafe && extensionOut()) 0.0 else 1.0)
     }
 
     init {
         robot.thread.addSubsystem(this)
     }
 
-    fun collectSample(){
+    private val leftInLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))// todo get port numbers
+    private val leftOutLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
+    private val rightInLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
+    private val rightOutLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
 
-    }
+    private fun extensionIn() = leftInLimit.pressed() && rightInLimit.pressed()
+    private fun extensionOut() = leftOutLimit.pressed() && rightOutLimit.pressed()
 }
