@@ -25,7 +25,8 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     }
 
     override fun update() {
-        if(robot.opMode.isAutonomous()){}
+        if(robot.opMode.isAutonomous())
+            blinken.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK)
         else
             blinken.setPattern(if (120.0 - robot.opMode.runtime.seconds() < 10.0) hangTimePattern else normalPattern)
     }
