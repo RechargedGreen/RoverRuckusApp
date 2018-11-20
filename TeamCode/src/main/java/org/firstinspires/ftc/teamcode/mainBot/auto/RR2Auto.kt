@@ -55,18 +55,19 @@ abstract class RR2Auto(val startingPosition:StartingPositions) : FluidAuto<Hardw
         LANDER_DRIVE_SLOW_PARK,
         LANDER_DRIVE_SLOW_BACKUP,
         LANDER_DRIVE_FAST_PARK,
-        LANDER_DRIVE_FAST_BACKUP
+        LANDER_DRIVE_FAST_BACKUP,
+        LANDER_DRIVE_FAST_TEAM_MARKER,
     }
 
     fun sample(sampleCollectionType: SampleCollectionType){
         if(startingPosition != StartingPositions.SILVER_HANG && (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_SLOW_PARK || sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK))
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         when(sampleCollectionType){
-            SampleCollectionType.LANDER_INTAKE -> {}
-            SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
+            SampleCollectionType.LANDER_INTAKE                                                                                                                  -> {}
+            SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP, SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER -> {
 
             }
-            SampleCollectionType.LANDER_DRIVE_SLOW_PARK, SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP -> {
+            SampleCollectionType.LANDER_DRIVE_SLOW_PARK, SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP                                                          -> {
                 val knockAngle = startingPosition.angle + when(ORDER){
                     SampleRandomizedPositions.UNKNOWN, SampleRandomizedPositions.CENTER -> 0.0
                     SampleRandomizedPositions.LEFT -> landerSlowSampleDriveSideSampleOffSet
