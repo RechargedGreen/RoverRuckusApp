@@ -32,16 +32,12 @@ abstract class DiffDrive(
         private val rightMotors: Array<CachedDcMotorEx>,
         mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
         zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
-        kA: Double,
-        kV: Double,
-        kStatic: Double,
-        TRACK_WIDTH: Double,
         val imu: SimplifiedBNO055,
         val DISPLACEMENT_PID: PIDCoefficients,
         val CROSSTRACK_PID: PIDCoefficients,
         val encoderTicksToInches: (Int) -> Double,
         baseConstraints: DriveConstraints
-) : TankDrive(TRACK_WIDTH), MTSubsystem {
+) : MTSubsystem {
     init {
         leftMotors.forEach {
             it.mode = mode
@@ -55,25 +51,18 @@ abstract class DiffDrive(
     }
 
     enum class ControlLoopStates {
-        FOLLOW_TRAJECTORY,
         OPEN_LOOP,
         DRIVING_AT_ANGLE
     }
 
-    val mainConstraints = TankConstraints(baseConstraints, trackWidth)
-    val follower = TankPIDVAFollower(this, displacementCoeffs = DISPLACEMENT_PID, crossTrackCoeffs = CROSSTRACK_PID, kV = kV, kStatic = kStatic, kA = kA)
     private var controlState = ControlLoopStates.OPEN_LOOP
-
-    override fun getExternalHeading() = imu.getZ(AngleUnit.RADIANS) // radians for road runner
 
     override fun update() {
         imu.clearCaches()
         imu.checkAngleCache()
-        updatePoseEstimate()
         if(controlState != ControlLoopStates.DRIVING_AT_ANGLE)
             lastAngleFollowerError = null
         when (controlState) {
-            ControlLoopStates.FOLLOW_TRAJECTORY -> follower.update(poseEstimate)
             ControlLoopStates.OPEN_LOOP -> {
                 val powers = openLoopWheelPowers.copy()
                 setMotorPowers(powers.l, powers.r)
@@ -90,7 +79,7 @@ abstract class DiffDrive(
         }
     }
 
-    override fun setMotorPowers(left: Double, right: Double) {
+    fun setMotorPowers(left: Double, right: Double) {
         leftMotors.forEach { it.power = left }
         rightMotors.forEach { it.power = right }
     }
@@ -106,9 +95,6 @@ abstract class DiffDrive(
         rightMotors.forEach { sum += it.encoder.getRawTicks() }
         return sum / rightMotors.size
     }
-
-    fun leftRawInches() = encoderTicksToInches(leftRawTicks())
-    fun rightRawInches() = encoderTicksToInches(rightRawTicks())
 
     fun leftTicks(): Int {
         var sum = 0
@@ -131,8 +117,6 @@ abstract class DiffDrive(
         resetRightEncoders()
     }
 
-    override fun getWheelPositions(): List<Double> = listOf(leftRawInches(), rightRawInches())
-
     override fun start() {
     }
 
@@ -143,25 +127,6 @@ abstract class DiffDrive(
         controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }
 
-    fun startFollowingTrajectory(trajectory: Trajectory) {
-        follower.followTrajectory(trajectory)
-        controlState = ControlLoopStates.FOLLOW_TRAJECTORY
-    }
-
-    fun followingTrajectory(): Boolean = follower.isFollowing()
-
-    fun waitOnFollower(condition: () -> Boolean = { true }, action: Runnable? = null) {
-        while (robot.opMode.opModeIsActive() && followingTrajectory() && condition()) action?.run()
-        stop()
-    }
-
-    fun waitOnTrajectory(condition: () -> Boolean = { true }, action: Runnable? = null, trajectory: Trajectory) {
-        startFollowingTrajectory(trajectory)
-        waitOnFollower(condition, action)
-    }
-
-    fun trajectoryBuilder(pos: Pose2d = poseEstimate, constraints: TankConstraints = mainConstraints) = TrajectoryBuilder(pos, constraints)
-
     fun openLoopPowerWheels(l: Double, r: Double) {
         controlState = ControlLoopStates.OPEN_LOOP
         openLoopWheelPowers = SidePowers(l = l, r = r)
@@ -170,11 +135,6 @@ abstract class DiffDrive(
     private var openLoopWheelPowers = SidePowers(l = 0.0, r = 0.0)
 
     private data class SidePowers(val l: Double, val r: Double)
-
-    fun openLoopSetVelocity(vel:Pose2d) {
-        val powers = TankKinematics.robotToWheelVelocities(vel, trackWidth)
-        openLoopPowerWheels(l = powers[0], r = powers[1])
-    }
 
     fun openLoopArcade(x:Double = 0.0, heading:Double = 0.0){
         val l = x - heading
