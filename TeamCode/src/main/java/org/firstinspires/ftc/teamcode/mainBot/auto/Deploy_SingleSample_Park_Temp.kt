@@ -7,5 +7,5 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
  */
 @Autonomous
 class Deploy_SingleSample_Park_Temp : RR2Auto(StartingPositions.SILVER_HANG){
-    override fun postDeploy() = sample(SampleCollectionType.LANDER_DRIVE_PARK)
+    override fun postDeploy() = sample(SampleCollectionType.LANDER_DRIVE_SLOW_PARK)
 }

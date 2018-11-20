@@ -21,10 +21,15 @@ abstract class RR2Auto(val startingPosition:StartingPositions) : FluidAuto<Hardw
     }
 
     companion object {
-        @JvmField var landerSampleDriveStartDistance = 300
-        @JvmField var landerSampleDriveSideSampleDistance = 2000
-        @JvmField var landerSampleDriveSideSampleOffSet = 40.0
-        @JvmField var landerSampleDriveCenterSampleDistance = 1400
+        @JvmField var landerSlowSampleDriveStartDistance = 300
+        @JvmField var landerSlowSampleDriveSideSampleDistance = 2000
+        @JvmField var landerSlowSampleDriveSideSampleOffSet = 40.0
+        @JvmField var landerSlowSampleDriveCenterSampleDistance = 1400
+
+        @JvmField var landerFastSampleDriveStartDistance = 300
+        @JvmField var landerFastSampleDriveSideSampleDistance = 2000
+        @JvmField var landerFastSampleDriveSideSampleOffSet = 40.0
+        @JvmField var landerFastSampleDriveCenterSampleDistance = 1400
 
         @JvmField var parkPower = 0.15
     }
@@ -47,26 +52,31 @@ abstract class RR2Auto(val startingPosition:StartingPositions) : FluidAuto<Hardw
 
     enum class SampleCollectionType{
         LANDER_INTAKE,
-        LANDER_DRIVE_PARK,
-        LANDER_DRIVE_BACKUP
+        LANDER_DRIVE_SLOW_PARK,
+        LANDER_DRIVE_SLOW_BACKUP,
+        LANDER_DRIVE_FAST_PARK,
+        LANDER_DRIVE_FAST_BACKUP
     }
 
     fun sample(sampleCollectionType: SampleCollectionType){
-        if(startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_PARK)
+        if(startingPosition != StartingPositions.SILVER_HANG && (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_SLOW_PARK || sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK))
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         when(sampleCollectionType){
             SampleCollectionType.LANDER_INTAKE -> {}
-            SampleCollectionType.LANDER_DRIVE_PARK, SampleCollectionType.LANDER_DRIVE_BACKUP -> {
+            SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
+
+            }
+            SampleCollectionType.LANDER_DRIVE_SLOW_PARK, SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP -> {
                 val knockAngle = startingPosition.angle + when(ORDER){
                     SampleRandomizedPositions.UNKNOWN, SampleRandomizedPositions.CENTER -> 0.0
-                    SampleRandomizedPositions.LEFT -> landerSampleDriveSideSampleOffSet
-                    SampleRandomizedPositions.RIGHT -> -landerSampleDriveSideSampleOffSet
+                    SampleRandomizedPositions.LEFT -> landerSlowSampleDriveSideSampleOffSet
+                    SampleRandomizedPositions.RIGHT -> -landerSlowSampleDriveSideSampleOffSet
                 }
                 val knockDistance = when(ORDER){
-                    SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> landerSampleDriveSideSampleDistance
-                    SampleRandomizedPositions.UNKNOWN, SampleRandomizedPositions.CENTER -> landerSampleDriveCenterSampleDistance
+                    SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> landerSlowSampleDriveSideSampleDistance
+                    SampleRandomizedPositions.UNKNOWN, SampleRandomizedPositions.CENTER -> landerSlowSampleDriveCenterSampleDistance
                 }
-                robot.drive.deadReckonPID(landerSampleDriveStartDistance, startingPosition.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                robot.drive.deadReckonPID(landerSlowSampleDriveStartDistance, startingPosition.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                 sleepSeconds(0.5)
 
                 robot.drive.pidTurn(knockAngle)
@@ -74,8 +84,8 @@ abstract class RR2Auto(val startingPosition:StartingPositions) : FluidAuto<Hardw
                 robot.drive.deadReckonPID(knockDistance, knockAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
 
                 when(sampleCollectionType) {
-                    SampleCollectionType.LANDER_DRIVE_BACKUP -> robot.drive.deadReckonPID(-knockDistance, knockAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                    SampleCollectionType.LANDER_DRIVE_PARK -> {
+                    SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP -> robot.drive.deadReckonPID(-knockDistance, knockAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                    SampleCollectionType.LANDER_DRIVE_SLOW_PARK -> {
                         if(ORDER != SampleRandomizedPositions.CENTER && ORDER != SampleRandomizedPositions.UNKNOWN)
                             robot.drive.pidTurn(-135.0)
                         robot.drive.openLoopArcade(parkPower)
