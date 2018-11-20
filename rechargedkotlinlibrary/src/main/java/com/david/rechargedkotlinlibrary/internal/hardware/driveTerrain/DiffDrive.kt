@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.TankConstraints
+import com.acmerobotics.roadrunner.util.Angle
 import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
@@ -70,13 +71,22 @@ abstract class DiffDrive(
             ControlLoopStates.DRIVING_AT_ANGLE -> {
                 val err = MathUtil.norm(imu.getZ() - followAngleData.angle, AngleUnit.DEGREES)
                 lastAngleFollowerError = err
-                val turn = followAngleData.controller.update(err)
-                val left = followAngleData.power + turn
-                val right = followAngleData.power - turn
-                val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
-                setMotorPowers(left / max, right / max)
+                val turn = -followAngleData.controller.update(err)
+                when(followAngleData.type){
+                    AnglePIDType.POINT_TURN -> internalArcade(0.0, turn)
+                    AnglePIDType.STRAIGHT -> internalArcade(followAngleData.power, turn)
+                    AnglePIDType.TURN_AROUND_LEFT -> internalArcade(turn, turn)
+                    AnglePIDType.TURN_AROUND_RIGHT -> internalArcade(-turn, turn)
+                }
             }
         }
+    }
+
+    private fun internalArcade(x:Double, heading:Double){
+        val left = x - heading
+        val right = x + heading
+        val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
+        setMotorPowers(left / max, right / max)
     }
 
     fun setMotorPowers(left: Double, right: Double) {
@@ -122,9 +132,14 @@ abstract class DiffDrive(
 
     fun stop() = openLoopPowerWheels(0.0, 0.0)
 
-    fun startDrivingAtAngle(controller: PIDController = PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), power: Double = 1.0, angle: Double) {
-        followAngleData = FollowAngleData(controller = controller, power = power, angle = MathUtil.norm(angle, AngleUnit.DEGREES))
-        controlState = ControlLoopStates.DRIVING_AT_ANGLE
+
+    private var maxTurnPower = 1.0
+
+    enum class AnglePIDType{
+        POINT_TURN,
+        TURN_AROUND_LEFT,
+        TURN_AROUND_RIGHT,
+        STRAIGHT
     }
 
     fun openLoopPowerWheels(l: Double, r: Double) {
@@ -144,12 +159,12 @@ abstract class DiffDrive(
     }
 
     var lastAngleFollowerError:Double? = null
-    private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0)
+    private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0, type = AnglePIDType.STRAIGHT)
 
-    data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double)
+    data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double, val type:AnglePIDType)
 
-    fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double) {
-        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle)
+    fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double, type:AnglePIDType) {
+        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle, type = type)
         controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }
 }

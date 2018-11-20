@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
+import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -56,7 +57,7 @@ class AngleFollowTuner : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMo
                 lastKD = kD
                 lastVel = vel
                 lastTarget = target
-                robot.drive.startFollowingAngle(PIDController(PIDCoefficients(kP, kI, kD)), power = vel, angle = target)
+                robot.drive.startFollowingAngle(PIDController(PIDCoefficients(kP, kI, kD)), power = vel, angle = target, type = DiffDrive.AnglePIDType.POINT_TURN)
                 following = true
             }
 

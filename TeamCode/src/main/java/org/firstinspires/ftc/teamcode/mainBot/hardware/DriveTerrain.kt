@@ -23,12 +23,8 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
                 CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rf", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(0)),
                 CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rb", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(0))
         ),
-        TRACK_WIDTH = DriveConstants.TRACK_WIDTH,
         CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
         DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
-        kV = DriveConstants.kV,
-        kA = DriveConstants.kA,
-        kStatic = DriveConstants.kStatic,
         imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU)),
         encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) },
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
@@ -36,14 +32,16 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     enum class AngleFollowSpeeds(val controller: PIDController, val speed: Double) {
         FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.01, 0.0, 0.0013)), 1.0),
         SLOW(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.01, 0.0, 0.0013)), 0.3),
-        TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.0)
+        // 0.005, 0.0, 0.001 at lm1
+        TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.007, 0.0, 0.001)), 0.0),
+        STRAFE(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.007, 0.0, 0.001)), 0.0)
     }
 
-    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false) {
-        startFollowingAngle(angleFollowSpeed.controller, if(reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle)
+    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false, type:AnglePIDType) {
+        startFollowingAngle(angleFollowSpeed.controller, if(reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle, type)
     }
 
-    enum class WallFollows() {
+    enum class WallFollows {
         OWN_CRATER_TO_DEPOT,
         OPPOSING_CRATER_TO_DEPOT,
         DEPOT_TO_OPPOSING_CRATER,
@@ -55,7 +53,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     }
 
     fun pidTurn(target:Double, threshold:Double = 2.0){
-        startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target)
+        startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target, false, AnglePIDType.POINT_TURN)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
         stop()
     }
@@ -63,11 +61,23 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     fun deadReckonPID(ticks:Int, angle:Double, speed:AngleFollowSpeeds = AngleFollowSpeeds.FAST){
         val reverse = ticks < 0
         resetEncoders()
-        startFollowingAngle_setConstants(speed, angle, reverse)
+        startFollowingAngle_setConstants(speed, angle, reverse, AnglePIDType.STRAIGHT)
         if(reverse)
             robot.opMode.waitTill { (leftTicks() + rightTicks()) < ticks}
         else
             robot.opMode.waitTill { (leftTicks() + rightTicks()) > ticks}
+        stop()
+    }
+
+    fun strafeAroundLeft(target:Double, threshold:Double = 2.0){
+        startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_LEFT)
+        robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
+        stop()
+    }
+
+    fun strafeAroundRight(target:Double, threshold:Double = 2.0){
+        startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_RIGHT)
+        robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
         stop()
     }
 
