@@ -41,24 +41,14 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         startFollowingAngle(angleFollowSpeed.controller, if(reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle, type)
     }
 
-    enum class WallFollows {
-        OWN_CRATER_TO_DEPOT,
-        OPPOSING_CRATER_TO_DEPOT,
-        DEPOT_TO_OPPOSING_CRATER,
-        DEPOT_TO_OWN_CRATER
-    }
-
-    fun followWall(type: WallFollows) {
-
-    }
-
-    fun pidTurn(target:Double, threshold:Double = 2.0){
+    fun pidTurn(target:Double, threshold:Double = 2.0, stop:Boolean = true){
         startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target, false, AnglePIDType.POINT_TURN)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
-        stop()
+        if(stop)
+            stop()
     }
 
-    fun deadReckonPID(ticks:Int, angle:Double, speed:AngleFollowSpeeds = AngleFollowSpeeds.FAST){
+    fun deadReckonPID(ticks:Int, angle:Double, speed:AngleFollowSpeeds = AngleFollowSpeeds.FAST, stop:Boolean = true){
         val reverse = ticks < 0
         resetEncoders()
         startFollowingAngle_setConstants(speed, angle, reverse, AnglePIDType.STRAIGHT)
@@ -66,24 +56,28 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             robot.opMode.waitTill { (leftTicks() + rightTicks()) < ticks}
         else
             robot.opMode.waitTill { (leftTicks() + rightTicks()) > ticks}
-        stop()
+        if(stop)
+            stop()
     }
 
-    fun strafeAroundLeft(target:Double, threshold:Double = 2.0){
+    fun strafeAroundLeft(target:Double, threshold:Double = 2.0, stop:Boolean = true){
         startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_LEFT)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
-        stop()
+        if(stop)
+            stop()
     }
 
-    fun strafeAroundRight(target:Double, threshold:Double = 2.0){
+    fun strafeAroundRight(target:Double, threshold:Double = 2.0, stop:Boolean = true){
         startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_RIGHT)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
-        stop()
+        if(stop)
+            stop()
     }
 
-    fun runTime(power:Double, seconds:Double){
+    fun runTime(power:Double, seconds:Double, stop:Boolean = true){
         openLoopArcade(power)
         robot.opMode.sleepSeconds(seconds)
-        stop()
+        if(stop)
+            stop()
     }
 }
