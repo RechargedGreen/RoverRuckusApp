@@ -5,6 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.util.BooleanToggle
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.hardware.Dumper
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
+import org.firstinspires.ftc.teamcode.mainBot.hardware.Intake
 import org.firstinspires.ftc.teamcode.mainBot.hardware.Lift
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
@@ -38,6 +39,9 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
             robot.lift.setOpenLoopPower(if(lift.absoluteValue > deadBand) lift else 0.0, useFailSafes = liftFailSafesToggle.toggled())
         else
             robot.lift.state = if(c1.rb) Lift.State.UP else Lift.State.DOWN
+
+        robot.intake.intakeState = if(c1.rb) Intake.IntakeState.IN else if (c1.lb) Intake.IntakeState.OUT else Intake.IntakeState.STOP
+        robot.intake.manualPowerExtension(c1.ry, true)
 
         telemetry.addData("lift power", lift)
         telemetry.addData("using liftFailSafes", liftFailSafesToggle.toggled())
