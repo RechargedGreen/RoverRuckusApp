@@ -38,7 +38,9 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     private var openLoop = 0.0
 
-    private enum class ControlState {
+    fun getControlState() = controlState
+
+    enum class ControlState {
         MANUAL_SAFE,
         MANUAL_DANGER,
         AUTO

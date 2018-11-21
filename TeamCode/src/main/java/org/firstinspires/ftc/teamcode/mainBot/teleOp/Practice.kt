@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mainBot.teleOp
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
 import com.david.rechargedkotlinlibrary.internal.util.BooleanToggle
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.mainBot.hardware.Dumper
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.hardware.Lift
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
@@ -23,6 +24,8 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
         val l = c1.ly * (1.0 - c1.lt)
         val r = c1.ry * (1.0 - c1.rt)
         robot.drive.openLoopPowerWheels(if(l.absoluteValue > deadBand) l else 0.0, if(r.absoluteValue > deadBand) r else 0.0)
+
+        robot.dumper.state = if(c1.lb) Dumper.DumpState.DUMP else Dumper.DumpState.LOAD
 
         liftFailSafesToggle.update(c2.x)
         val lift = c2.ly

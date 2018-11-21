@@ -18,7 +18,7 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
                 robot.intake.intakeState = Intake.IntakeState.STOP
                 robot.intake.extensionState = Intake.IntakeExtensionState.IN
                 robot.intake.sortState = Intake.SortState.BLIND
-                robot.dumper.dumpState = Dumper.DumpState.HOLD
+                robot.dumper.state = Dumper.DumpState.LOAD
                 robot.lift.state = Lift.State.DOWN
             }
         }
