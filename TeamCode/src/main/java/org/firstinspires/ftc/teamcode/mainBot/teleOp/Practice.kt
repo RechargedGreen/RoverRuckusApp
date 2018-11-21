@@ -41,7 +41,7 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
             robot.lift.state = if(c1.rb) Lift.State.UP else Lift.State.DOWN
 
         robot.intake.intakeState = if(c1.rb) Intake.IntakeState.IN else if (c1.lb) Intake.IntakeState.OUT else Intake.IntakeState.STOP
-        robot.intake.manualPowerExtension(c1.ry, true)
+        robot.intake.manualPowerExtension(c1.ry, false)
 
         telemetry.addData("lift power", lift)
         telemetry.addData("using liftFailSafes", liftFailSafesToggle.toggled())
