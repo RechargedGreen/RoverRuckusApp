@@ -19,13 +19,13 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     override fun update() {
         when(state) {
             DumpState.LOAD -> internalSetFlipPosition(DumpState.LOAD.pos)
-            DumpState.DUMP -> internalSetFlipPosition((if(robot.lift.isFullyUp()) DumpState.DUMP else DumpState.LOAD).pos)
+            DumpState.DUMP -> internalSetFlipPosition((if(robot.lift.isFullyUp() || robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER) DumpState.DUMP else DumpState.LOAD).pos)
         }
     }
 
     private fun internalSetFlipPosition(pos:Double) {
         flip1.position = pos
-        flip2.position = pos
+        flip2.position = 1.0 - pos
     }
 
     fun clearingLift() = true
