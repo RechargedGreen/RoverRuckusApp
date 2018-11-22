@@ -25,7 +25,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         @JvmField
         var landerSlowSampleDriveSideSampleDistance = 2000
         @JvmField
-        var landerSlowSampleDriveSideSampleOffSet = 40.0
+        var landerSlowSampleDriveSideSampleOffSet = 30.0
         @JvmField
         var landerSlowSampleDriveCenterSampleDistance = 1400
 
@@ -36,7 +36,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         @JvmField
         var landerFastSampleDriveSideSampleOffSet = 40.0
         @JvmField
-        var landerFastSampleDriveCenterSampleDistance = 0
+        var landerFastSampleDriveCenterSampleDistance = 2000
         @JvmField
         var landerFastSampleDriveTeamMarkerCenterSampleDistance = 0
 
