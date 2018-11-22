@@ -49,13 +49,15 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     }
 
     fun deadReckonPID(ticks:Int, angle:Double, speed:AngleFollowSpeeds = AngleFollowSpeeds.FAST, stop:Boolean = true){
-        val reverse = ticks < 0
-        resetEncoders()
-        startFollowingAngle_setConstants(speed, angle, reverse, AnglePIDType.STRAIGHT)
-        if(reverse)
-            robot.opMode.waitTill { (leftTicks() + rightTicks()) < ticks}
-        else
-            robot.opMode.waitTill { (leftTicks() + rightTicks()) > ticks}
+        if(ticks != 0) {
+            val reverse = ticks < 0
+            resetEncoders()
+            startFollowingAngle_setConstants(speed, angle, reverse, AnglePIDType.STRAIGHT)
+            if (reverse)
+                robot.opMode.waitTill { (leftTicks() + rightTicks()) < ticks }
+            else
+                robot.opMode.waitTill { (leftTicks() + rightTicks()) > ticks }
+        }
         if(stop)
             stop()
     }
@@ -75,8 +77,10 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     }
 
     fun runTime(power:Double, seconds:Double, stop:Boolean = true){
-        openLoopArcade(power)
-        robot.opMode.sleepSeconds(seconds)
+        if(seconds != 0.0) {
+            openLoopArcade(power)
+            robot.opMode.sleepSeconds(seconds)
+        }
         if(stop)
             stop()
     }
