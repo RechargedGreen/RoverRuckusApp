@@ -39,6 +39,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         var landerFastSampleDriveCenterSampleDistance = 2000
         @JvmField
         var landerFastSampleDriveTeamMarkerCenterSampleDistance = 0
+        @JvmField
+        var landerFastSampleDriveTeamMarkerSideSampleDistance = 1500
+        @JvmField
+        var teamMarkerPostSampleOffset = 45.0
 
         @JvmField
         var parkPower = 0.15
@@ -75,7 +79,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         when (sampleCollectionType) {
             SampleCollectionType.LANDER_INTAKE                                                                                                             -> {
             }
-            SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
+            SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER, SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
                 val angle = startingPosition.angle + when(ORDER){
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
                     SampleRandomizedPositions.LEFT -> landerFastSampleDriveSideSampleOffSet
@@ -93,9 +97,24 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                             robot.drive.strafeAroundLeft(angle, stop = false)
                         else
                             robot.drive.strafeAroundRight(angle, stop = false)
-                        robot.drive.deadReckonPID(landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.deadReckonPID(if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) landerFastSampleDriveTeamMarkerSideSampleDistance else landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                         if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
                             robot.drive.deadReckonPID(-landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                    }
+                }
+
+                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER){
+                    when(ORDER){
+                        SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
+
+                        }
+                        SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
+                            var angle = startingPosition.angle + ((if(ORDER == SampleRandomizedPositions.LEFT) -1.0 else 1.0 ) * teamMarkerPostSampleOffset)
+                            if(ORDER == SampleRandomizedPositions.LEFT)
+                                robot.drive.strafeAroundRight(angle)
+                            else
+                                robot.drive.strafeAroundLeft(angle)
+                        }
                     }
                 }
 
@@ -105,9 +124,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                     sleepSeconds(2.0)
                     robot.drive.stop()
                 }
-            }
-            SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER -> {
-
             }
             SampleCollectionType.LANDER_DRIVE_SLOW_PARK, SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP                                                     -> {
                 val knockAngle = startingPosition.angle + when (ORDER) {
