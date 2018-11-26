@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.util.Range
 class Intake(val robot: HardwareClass) : MTSubsystem {
     enum class IntakeState(internal val power: Double) {
         IN(1.0),
-        OUT(0.0),
-        STOP(-1.0)
+        OUT(-1.0),
+        STOP(0.0)
     }
 
     enum class SortState {
