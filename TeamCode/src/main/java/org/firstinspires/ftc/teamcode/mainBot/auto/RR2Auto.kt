@@ -5,6 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
+import org.firstinspires.ftc.teamcode.mainBot.hardware.Intake
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 /**
@@ -46,6 +47,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
 
         @JvmField
         var parkPower = 0.15
+        @JvmField
+        var intoDepotTicks = 2000
+        var outOfDepotTicks = 2000
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -71,6 +75,35 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         LANDER_DRIVE_FAST_PARK,
         LANDER_DRIVE_FAST_BACKUP,
         LANDER_DRIVE_FAST_TEAM_MARKER,
+    }
+
+    enum class WallFollowSituation(val robotSide: RobotSide, val direction:CompassDirection, driveReverse:Boolean){
+        LEFT_SAMPLE_DEPOT(RobotSide.LEFT, CompassDirection.EAST, false),
+        RIGHT_SAMPLE_DEPOT(RobotSide.RIGHT, CompassDirection.NORTH, false)
+    }
+
+    enum class CompassDirection(val degrees:Double){
+        NORTH(0.0),
+        SOUTH(180.0),
+        EAST(-90.0),
+        WEST(90.0),
+        NORTH_EAST(-45.0),
+        NORTH_WEST(45.0),
+        SOUTH_EAST(-135.0),
+        SOUTH_WEST(135.0),
+    }
+
+    enum class RobotSide{
+        LEFT,
+        RIGHT,
+        FRONT,
+        BACK
+    }
+
+    fun followWall(situation:WallFollowSituation){
+        when(situation){
+            WallFollowSituation.LEFT_SAMPLE_DEPOT, WallFollowSituation.RIGHT_SAMPLE_DEPOT -> robot.drive.deadReckonPID(intoDepotTicks, situation.direction.degrees)
+        }
     }
 
     fun sample(sampleCollectionType: SampleCollectionType) {
@@ -110,12 +143,23 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                         }
                         SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
                             var angle = startingPosition.angle + ((if(ORDER == SampleRandomizedPositions.LEFT) -1.0 else 1.0 ) * teamMarkerPostSampleOffset)
-                            if(ORDER == SampleRandomizedPositions.LEFT)
+                            if(ORDER == SampleRandomizedPositions.LEFT) {
                                 robot.drive.strafeAroundRight(angle)
-                            else
+                                followWall(WallFollowSituation.LEFT_SAMPLE_DEPOT)
+                            }
+                            else {
                                 robot.drive.strafeAroundLeft(angle)
+                                followWall(WallFollowSituation.RIGHT_SAMPLE_DEPOT)
+                            }
                         }
                     }
+                    robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees)
+                    robot.intake.intakeState = Intake.IntakeState.OUT
+                    robot.drive.runTime(0.15, 2.0)
+                    robot.drive.pidTurn(CompassDirection.EAST.degrees)
+                    sleepSeconds(0.5)
+                    robot.drive.pidTurn(CompassDirection.EAST.degrees)
+                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
                 if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
