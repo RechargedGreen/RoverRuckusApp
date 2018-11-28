@@ -158,8 +158,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                     robot.drive.runTime(0.15, 2.0)
                     robot.drive.pidTurn(CompassDirection.EAST.degrees)
                     sleepSeconds(0.5)
-                    robot.drive.pidTurn(CompassDirection.EAST.degrees)
-                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
+                    val offset = -2.0
+                    robot.drive.pidTurn(CompassDirection.EAST.degrees + offset)
+                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees + offset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
                 if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
