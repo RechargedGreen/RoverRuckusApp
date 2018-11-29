@@ -17,5 +17,6 @@ class GoldDeployFastSampleTeamMarkerParkInOpposingCrater : RR2Auto(StartingPosit
         robot.drive.imu.resetY()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.EAST.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { robot.drive.imu.getY().absoluteValue + robot.drive.imu.getX().absoluteValue > 7 }
+        robot.drive.stop()
     }
 }

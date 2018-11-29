@@ -35,11 +35,11 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         @JvmField
         var landerFastSampleDriveSideSampleDistance = 2000
         @JvmField
-        var landerFastSampleDriveSideSampleOffSet = 40.0
+        var landerFastSampleDriveSideSampleOffSet = 35.0
         @JvmField
         var landerFastSampleDriveCenterSampleDistance = 2000
         @JvmField
-        var landerFastSampleDriveTeamMarkerCenterSampleDistance = 0
+        var landerFastSampleDriveTeamMarkerCenterSampleDistance = 3500
         @JvmField
         var landerFastSampleDriveTeamMarkerSideSampleDistance = 1500
         @JvmField
@@ -120,7 +120,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                 }
                 when(ORDER){
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN  -> {
-                        robot.drive.deadReckonPID(landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) {
+                            robot.drive.deadReckonPID(landerFastSampleDriveTeamMarkerCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                            sleepSeconds(0.5)
+                        }
+                        else
+                            robot.drive.deadReckonPID(landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                         if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
                             robot.drive.deadReckonPID(-landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
@@ -154,11 +159,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                         }
                     }
                     robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees)
+                    robot.drive.runTime(0.15, 1.0)
                     robot.intake.intakeState = Intake.IntakeState.OUT
-                    robot.drive.runTime(0.15, 2.0)
-                    robot.drive.pidTurn(CompassDirection.EAST.degrees)
                     sleepSeconds(0.5)
-                    val offset = -2.0
+                    robot.intake.intakeState = Intake.IntakeState.STOP
+                    sleepSeconds(0.5)
+                    val offset = -4.0
                     robot.drive.pidTurn(CompassDirection.EAST.degrees + offset)
                     robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees + offset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }

@@ -18,29 +18,29 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
     private var xBias:Double = 0.0
     private var yBias:Double = 0.0
     fun setZBias(bias:Double, angleUnit: AngleUnit = AngleUnit.DEGREES){
-        zBias = if(angleUnit == AngleUnit.DEGREES) bias else Math.toDegrees(bias)
+        zBias = if(angleUnit == AngleUnit.DEGREES) bias else Math.toRadians(bias)
     }
     fun setXBias(bias:Double, angleUnit: AngleUnit = AngleUnit.DEGREES) {
-        xBias = if (angleUnit == AngleUnit.DEGREES) bias else Math.toDegrees(bias)
+        xBias = if (angleUnit == AngleUnit.DEGREES) bias else Math.toRadians(bias)
     }
     fun setYBias(bias:Double, angleUnit: AngleUnit = AngleUnit.DEGREES){
-        yBias = if(angleUnit == AngleUnit.DEGREES) bias else Math.toDegrees(bias)
+        yBias = if(angleUnit == AngleUnit.DEGREES) bias else Math.toRadians(bias)
     }
     fun getZBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
-        return if(angleUnit == AngleUnit.DEGREES) zBias else Math.toDegrees(zBias)
+        return if(angleUnit == AngleUnit.DEGREES) zBias else Math.toRadians(zBias)
     }
     fun getXBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
-        return if(angleUnit == AngleUnit.DEGREES) xBias else Math.toDegrees(xBias)
+        return if(angleUnit == AngleUnit.DEGREES) xBias else Math.toRadians(xBias)
     }
     fun getYBias(angleUnit: AngleUnit = AngleUnit.DEGREES):Double{
-        return if(angleUnit == AngleUnit.DEGREES) yBias else Math.toDegrees(yBias)
+        return if(angleUnit == AngleUnit.DEGREES) yBias else Math.toRadians(yBias)
     }
     fun resetZ() = setZ(0.0, AngleUnit.DEGREES)
     fun resetX() = setX(0.0, AngleUnit.DEGREES)
     fun resetY() = setY(0.0, AngleUnit.DEGREES)
     fun setZ(z:Double, angleUnit: AngleUnit) = setZBias(z - getRawZ(angleUnit), angleUnit)
-    fun setX(z:Double, angleUnit: AngleUnit) = setXBias(z - getRawZ(angleUnit), angleUnit)
-    fun setY(z:Double, angleUnit: AngleUnit) = setYBias(z - getRawZ(angleUnit), angleUnit)
+    fun setX(z:Double, angleUnit: AngleUnit) = setXBias(z - getRawX(angleUnit), angleUnit)
+    fun setY(z:Double, angleUnit: AngleUnit) = setYBias(z - getRawY(angleUnit), angleUnit)
 
     fun clearCaches() {
         useAngleCache = false
