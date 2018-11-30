@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.mainBot.auto
 
 import com.acmerobotics.dashboard.config.Config
+import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.hardware.Intake
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
+import kotlin.math.absoluteValue
 
 /**
  * Created by David Lukens on 11/18/2018.
@@ -67,6 +69,13 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
     }
 
     abstract fun postDeploy()
+
+    fun prepCraterSense(){
+        robot.drive.imu.resetX()
+        robot.drive.imu.resetY()
+    }
+
+    fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
     enum class SampleCollectionType {
         LANDER_INTAKE,
@@ -171,8 +180,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
 
                 if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
                     robot.drive.pidTurn(-135.0)
-                    robot.drive.openLoopArcade(parkPower)
-                    sleepSeconds(2.0)
+                    prepCraterSense()
+                    robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, -135.0, false, DiffDrive.AnglePIDType.STRAIGHT)
+                    waitTill { hittingCrater() }
                     robot.drive.stop()
                 }
             }

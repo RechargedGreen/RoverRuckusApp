@@ -13,10 +13,9 @@ class GoldDeployFastSampleTeamMarkerParkInOpposingCrater : RR2Auto(StartingPosit
         sample(SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER)
         robot.intake.intakeState = Intake.IntakeState.STOP
         robot.drive.pidTurn(CompassDirection.EAST.degrees)
-        robot.drive.imu.resetX()
-        robot.drive.imu.resetY()
+        prepCraterSense()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.EAST.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
-        waitTill { robot.drive.imu.getY().absoluteValue + robot.drive.imu.getX().absoluteValue > 7 }
+        waitTill { hittingCrater() }
         robot.drive.stop()
     }
 }
