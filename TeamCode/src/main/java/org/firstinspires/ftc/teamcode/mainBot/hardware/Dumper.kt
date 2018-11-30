@@ -14,7 +14,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     }
 
     enum class DumpState (internal val pos:Double) {
-        LOAD(0.0),
+        LOAD(0.1),
         DUMP(1.0)
     }
 

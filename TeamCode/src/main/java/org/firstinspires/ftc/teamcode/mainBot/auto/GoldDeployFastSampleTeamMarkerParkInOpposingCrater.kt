@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.Intake
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
-@Autonomous(group = OpModeGroups.AUTO)
+@Autonomous(group = OpModeGroups.MAIN_AUTO)
 class GoldDeployFastSampleTeamMarkerParkInOpposingCrater : RR2Auto(StartingPositions.GOLD_HANG){
     override fun postDeploy() {
         sample(SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER)

@@ -130,11 +130,11 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                 when(ORDER){
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN  -> {
                         if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) {
-                            robot.drive.deadReckonPID(landerFastSampleDriveTeamMarkerCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                            robot.drive.deadReckonPID(landerFastSampleDriveTeamMarkerCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                             sleepSeconds(0.5)
                         }
                         else
-                            robot.drive.deadReckonPID(landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                            robot.drive.deadReckonPID(landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                         if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
                             robot.drive.deadReckonPID(-landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
@@ -169,10 +169,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                     }
                     robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees)
                     robot.drive.runTime(0.15, 1.0)
-                    robot.intake.intakeState = Intake.IntakeState.OUT
-                    sleepSeconds(0.5)
-                    robot.intake.intakeState = Intake.IntakeState.STOP
-                    sleepSeconds(0.5)
+                    robot.intake.intakeState = Intake.IntakeState.SEND_MARKER
                     val offset = -4.0
                     robot.drive.pidTurn(CompassDirection.EAST.degrees + offset)
                     robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees + offset, DriveTerrain.AngleFollowSpeeds.SLOW)

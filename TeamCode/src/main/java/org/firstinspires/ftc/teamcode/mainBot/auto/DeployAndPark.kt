@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
-@Autonomous(group = OpModeGroups.AUTO)
+@Autonomous(group = OpModeGroups.BACKUP_AUTO)
 class DeployAndPark : RR2Auto(StartingPositions.SILVER_HANG){
     override fun postDeploy() {
         robot.drive.openLoopArcade(x = 0.15)

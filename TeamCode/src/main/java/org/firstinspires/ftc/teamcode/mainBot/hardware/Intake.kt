@@ -4,13 +4,15 @@ import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
+import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
 class Intake(val robot: HardwareClass) : MTSubsystem {
     enum class IntakeState(internal val power: Double) {
         IN(1.0),
         OUT(-1.0),
-        STOP(0.0)
+        STOP(0.0),
+        SEND_MARKER(OUT.power)
     }
 
     enum class SortState {
@@ -34,7 +36,14 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         OUT(1.0)
     }
 
+    val sendingTimer = ElapsedTime()
+
     var intakeState = IntakeState.STOP
+        set(value){
+            if(value == IntakeState.SEND_MARKER)
+                sendingTimer.reset()
+            field = value
+        }
     var extensionControlState = Intake.ExtensionControlState.AUTO
     var sortState: SortState = SortState.BLIND
     var extensionState = IntakeExtensionState.IN
@@ -54,6 +63,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     override fun update() {
+        if(intakeState == IntakeState.SEND_MARKER && sendingTimer.seconds() > 2.0)
+            intakeState = IntakeState.STOP
         internalPowerIntake(intakeState.power)
         internalPowerExtension(when (extensionControlState) {
             ExtensionControlState.AUTO -> extensionState.power

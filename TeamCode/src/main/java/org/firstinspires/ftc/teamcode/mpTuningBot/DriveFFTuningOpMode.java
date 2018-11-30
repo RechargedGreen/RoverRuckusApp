@@ -5,8 +5,10 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.List;
  *      regression.
  */
 @Config
-@Autonomous
+@TeleOp(group = OpModeGroups.TELE_TUNERS)
 public class DriveFFTuningOpMode extends LinearOpMode {
     private static final double EPSILON = 1e-2;
 

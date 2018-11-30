@@ -11,9 +11,11 @@ import com.acmerobotics.roadrunner.util.Angle;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.MovingStatistics;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
+import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.List;
  * averaged over those runs.
  */
 @Config
-@Autonomous
+@TeleOp(group = OpModeGroups.TELE_TUNERS)
 public class NewTrackWidthCalibrationOpMode extends LinearOpMode {
     public static int CIRCUMFERENTIAL_DISTANCE = 500;
     public static int NUM_TRIALS = 5;

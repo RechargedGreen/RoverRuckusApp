@@ -6,8 +6,9 @@ package org.firstinspires.ftc.teamcode.mainBot.misc
 object OpModeGroups {
     const val MAIN_AUTO = ".1"
     const val AUTO = ".2"
-    const val PROTOTYPE_AUTO = ".3"
-    const val MISC_AUTO = ".4"
+    const val BACKUP_AUTO = ".3"
+    const val PROTOTYPE_AUTO = ".4"
+    const val MISC_AUTO = ".5"
 
     const val TELEOP = ".1"
     const val TELE_DIAGNOSTICS = ".2"
