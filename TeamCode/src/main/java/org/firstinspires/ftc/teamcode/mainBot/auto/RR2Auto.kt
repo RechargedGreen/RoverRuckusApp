@@ -37,7 +37,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         @JvmField
         var landerFastSampleDriveSideSampleDistance = 2000
         @JvmField
-        var landerFastSampleDriveSideSampleOffSet = 35.0
+        var landerFastSampleDriveSideSampleOffSet = 33.0
         @JvmField
         var landerFastSampleDriveCenterSampleDistance = 2000
         @JvmField
@@ -50,8 +50,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
         @JvmField
         var parkPower = 0.15
         @JvmField
-        var intoDepotTicks = 2000
-        var outOfDepotTicks = 2000
+        var intoDepotTicks = 1700
+        @JvmField
+        var outOfDepotTicks = 2500
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -111,11 +112,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
 
     fun followWall(situation:WallFollowSituation){
         when(situation){
-            WallFollowSituation.LEFT_SAMPLE_DEPOT, WallFollowSituation.RIGHT_SAMPLE_DEPOT -> robot.drive.deadReckonPID(intoDepotTicks, situation.direction.degrees)
+            WallFollowSituation.LEFT_SAMPLE_DEPOT, WallFollowSituation.RIGHT_SAMPLE_DEPOT -> robot.drive.deadReckonPID(intoDepotTicks, situation.direction.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
         }
     }
 
     fun sample(sampleCollectionType: SampleCollectionType) {
+        robot.intake.intakeState = Intake.IntakeState.OUT
         if (startingPosition != StartingPositions.SILVER_HANG && (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_SLOW_PARK || sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK))
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         when (sampleCollectionType) {
@@ -139,12 +141,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
                             robot.drive.deadReckonPID(-landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
                     SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
-                        robot.drive.deadReckonPID(landerFastSampleDriveSideStartDistance, startingPosition.angle, DriveTerrain.AngleFollowSpeeds.FAST, false)
+                        robot.drive.deadReckonPID(landerFastSampleDriveSideStartDistance, startingPosition.angle, DriveTerrain.AngleFollowSpeeds.SLOW, false)
                         if(ORDER == SampleRandomizedPositions.LEFT)
                             robot.drive.strafeAroundLeft(angle, stop = false)
                         else
                             robot.drive.strafeAroundRight(angle, stop = false)
-                        robot.drive.deadReckonPID(if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) landerFastSampleDriveTeamMarkerSideSampleDistance else landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.deadReckonPID(if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) landerFastSampleDriveTeamMarkerSideSampleDistance else landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                         if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
                             robot.drive.deadReckonPID(-landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }

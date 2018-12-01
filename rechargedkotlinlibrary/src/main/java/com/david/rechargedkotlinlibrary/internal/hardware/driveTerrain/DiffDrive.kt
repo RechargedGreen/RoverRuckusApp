@@ -20,6 +20,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
 import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import java.util.*
 import kotlin.math.absoluteValue
@@ -75,8 +76,8 @@ abstract class DiffDrive(
                 when(followAngleData.type){
                     AnglePIDType.POINT_TURN -> internalArcade(0.0, turn)
                     AnglePIDType.STRAIGHT -> internalArcade(followAngleData.power, turn)
-                    AnglePIDType.TURN_AROUND_LEFT -> internalArcade(turn, turn)
-                    AnglePIDType.TURN_AROUND_RIGHT -> internalArcade(-turn, turn)
+                    AnglePIDType.TURN_AROUND_LEFT -> internalArcade(Range.clip(turn, -0.3, 0.3), Range.clip(turn, -0.3, 0.3))//todo remove clip
+                    AnglePIDType.TURN_AROUND_RIGHT -> internalArcade(Range.clip(-turn, -0.3, 0.3), Range.clip(turn, -0.3, 0.3))
                 }
             }
         }
