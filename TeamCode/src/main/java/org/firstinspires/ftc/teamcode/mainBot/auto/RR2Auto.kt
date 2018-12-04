@@ -15,7 +15,7 @@ import kotlin.math.absoluteValue
  * Created by David Lukens on 11/18/2018.
  */
 @Config
-abstract class RR2Auto(val startingPosition: StartingPositions, val postDeployWait:Double) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+abstract class RR2Auto(val startingPosition: StartingPositions, val postDeployWait:Double = 0.0) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
 
     enum class StartingPositions(val angle: Double) {
         GOLD_HANG(-45.0),
