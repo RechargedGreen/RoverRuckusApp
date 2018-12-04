@@ -112,8 +112,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     enum class SampleCollectionType {
         LANDER_INTAKE,
-        LANDER_DRIVE_SLOW_PARK,
-        LANDER_DRIVE_SLOW_BACKUP,
         LANDER_DRIVE_FAST_PARK,
         LANDER_DRIVE_FAST_BACKUP,
         LANDER_DRIVE_FAST_TEAM_MARKER,
@@ -150,7 +148,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     fun sample(sampleCollectionType: SampleCollectionType) {
         robot.intake.intakeState = Intake.IntakeState.OUT
-        if (startingPosition != StartingPositions.SILVER_HANG && (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_SLOW_PARK || sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK))
+        if (startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         when (sampleCollectionType) {
             SampleCollectionType.LANDER_INTAKE                                                                                                             -> {
@@ -215,34 +213,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, -135.0, false, DiffDrive.AnglePIDType.STRAIGHT)
                     waitTill { hittingCrater() }
                     robot.drive.stop()
-                }
-            }
-            SampleCollectionType.LANDER_DRIVE_SLOW_PARK, SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP                                                     -> {
-                val knockAngle = startingPosition.angle + when (ORDER) {
-                    SampleRandomizedPositions.UNKNOWN, SampleRandomizedPositions.CENTER -> 0.0
-                    SampleRandomizedPositions.LEFT                                      -> landerSlowSampleDriveSideSampleOffSet
-                    SampleRandomizedPositions.RIGHT                                     -> -landerSlowSampleDriveSideSampleOffSet
-                }
-                val knockDistance = when (ORDER) {
-                    SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT     -> landerSlowSampleDriveSideSampleDistance
-                    SampleRandomizedPositions.UNKNOWN, SampleRandomizedPositions.CENTER -> landerSlowSampleDriveCenterSampleDistance
-                }
-                robot.drive.deadReckonPID(landerSlowSampleDriveStartDistance, startingPosition.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                sleepSeconds(0.5)
-
-                robot.drive.pidTurn(knockAngle)
-
-                robot.drive.deadReckonPID(knockDistance, knockAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-
-                when (sampleCollectionType) {
-                    SampleCollectionType.LANDER_DRIVE_SLOW_BACKUP -> robot.drive.deadReckonPID(-knockDistance, knockAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                    SampleCollectionType.LANDER_DRIVE_SLOW_PARK   -> {
-                        if (ORDER != SampleRandomizedPositions.CENTER && ORDER != SampleRandomizedPositions.UNKNOWN)
-                            robot.drive.pidTurn(-135.0)
-                        robot.drive.openLoopArcade(parkPower)
-                        sleepSeconds(2.0)
-                        robot.drive.stop()
-                    }
                 }
             }
         }
