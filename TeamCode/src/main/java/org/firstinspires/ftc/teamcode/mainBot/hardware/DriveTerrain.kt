@@ -38,12 +38,12 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         STRAFE(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.007, 0.0, 0.001)), 0.0)
     }
 
-    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false, type:AnglePIDType) {
-        startFollowingAngle(angleFollowSpeed.controller, if(reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle, type)
+    fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false, type:AnglePIDType, maxTurnPower:Double = 1.0) {
+        startFollowingAngle(angleFollowSpeed.controller, if(reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle, type, maxTurnPower)
     }
 
-    fun pidTurn(target:Double, threshold:Double = 2.0, stop:Boolean = true){
-        startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target, false, AnglePIDType.POINT_TURN)
+    fun pidTurn(target:Double, threshold:Double = 2.0, stop:Boolean = true, maxTurnPower: Double = 1.0) {
+        startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target, false, AnglePIDType.POINT_TURN, maxTurnPower)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
         if(stop)
             stop()
@@ -63,15 +63,15 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             stop()
     }
 
-    fun strafeAroundLeft(target:Double, threshold:Double = 2.0, stop:Boolean = true){
-        startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_LEFT)
+    fun strafeAroundLeft(target:Double, threshold:Double = 2.0, stop:Boolean = true, maxTurnPower: Double = 1.0){
+        startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_LEFT, maxTurnPower)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
         if(stop)
             stop()
     }
 
-    fun strafeAroundRight(target:Double, threshold:Double = 2.0, stop:Boolean = true){
-        startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_RIGHT)
+    fun strafeAroundRight(target:Double, threshold:Double = 2.0, stop:Boolean = true, maxTurnPower: Double = 1.0){
+        startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_RIGHT, maxTurnPower)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
         if(stop)
             stop()

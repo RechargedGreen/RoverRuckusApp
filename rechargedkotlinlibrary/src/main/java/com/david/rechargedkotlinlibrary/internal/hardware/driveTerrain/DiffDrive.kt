@@ -71,13 +71,14 @@ abstract class DiffDrive(
             }
             ControlLoopStates.DRIVING_AT_ANGLE -> {
                 val err = MathUtil.norm(imu.getZ() - followAngleData.angle, AngleUnit.DEGREES)
+                val data = followAngleData
                 lastAngleFollowerError = err
-                val turn = -followAngleData.controller.update(err)
+                val turn = Range.clip(-followAngleData.controller.update(err), -data.maxTurnPower, data.maxTurnPower)
                 when(followAngleData.type){
                     AnglePIDType.POINT_TURN -> internalArcade(0.0, turn)
-                    AnglePIDType.STRAIGHT -> internalArcade(followAngleData.power, turn)
-                    AnglePIDType.TURN_AROUND_LEFT -> internalArcade(Range.clip(turn, -0.3, 0.3), Range.clip(turn, -0.3, 0.3))//todo remove clip
-                    AnglePIDType.TURN_AROUND_RIGHT -> internalArcade(Range.clip(-turn, -0.3, 0.3), Range.clip(turn, -0.3, 0.3))
+                    AnglePIDType.STRAIGHT -> internalArcade(data.power, turn)
+                    AnglePIDType.TURN_AROUND_LEFT -> internalArcade(turn, turn)//todo remove clip
+                    AnglePIDType.TURN_AROUND_RIGHT -> internalArcade(-turn, turn)
                 }
             }
         }
@@ -160,12 +161,12 @@ abstract class DiffDrive(
     }
 
     var lastAngleFollowerError:Double? = null
-    private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0, type = AnglePIDType.STRAIGHT)
+    private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0, AnglePIDType.STRAIGHT, 1.0)
 
-    data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double, val type:AnglePIDType)
+    data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double, val type:AnglePIDType, val maxTurnPower:Double)
 
-    fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double, type:AnglePIDType) {
-        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle, type = type)
+    fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double, type:AnglePIDType, maxTurnPower: Double = 1.0) {
+        followAngleData = FollowAngleData(controller = controller, power = power, angle = angle, type = type, maxTurnPower = maxTurnPower)
         controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }
 }
