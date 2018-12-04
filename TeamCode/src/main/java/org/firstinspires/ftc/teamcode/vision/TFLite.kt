@@ -72,9 +72,9 @@ class TFLite(private val master: MasterVision) {
                                 else if (silverMineral1X != null)
                                     lastKnownSampleOrder =
                                             if (goldMineralX < silverMineral1X)
-                                                SampleRandomizedPositions.LEFT
-                                            else
                                                 SampleRandomizedPositions.CENTER
+                                            else
+                                                SampleRandomizedPositions.LEFT
                             }
                         }
                     }
