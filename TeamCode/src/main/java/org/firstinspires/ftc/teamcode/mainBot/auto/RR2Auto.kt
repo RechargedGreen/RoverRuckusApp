@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mainBot.auto
 import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
+import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
@@ -15,7 +16,7 @@ import kotlin.math.absoluteValue
  * Created by David Lukens on 11/18/2018.
  */
 @Config
-abstract class RR2Auto(val startingPosition: StartingPositions, val postDeployWait:Double = 0.0) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWait:Double = 0.0) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
 
     enum class StartingPositions(val angle: Double) {
         GOLD_HANG(-45.0),
@@ -57,10 +58,38 @@ abstract class RR2Auto(val startingPosition: StartingPositions, val postDeployWa
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
+    var lastButtonState = false
     override fun tillStart() {
         ORDER = robot.vision.tfLite.lastKnownSampleOrder
         telemetry.addLine("must be lined up at starting position $startingPosition")
         telemetry.addData("Order", ORDER)
+
+        telemetry.addData("Wait time", "$postDeployWait seconds")
+        telemetry.addLine("x to increment 1.0 seconds")
+        telemetry.addLine("y to decrement 1.0 seconds")
+        telemetry.addLine("lb to increment 0.1 seconds")
+        telemetry.addLine("rb to decrement 0.1 seconds")
+
+        val x = gamepad1.x
+        val y = gamepad1.y
+        val lb = gamepad1.left_bumper
+        val rb = gamepad1.right_bumper
+        val buttonState = x || y || lb || rb
+        if(buttonState && !lastButtonState){
+            if(x)
+                postDeployWait += 1.0
+            if(y)
+                postDeployWait -= 1.0
+            if(lb)
+                postDeployWait += 0.1
+            if(rb)
+                postDeployWait -= 0.1
+        }
+
+        postDeployWait = Range.clip(postDeployWait, 0.0, 30.0)
+
+        lastButtonState = buttonState
+
         telemetry.update()
     }
 
