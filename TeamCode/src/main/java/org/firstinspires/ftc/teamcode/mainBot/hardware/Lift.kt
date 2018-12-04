@@ -19,7 +19,6 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     fun deploy() {
         state = State.UP
         robot.opMode.waitTill { isFullyUp() }
-        state = State.DOWN
     }
 
     private val downSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(0), 3))// channel 2

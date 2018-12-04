@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.hardware.Intake
+import org.firstinspires.ftc.teamcode.mainBot.hardware.Lift
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 import kotlin.math.absoluteValue
 
@@ -14,7 +15,7 @@ import kotlin.math.absoluteValue
  * Created by David Lukens on 11/18/2018.
  */
 @Config
-abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+abstract class RR2Auto(val startingPosition: StartingPositions, val postDeployWait:Double) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
 
     enum class StartingPositions(val angle: Double) {
         GOLD_HANG(-45.0),
@@ -66,6 +67,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions) : FluidAuto<Hard
     override fun run() {
         robot.drive.imu.setZ(startingPosition.angle, AngleUnit.DEGREES)
         robot.lift.deploy()
+        sleepSeconds(postDeployWait)
+        robot.lift.state = Lift.State.DOWN
         postDeploy()
     }
 
