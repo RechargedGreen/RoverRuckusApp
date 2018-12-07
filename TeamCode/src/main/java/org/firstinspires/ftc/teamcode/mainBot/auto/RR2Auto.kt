@@ -60,6 +60,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var extensionSampleOffset = 0.0
         @JvmField
         var extensionSampleForwardDistance = 0
+
+        @JvmField
+        var silverSampleWallLinupDistance = 0
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -115,6 +118,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
+    fun silverSampleWallLinup(){
+        robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees, maxTurnPower = 0.3)
+        robot.drive.deadReckonPID(silverSampleWallLinupDistance, CompassDirection.NORTH_EAST.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
+        robot.drive.pidTurn(CompassDirection.NORTH.degrees)
+    }
+
     enum class SampleCollectionType {
         LANDER_DRIVE_FAST_PARK,
         LANDER_DRIVE_FAST_BACKUP,
@@ -164,7 +173,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     SampleRandomizedPositions.RIGHT -> -extensionSampleOffset
                 }, maxTurnPower = 0.3)
                 robot.intake.hitSample()
-                robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees, maxTurnPower = 0.3)
             }
             SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER, SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
                 val angle = startingPosition.angle + when(ORDER){
