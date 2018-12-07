@@ -62,6 +62,13 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         extensionControlState = if (useFailSafe) ExtensionControlState.MANUAL_SAFE else ExtensionControlState.MANUAL_DANGER
     }
 
+    fun hitSample(){
+        extensionState = IntakeExtensionState.OUT
+        robot.opMode.waitTill { extensionOut() }
+        extensionState = IntakeExtensionState.IN
+        robot.opMode.waitTill { extensionIn() }
+    }
+
     override fun update() {
         if(intakeState == IntakeState.SEND_MARKER && sendingTimer.seconds() > 2.0)
             intakeState = IntakeState.STOP

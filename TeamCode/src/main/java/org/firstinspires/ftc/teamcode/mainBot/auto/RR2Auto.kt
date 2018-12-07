@@ -55,6 +55,11 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var intoDepotTicks = 1700
         @JvmField
         var outOfDepotTicks = 2500
+
+        @JvmField
+        var extensionSampleOffset = 0.0
+        @JvmField
+        var extensionSampleForwardDistance = 0
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -111,10 +116,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
     enum class SampleCollectionType {
-        LANDER_INTAKE,
         LANDER_DRIVE_FAST_PARK,
         LANDER_DRIVE_FAST_BACKUP,
         LANDER_DRIVE_FAST_TEAM_MARKER,
+        LANDER_EXTENSION_SILVER,
     }
 
     enum class WallFollowSituation(val robotSide: RobotSide, val direction:CompassDirection, driveReverse:Boolean){
@@ -151,7 +156,15 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         if (startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         when (sampleCollectionType) {
-            SampleCollectionType.LANDER_INTAKE                                                                                                             -> {
+            SampleCollectionType.LANDER_EXTENSION_SILVER -> {
+                robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                robot.drive.pidTurn(StartingPositions.SILVER_HANG.angle + when(ORDER){
+                    SampleRandomizedPositions.LEFT -> extensionSampleOffset
+                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
+                    SampleRandomizedPositions.RIGHT -> -extensionSampleOffset
+                }, maxTurnPower = 0.3)
+                robot.intake.hitSample()
+                robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees, maxTurnPower = 0.3)
             }
             SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER, SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
                 val angle = startingPosition.angle + when(ORDER){
