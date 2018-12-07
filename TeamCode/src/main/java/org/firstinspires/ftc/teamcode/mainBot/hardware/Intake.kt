@@ -105,6 +105,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private val rightInLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
     private val rightOutLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
 
-    private fun extensionIn() = leftInLimit.pressed() && rightInLimit.pressed()
-    private fun extensionOut() = leftOutLimit.pressed() && rightOutLimit.pressed()
+    private fun extensionIn() = true//leftInLimit.pressed() && rightInLimit.pressed()
+    private fun extensionOut() = true//leftOutLimit.pressed() && rightOutLimit.pressed()
 }
