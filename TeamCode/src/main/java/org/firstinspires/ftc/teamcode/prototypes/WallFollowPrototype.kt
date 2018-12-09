@@ -69,6 +69,13 @@ class WallFollowPrototype : FluidAuto<HardwareClass>({ opMode -> HardwareClass(o
                 cD = PIDController(PIDCoefficients(cKPD, cKID, cKDD))
             }
 
+            lKPA = cKPA
+            lKIA = cKIA
+            lKDA = cKDA
+            lKPD = cKPD
+            lKID = cKID
+            lKDD = cKDD
+
             followingToggle.update(gamepad1.a)
             if(followingToggle.toggled())
                 robot.drive.openLoopArcade(speed, turn)
