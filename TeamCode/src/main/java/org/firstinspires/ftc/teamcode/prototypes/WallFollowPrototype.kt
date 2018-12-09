@@ -58,23 +58,23 @@ class WallFollowPrototype : FluidAuto<HardwareClass>({ opMode -> HardwareClass(o
             var cKDD = kDD
 
             var a = robot.drive.imu.getZ(AngleUnit.DEGREES)
-            var d = robot.sensors.rightRangeInches
+            var d = robot.sensors.getRightDistanceFromWall(0.0)
             var dError = target - d
             var aError = 0.0
             var aTarget = 0.0
 
+            aTarget = cD.update(dError)
+            aError = aTarget - a
+
             if (cKPA != lKPA || cKIA != lKIA || cKDA != lKDA || cKPD != lKPD || cKID != lKID || cKDD != lKDD){
                 cA = PIDController(PIDCoefficients(cKPA, cKIA, cKDA))
                 cD = PIDController(PIDCoefficients(cKPD, cKID, cKDD))
-                aTarget = cD.update(dError)
-                aError = aTarget - a
-                val turn = -cA.update(aError)
-                robot.drive.openLoopArcade(speed, turn)
             }
 
             followingToggle.update(gamepad1.a)
             if(followingToggle.toggled()){
-                val degree = cD.update(robot.sensors.rightRangeInches)
+                val turn = -cA.update(aError)
+                robot.drive.openLoopArcade(speed, turn)
             }else{
                 robot.drive.stop()
             }
