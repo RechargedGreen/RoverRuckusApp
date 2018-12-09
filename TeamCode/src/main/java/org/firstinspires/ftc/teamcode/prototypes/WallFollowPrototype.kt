@@ -59,12 +59,10 @@ class WallFollowPrototype : FluidAuto<HardwareClass>({ opMode -> HardwareClass(o
 
             var a = robot.drive.imu.getZ(AngleUnit.DEGREES)
             var d = robot.sensors.getRightDistanceFromWall(0.0)
-            var dError = target - d
-            var aError = 0.0
-            var aTarget = 0.0
-
-            aTarget = cD.update(dError)
-            aError = aTarget - a
+            var dError =  d - target
+            var aTarget = cD.update(dError)
+            var aError = aTarget - a
+            val turn = -cA.update(aError)
 
             if (cKPA != lKPA || cKIA != lKIA || cKDA != lKDA || cKPD != lKPD || cKID != lKID || cKDD != lKDD){
                 cA = PIDController(PIDCoefficients(cKPA, cKIA, cKDA))
@@ -72,12 +70,10 @@ class WallFollowPrototype : FluidAuto<HardwareClass>({ opMode -> HardwareClass(o
             }
 
             followingToggle.update(gamepad1.a)
-            if(followingToggle.toggled()){
-                val turn = -cA.update(aError)
+            if(followingToggle.toggled())
                 robot.drive.openLoopArcade(speed, turn)
-            }else{
+            else
                 robot.drive.stop()
-            }
 
             packet.put("dError", dError)
             packet.put("aError", aError)
@@ -85,6 +81,8 @@ class WallFollowPrototype : FluidAuto<HardwareClass>({ opMode -> HardwareClass(o
             packet.put("a", a)
             packet.put("d", d)
             packet.put("aTarget", aTarget)
+            packet.put("turn", turn)
+            packet.put("speed", speed)
 
             dash.sendTelemetryPacket(packet)
         }
