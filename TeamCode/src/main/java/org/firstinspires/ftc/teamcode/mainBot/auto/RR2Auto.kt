@@ -57,12 +57,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var outOfDepotTicks = 2500
 
         @JvmField
-        var extensionSampleOffset = 0.0
+        var extensionSampleOffset = 45.0
         @JvmField
-        var extensionSampleForwardDistance = 0
+        var extensionSampleForwardDistance = 800
 
         @JvmField
-        var silverSampleWallLinupDistance = 0
+        var silverSampleWallLinupDistance = 3000
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -119,9 +119,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
     fun silverSampleWallLinup(){
-        robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees, maxTurnPower = 0.3)
-        robot.drive.deadReckonPID(silverSampleWallLinupDistance, CompassDirection.NORTH_EAST.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
-        robot.drive.pidTurn(CompassDirection.NORTH.degrees)
+        val offset = -15.0
+        robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
+        robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees + offset)
+        robot.drive.deadReckonPID(-1000, CompassDirection.SOUTH.degrees + offset, DriveTerrain.AngleFollowSpeeds.SLOW)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees)
     }
 
     enum class SampleCollectionType {

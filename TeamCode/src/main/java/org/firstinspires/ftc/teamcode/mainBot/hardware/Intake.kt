@@ -63,10 +63,11 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     fun hitSample(){
-        extensionState = IntakeExtensionState.OUT
+        robot.opMode.sleepSeconds(2.0)//todo make actual
+        /*extensionState = IntakeExtensionState.OUT
         robot.opMode.waitTill { extensionOut() }
         extensionState = IntakeExtensionState.IN
-        robot.opMode.waitTill { extensionIn() }
+        robot.opMode.waitTill { extensionIn() }*/
     }
 
     override fun update() {
@@ -105,6 +106,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private val rightInLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
     private val rightOutLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
 
-    private fun extensionIn() = true//leftInLimit.pressed() && rightInLimit.pressed()
-    private fun extensionOut() = true//leftOutLimit.pressed() && rightOutLimit.pressed()
+    private fun extensionIn() = leftInLimit.pressed() && rightInLimit.pressed()
+    private fun extensionOut() = leftOutLimit.pressed() && rightOutLimit.pressed()
 }
