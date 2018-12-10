@@ -5,10 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
-import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
-import org.firstinspires.ftc.teamcode.mainBot.hardware.Intake
-import org.firstinspires.ftc.teamcode.mainBot.hardware.Lift
+import org.firstinspires.ftc.teamcode.mainBot.hardware.*
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 import kotlin.math.absoluteValue
 
@@ -63,6 +60,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
         @JvmField
         var silverSampleWallLinupDistance = 3000
+
+        @JvmField
+        var intoWallOffset = 15.0
     }
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
@@ -111,6 +111,16 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     abstract fun postDeploy()
 
+    fun teamMarker(){
+        robot.lift.state = Lift.State.UP
+        robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
+        robot.dumper.state = Dumper.DumpState.DUMP
+        waitTill { robot.lift.isFullyUp() }
+        sleepSeconds(1.5)
+        robot.dumper.state = Dumper.DumpState.LOAD
+        robot.lift.state = Lift.State.DOWN
+    }
+
     fun prepCraterSense(){
         robot.drive.imu.resetX()
         robot.drive.imu.resetY()
@@ -119,11 +129,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
     fun silverSampleWallLinup(){
-        val offset = -15.0
         robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
         robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
-        robot.drive.pidTurn(CompassDirection.SOUTH.degrees + offset)
-        robot.drive.deadReckonPID(-1000, CompassDirection.SOUTH.degrees + offset, DriveTerrain.AngleFollowSpeeds.SLOW)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees - intoWallOffset)
+        robot.drive.deadReckonPID(-1000, CompassDirection.SOUTH.degrees - intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
         robot.drive.pidTurn(CompassDirection.SOUTH.degrees)
     }
 
@@ -223,12 +232,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                             }
                         }
                     }
-                    robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees)
-                    robot.drive.runTime(0.15, 1.0)
-                    robot.intake.intakeState = Intake.IntakeState.SEND_MARKER
-                    val offset = -4.0
-                    robot.drive.pidTurn(CompassDirection.EAST.degrees + offset)
-                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees + offset, DriveTerrain.AngleFollowSpeeds.SLOW)
+                    teamMarker()
+                    robot.drive.pidTurn(CompassDirection.EAST.degrees - intoWallOffset)
+                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
                 if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
