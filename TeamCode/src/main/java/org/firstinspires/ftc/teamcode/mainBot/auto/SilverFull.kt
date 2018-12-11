@@ -10,8 +10,9 @@ class SilverFull : RR2Auto(StartingPositions.SILVER_HANG){
     override fun postDeploy() {
         sample(SampleCollectionType.LANDER_EXTENSION_SILVER)
         silverSampleWallLinup()
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
-        waitTill { robot.sensors.lineDetector.onLine }
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
+        robot.sensors.lineDetector.reset()
+        waitTill { robot.sensors.lineDetector.hasHit }
         robot.drive.stop()
         teamMarker(true)
         park(CompassDirection.SOUTH.degrees)
