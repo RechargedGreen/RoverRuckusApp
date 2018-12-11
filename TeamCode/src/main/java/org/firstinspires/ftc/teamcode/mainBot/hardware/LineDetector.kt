@@ -11,14 +11,19 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
     var alpha = 0
     var hue = 0
 
+    var onLine = false
+
+    private val threshold = 0
+
     val color:ColorSensor = robot.hMap.get(ColorSensor::class.java, "color")
 
     override fun update() {
-        r = color.red()
-        g = color.green()
-        b = color.blue()
-        alpha = color.alpha()
+        //r = color.red()
+        //g = color.green()
+        //b = color.blue()
+        //alpha = color.alpha()
         hue = color.argb()
+        onLine = hue > threshold
     }
 
     override fun start() {

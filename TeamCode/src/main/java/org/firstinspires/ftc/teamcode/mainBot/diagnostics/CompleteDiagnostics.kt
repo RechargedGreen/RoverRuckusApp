@@ -16,5 +16,6 @@ class CompleteDiagnostics :Practice(){
         telemetry.addData("b", robot.sensors.lineDetector.b)
         telemetry.addData("alpha", robot.sensors.lineDetector.alpha)
         telemetry.addData("hue", robot.sensors.lineDetector.hue)
+        telemetry.addData("On line", robot.sensors.lineDetector.onLine)
     }
 }
