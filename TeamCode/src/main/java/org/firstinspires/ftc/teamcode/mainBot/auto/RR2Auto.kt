@@ -240,14 +240,17 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.WEST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
-                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
-                    robot.drive.pidTurn(-135.0)
-                    prepCraterSense()
-                    robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, -135.0, false, DiffDrive.AnglePIDType.STRAIGHT)
-                    waitTill { hittingCrater() }
-                    robot.drive.stop()
-                }
+                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
+                    park(CompassDirection.SOUTH_EAST.degrees)
             }
         }
+    }
+
+    fun park(angle:Double){
+        robot.drive.pidTurn(angle)
+        prepCraterSense()
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
+        waitTill { hittingCrater() }
+        robot.drive.stop()
     }
 }

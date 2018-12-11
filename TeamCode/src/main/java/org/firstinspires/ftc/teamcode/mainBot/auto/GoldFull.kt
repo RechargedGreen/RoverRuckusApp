@@ -11,11 +11,6 @@ import kotlin.math.absoluteValue
 class GoldFull : RR2Auto(StartingPositions.GOLD_HANG){
     override fun postDeploy() {
         sample(SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER)
-        robot.intake.intakeState = Intake.IntakeState.STOP
-        robot.drive.pidTurn(CompassDirection.WEST.degrees)
-        prepCraterSense()
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.WEST.degrees, false, DiffDrive.AnglePIDType.STRAIGHT)
-        waitTill { hittingCrater() }
-        robot.drive.stop()
+        park(CompassDirection.WEST.degrees)
     }
 }

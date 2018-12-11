@@ -14,5 +14,6 @@ class SilverFull : RR2Auto(StartingPositions.SILVER_HANG){
         waitTill { robot.sensors.lineDetector.onLine }
         robot.drive.stop()
         teamMarker(true)
+        park(CompassDirection.SOUTH.degrees)
     }
 }
