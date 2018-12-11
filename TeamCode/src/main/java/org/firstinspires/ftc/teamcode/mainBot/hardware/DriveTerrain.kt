@@ -30,12 +30,12 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
 ) {
     enum class AngleFollowSpeeds(val controller: PIDController, val speed: Double) {
-        PARK(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.002)), 0.15),
-        FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.002)), 1.0),
-        SLOW(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.002)), 0.3),
+        PARK(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0035, 0.0, 0.0013)), 0.15),
+        FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0035, 0.0, 0.0013)), 1.0),
+        SLOW(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0035, 0.0, 0.0013)), 0.3),
         // 0.005, 0.0, 0.001 at lm1
-        TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.002)), 0.0),
-        STRAFE(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.002)), 0.0)
+        TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0035, 0.0, 0.0013)), 0.0),
+        STRAFE(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.0035, 0.0, 0.0013)), 0.0)
     }
 
     fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse:Boolean = false, type:AnglePIDType, maxTurnPower:Double = 1.0) {
