@@ -119,6 +119,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         sleepSeconds(1.5)
         robot.dumper.state = Dumper.DumpState.LOAD
         robot.lift.state = Lift.State.DOWN
+        robot.drive.runTime(-parkPower, 1.5)
     }
 
     fun prepCraterSense(){
