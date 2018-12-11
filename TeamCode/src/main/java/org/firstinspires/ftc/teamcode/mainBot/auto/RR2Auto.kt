@@ -111,15 +111,17 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     abstract fun postDeploy()
 
-    fun teamMarker(){
+    fun teamMarker(stayStill:Boolean){
         robot.lift.state = Lift.State.UP
-        robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
+        if(!stayStill)
+            robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
         sleepSeconds(1.5)
         robot.dumper.state = Dumper.DumpState.LOAD
         robot.lift.state = Lift.State.DOWN
-        robot.drive.runTime(-parkPower, 1.5)
+        if(!stayStill)
+            robot.drive.runTime(-parkPower, 1.5)
     }
 
     fun prepCraterSense(){
@@ -233,7 +235,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                             }
                         }
                     }
-                    teamMarker()
+                    teamMarker(false)
                     robot.drive.pidTurn(CompassDirection.WEST.degrees - intoWallOffset)
                     robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.WEST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }

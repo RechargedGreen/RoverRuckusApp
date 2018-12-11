@@ -13,6 +13,6 @@ class SilverFull : RR2Auto(StartingPositions.SILVER_HANG){
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { robot.sensors.lineDetector.onLine }
         robot.drive.stop()
-        teamMarker()
+        teamMarker(true)
     }
 }
