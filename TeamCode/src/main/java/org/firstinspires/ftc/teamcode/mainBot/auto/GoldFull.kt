@@ -8,13 +8,13 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
 @Autonomous(group = OpModeGroups.MAIN_AUTO)
-class GoldDeployFastSampleTeamMarkerParkInOpposingCrater : RR2Auto(StartingPositions.GOLD_HANG){
+class GoldFull : RR2Auto(StartingPositions.GOLD_HANG){
     override fun postDeploy() {
         sample(SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER)
         robot.intake.intakeState = Intake.IntakeState.STOP
-        robot.drive.pidTurn(CompassDirection.EAST.degrees)
+        robot.drive.pidTurn(CompassDirection.WEST.degrees)
         prepCraterSense()
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.EAST.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.WEST.degrees, false, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
         robot.drive.stop()
     }

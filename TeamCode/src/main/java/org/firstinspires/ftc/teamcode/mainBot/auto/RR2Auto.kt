@@ -234,8 +234,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                         }
                     }
                     teamMarker()
-                    robot.drive.pidTurn(CompassDirection.EAST.degrees - intoWallOffset)
-                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.EAST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
+                    robot.drive.pidTurn(CompassDirection.WEST.degrees - intoWallOffset)
+                    robot.drive.deadReckonPID(-outOfDepotTicks, CompassDirection.WEST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
                 if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
