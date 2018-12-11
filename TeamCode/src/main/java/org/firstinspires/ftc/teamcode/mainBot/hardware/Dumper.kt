@@ -24,7 +24,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     var state = DumpState.LOAD
         set(value){
             if(value == DumpState.DUMP && value != field)
-                robot.sensors.textToSpeech.speak("Epic gamer moment rmao xd")
+                Static.textToSpeech.speak("Epic gamer moment rmao xd")
             field = value
         }
 

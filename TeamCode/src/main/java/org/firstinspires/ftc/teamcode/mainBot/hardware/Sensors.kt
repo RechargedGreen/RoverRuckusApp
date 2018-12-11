@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor
 import com.qualcomm.robotcore.hardware.DistanceSensor
-import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import kotlin.math.absoluteValue
@@ -11,9 +10,6 @@ import kotlin.math.cos
 
 class Sensors(val robot:HardwareClass) : MTSubsystem{
     val lineDetector = LineDetector(robot)
-
-
-    val textToSpeech = AndroidTextToSpeech()
 
     private val rightRange = robot.hMap.get(DistanceSensor::class.java, "rightRange") as Rev2mDistanceSensor
 
@@ -32,7 +28,5 @@ class Sensors(val robot:HardwareClass) : MTSubsystem{
 
     init {
         robot.thread.addSubsystem(this)
-        textToSpeech.initialize()
-        textToSpeech.setLanguageAndCountry("en", "US")
     }
 }
