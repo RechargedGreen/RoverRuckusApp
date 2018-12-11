@@ -10,6 +10,9 @@ import kotlin.math.absoluteValue
 import kotlin.math.cos
 
 class Sensors(val robot:HardwareClass) : MTSubsystem{
+    val lineDetector = LineDetector(robot)
+
+
     val textToSpeech = AndroidTextToSpeech()
 
     private val rightRange = robot.hMap.get(DistanceSensor::class.java, "rightRange") as Rev2mDistanceSensor
