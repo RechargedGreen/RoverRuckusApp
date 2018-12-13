@@ -18,8 +18,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         DUMP(1.0)
     }
 
-    private val flip1 = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flip1"))
-    private val flip2 = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flip2"))
+    private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
+    private val flipR = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipR"))
 
     var state = DumpState.LOAD
         set(value){
@@ -36,8 +36,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     }
 
     private fun internalSetFlipPosition(pos:Double) {
-        flip1.position = pos
-        flip2.position = 1.0 - pos
+        flipL.position = pos
+        flipR.position = 1.0 - pos
     }
 
     fun clearingLift() = true
