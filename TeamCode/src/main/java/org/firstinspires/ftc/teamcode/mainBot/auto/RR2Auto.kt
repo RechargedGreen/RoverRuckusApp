@@ -117,11 +117,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
-        sleepSeconds(1.5)
+        sleepSeconds(1.0)
         robot.dumper.state = Dumper.DumpState.LOAD
+        sleepSeconds(0.5)
         robot.lift.state = Lift.State.DOWN
-        if(!stayStill)
-            robot.drive.runTime(-parkPower, 1.5)
     }
 
     fun prepCraterSense(){
