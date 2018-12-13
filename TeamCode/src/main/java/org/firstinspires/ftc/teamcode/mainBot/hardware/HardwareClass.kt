@@ -17,7 +17,8 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     val sensors = Sensors(this)
 
     override fun autoPostInit() {
-        AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
+        if(Static.transitionOnAutoEnd)
+            AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
         vision.init()
         vision.enable()
     }

@@ -8,4 +8,5 @@ object Static {
         textToSpeech.initialize()
         textToSpeech.setLanguageAndCountry("en", "US")
     }
+    var transitionOnAutoEnd = true
 }
