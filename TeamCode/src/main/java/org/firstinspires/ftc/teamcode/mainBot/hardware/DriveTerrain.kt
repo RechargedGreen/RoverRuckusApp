@@ -21,12 +21,12 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
                 CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "lb"), robot.getHub(0))
         ),
         rightMotors = arrayOf(
-                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rf", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(0)),
-                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rb", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(0))
+                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rf", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(1)),
+                CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "rb", direction = DcMotorSimple.Direction.REVERSE), robot.getHub(1))
         ),
         CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
         DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
-        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", false, BNO055IMU.SensorMode.IMU), AxesOrder.XZX),
+        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU), AxesOrder.XZX),
         encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) },
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
 ) {

@@ -21,8 +21,8 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         robot.opMode.waitTill { isFullyUp() }
     }
 
-    private val downSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(0), 3))// channel 2
-    private val upSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(0), 1))// channel 1
+    private val downSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 1))// channel 2
+    private val upSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 3))// channel 1
 
     private val motorL = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftL", DcMotorSimple.Direction.REVERSE), robot.getHub(1))
     private val motorR = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftR"), robot.getHub(1))
