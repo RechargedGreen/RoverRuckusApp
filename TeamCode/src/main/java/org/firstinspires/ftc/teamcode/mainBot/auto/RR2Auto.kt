@@ -40,16 +40,16 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField
         var landerFastSampleDriveCenterSampleDistance = 2000
         @JvmField
-        var landerFastSampleDriveTeamMarkerCenterSampleDistance = 3500
+        var landerFastSampleDriveTeamMarkerCenterSampleDistance = 4000
         @JvmField
-        var landerFastSampleDriveTeamMarkerSideSampleDistance = 1500
+        var landerFastSampleDriveTeamMarkerSideSampleDistance = 2000
         @JvmField
         var teamMarkerPostSampleOffset = 45.0
 
         @JvmField
         var parkPower = 0.15
         @JvmField
-        var intoDepotTicks = 1700
+        var intoDepotTicks = 1500
         @JvmField
         var outOfDepotTicks = 2500
 
@@ -119,6 +119,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         waitTill { robot.lift.isFullyUp() }
         sleepSeconds(1.0)
         robot.superSystem.state = SuperSystem.State.LOWER_LIFT_AFTER_MARKER
+        if(!stayStill)
+            robot.drive.runTime(-0.15, 1.0)
     }
 
     fun prepCraterSense(){
