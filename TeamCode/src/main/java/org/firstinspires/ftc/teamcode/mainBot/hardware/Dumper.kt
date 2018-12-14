@@ -8,14 +8,10 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 @Config
 class Dumper(val robot: HardwareClass) : MTSubsystem {
 
-    companion object {
-        @JvmField
-        var holdingPos = 0.3
-    }
-
     enum class DumpState (internal val pos:Double) {
         LOAD(0.15),
-        DUMP(1.0)
+        DUMP(1.0),
+        HOLD(0.5)
     }
 
     private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
@@ -30,8 +26,9 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     override fun update() {
         when(state) {
-            DumpState.LOAD -> internalSetFlipPosition(if(robot.lift.getControlState() == Lift.ControlState.AUTO && robot.lift.state == Lift.State.UP) holdingPos else DumpState.LOAD.pos)
-            DumpState.DUMP -> internalSetFlipPosition(if(robot.lift.isFullyUp() || robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER) DumpState.DUMP.pos else holdingPos)
+            DumpState.LOAD -> internalSetFlipPosition(if(robot.lift.getControlState() != Lift.ControlState.MANUAL_DANGER && (robot.lift.state == Lift.State.UP || !robot.lift.isFullyDown())) DumpState.HOLD.pos else DumpState.LOAD.pos)
+            DumpState.DUMP -> internalSetFlipPosition(if(robot.lift.isFullyUp() || robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER) DumpState.DUMP.pos else DumpState.HOLD.pos)
+            DumpState.HOLD -> internalSetFlipPosition(DumpState.HOLD.pos)
         }
     }
 

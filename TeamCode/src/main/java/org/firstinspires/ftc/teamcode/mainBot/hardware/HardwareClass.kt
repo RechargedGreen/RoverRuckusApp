@@ -21,10 +21,10 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
             AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
         vision.init()
         vision.enable()
+        dumper.state = Dumper.DumpState.HOLD
     }
 
     override fun onPressingAutoPlay() {
         vision.shutdown()
-        lift.state = Lift.State.DOWN
     }
 }
