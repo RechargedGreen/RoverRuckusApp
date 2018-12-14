@@ -10,6 +10,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTempla
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import org.firstinspires.ftc.teamcode.mpTuningBot.DriveConstants
 import kotlin.math.absoluteValue
 
@@ -25,7 +26,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         ),
         CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
         DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
-        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU)),
+        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", false, BNO055IMU.SensorMode.IMU), AxesOrder.XZX),
         encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) },
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
 ) {

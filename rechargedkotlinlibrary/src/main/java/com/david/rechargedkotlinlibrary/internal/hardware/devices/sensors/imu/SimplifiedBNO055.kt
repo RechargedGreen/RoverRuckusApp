@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.*
 /**
  * Created by David Lukens on 10/1/2018.
  */
-class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
+class SimplifiedBNO055(private val delegate: BNO055IMU, private val axesOrder:AxesOrder = AxesOrder.ZYX) : BNO055IMU {
     private var useAngleCache = false
 
     private var zCache = 0.0
@@ -48,7 +48,7 @@ class SimplifiedBNO055(private val delegate: BNO055IMU) : BNO055IMU {
 
     fun checkAngleCache() {
         if (!useAngleCache) {
-            val angle = getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES)
+            val angle = getAngularOrientation(AxesReference.EXTRINSIC, axesOrder, AngleUnit.DEGREES)
             xCache = angle.secondAngle.toDouble()
             yCache = angle.thirdAngle.toDouble()
             zCache = angle.firstAngle.toDouble()
