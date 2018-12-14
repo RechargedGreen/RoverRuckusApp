@@ -118,9 +118,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
         sleepSeconds(1.0)
-        robot.dumper.state = Dumper.DumpState.LOAD
-        sleepSeconds(0.5)
-        robot.lift.state = Lift.State.DOWN
+        robot.superSystem.state = SuperSystem.State.LOWER_LIFT_AFTER_MARKER
     }
 
     fun prepCraterSense(){

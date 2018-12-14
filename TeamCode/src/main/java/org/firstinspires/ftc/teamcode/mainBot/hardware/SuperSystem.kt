@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver
+import com.qualcomm.robotcore.util.ElapsedTime
 
 class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     val blinken = robot.hMap.get(RevBlinkinLedDriver::class.java, "blinken") //as CachedBlinkenLED
@@ -9,22 +10,29 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     val hangTimePattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED
 
     enum class State {
-        RESET
+        UNKNOWN,
+        LOWER_LIFT_AFTER_MARKER
     }
 
-    fun setState(state: State) {
-        when (state) {
-            State.RESET -> {
-                robot.intake.intakeState = Intake.IntakeState.STOP
-                robot.intake.extensionState = Intake.IntakeExtensionState.IN
-                robot.intake.sortState = Intake.SortState.BLIND
-                robot.dumper.state = Dumper.DumpState.LOAD
-                robot.lift.state = Lift.State.DOWN
-            }
+    val timeAfterStateChange = ElapsedTime()
+
+    var state = State.UNKNOWN
+        set(value){
+            timeAfterStateChange.reset()
+            field = value
         }
-    }
 
     override fun update() {
+        when(state){
+            State.LOWER_LIFT_AFTER_MARKER -> {
+                robot.dumper.state = Dumper.DumpState.LOAD
+                if(timeAfterStateChange.seconds() > 2.0){
+                    robot.lift.state = Lift.State.DOWN
+                    state = State.UNKNOWN
+                }
+            }
+            State.UNKNOWN ->{}
+        }
         if(robot.opMode.isAutonomous())
             blinken.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK)
         else
