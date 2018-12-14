@@ -11,7 +11,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     enum class DumpState (internal val pos:Double) {
         LOAD(0.15),
         DUMP(1.0),
-        HOLD(0.5)
+        HOLD(0.4)
     }
 
     private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
