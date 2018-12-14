@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.*
 /**
  * Created by David Lukens on 10/1/2018.
  */
-class SimplifiedBNO055(private val delegate: BNO055IMU, private val axesOrder:AxesOrder = AxesOrder.ZYX) : BNO055IMU {
+class SimplifiedBNO055(private val delegate: BNO055IMU, private val axesOrder:AxesOrder = AxesOrder.ZXY) : BNO055IMU {
     private var useAngleCache = false
 
     private var zCache = 0.0
