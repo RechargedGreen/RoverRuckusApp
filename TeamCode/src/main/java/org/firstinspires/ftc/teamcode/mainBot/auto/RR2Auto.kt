@@ -34,7 +34,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField
         var landerFastSampleDriveSideStartDistance = 0
         @JvmField
-        var landerFastSampleDriveSideSampleDistance = 2000
+        var landerFastSampleDriveSideSampleDistance = 1700
         @JvmField
         var landerFastSampleDriveSideSampleOffSet = 33.0
         @JvmField
@@ -42,7 +42,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField
         var landerFastSampleDriveTeamMarkerCenterSampleDistance = 4000
         @JvmField
-        var landerFastSampleDriveTeamMarkerSideSampleDistance = 2000
+        var landerFastSampleDriveTeamMarkerSideSampleDistance = 1750
         @JvmField
         var teamMarkerPostSampleOffset = 45.0
 
