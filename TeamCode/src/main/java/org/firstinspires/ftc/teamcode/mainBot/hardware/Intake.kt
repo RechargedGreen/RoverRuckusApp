@@ -63,7 +63,12 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     fun hitSample(){
-        robot.opMode.sleepSeconds(2.0)//todo make actual
+        robot.intake.manualPowerExtension(1.0, false)
+        robot.opMode.sleepSeconds(2.0)
+        robot.intake.manualPowerExtension(-1.0, false)
+        robot.opMode.sleepSeconds(3.0)
+        robot.intake.manualPowerExtension(0.0, false)
+
         /*extensionState = IntakeExtensionState.OUT
         robot.opMode.waitTill { extensionOut() }
         extensionState = IntakeExtensionState.IN

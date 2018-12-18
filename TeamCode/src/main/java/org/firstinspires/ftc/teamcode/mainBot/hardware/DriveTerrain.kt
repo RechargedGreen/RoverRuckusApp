@@ -34,6 +34,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         PARK(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.15),
         FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 1.0),
         SLOW(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.3),
+        HALF(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.5),
         // 0.005, 0.0, 0.001 at lm1
         // 0.01, 0.0, 0.0013 at lm3
         TURN(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.0),

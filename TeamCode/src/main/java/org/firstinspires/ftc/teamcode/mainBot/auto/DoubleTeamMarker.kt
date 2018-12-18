@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mainBot.auto
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @Autonomous(group = OpModeGroups.MAIN_AUTO)
@@ -11,6 +12,9 @@ class DoubleTeamMarker : RR2Auto(StartingPositions.SILVER_HANG){
         intoDepotSilver()
         teamMarker(true)
         sample(SampleCollectionType.DEPOT_EXTENSION)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees + 10)
+        robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + 10, DriveTerrain.AngleFollowSpeeds.PARK)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees)
         park(CompassDirection.SOUTH.degrees)
     }
 }
