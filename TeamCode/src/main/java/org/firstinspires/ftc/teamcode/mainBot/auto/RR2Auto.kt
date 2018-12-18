@@ -63,6 +63,13 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
         @JvmField
         var intoWallOffset = 15.0
+
+        @JvmField
+        var depotSampleCenter = -30.0
+        @JvmField
+        var depotSampleLeft = -60.0
+        @JvmField
+        var depotSampleRight = -90.0
     }
 
     fun intoDepotSilver(){
@@ -151,6 +158,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         LANDER_DRIVE_FAST_BACKUP,
         LANDER_DRIVE_FAST_TEAM_MARKER,
         LANDER_EXTENSION_SILVER,
+        DEPOT_EXTENSION
     }
 
     enum class WallFollowSituation(val robotSide: RobotSide, val direction:CompassDirection, driveReverse:Boolean){
@@ -187,6 +195,14 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         if (startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         when (sampleCollectionType) {
+            SampleCollectionType.DEPOT_EXTENSION -> {
+                robot.drive.pidTurn(when(ORDER){
+                    SampleRandomizedPositions.LEFT -> depotSampleLeft
+                    SampleRandomizedPositions.RIGHT -> depotSampleRight
+                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> depotSampleCenter
+                })
+                robot.intake.hitSample()
+            }
             SampleCollectionType.LANDER_EXTENSION_SILVER -> {
                 robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                 robot.drive.pidTurn(StartingPositions.SILVER_HANG.angle + when(ORDER){
