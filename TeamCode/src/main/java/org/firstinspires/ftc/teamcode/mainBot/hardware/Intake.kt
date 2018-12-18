@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
@@ -13,6 +14,19 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         OUT(-1.0),
         STOP(0.0),
         SEND_MARKER(OUT.power)
+    }
+
+    private val intakeFlip = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlip"))
+    private val intakeFlap = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlap"))
+    private val intakeFlipUp = 0.0
+    private val intakeFlipDown = 1.0
+    private val intakeGateRelease = 0.0
+    private val intakeGateClose = 1.0
+    var intakeBucketState = IntakeBucketState.UP
+    enum class IntakeBucketState{
+        INTAKE,
+        UP,
+        LOAD_BUCKET
     }
 
     enum class SortState {
@@ -84,8 +98,29 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
             ExtensionControlState.MANUAL_DANGER, ExtensionControlState.MANUAL_SAFE -> manualExtensionPower
         }, extensionControlState != ExtensionControlState.MANUAL_DANGER)
         internalSetSort(sortState)
+
+        when(intakeBucketState){
+            IntakeBucketState.INTAKE -> {
+                internalSetFlapPos(intakeFlipDown)
+                internalSetIntakeFlipPos(intakeGateClose)
+            }
+            IntakeBucketState.UP -> {
+                internalSetFlapPos(intakeFlipUp)
+                internalSetIntakeFlipPos(intakeGateClose)
+            }
+            IntakeBucketState.LOAD_BUCKET -> {
+                internalSetFlapPos(intakeFlipUp)
+                internalSetIntakeFlipPos(intakeGateRelease)
+            }
+        }
     }
 
+    fun internalSetFlapPos(position: Double){
+        intakeFlap.position = position
+    }
+    fun internalSetIntakeFlipPos(position:Double){
+        intakeFlip.position = position
+    }
 
     override fun start() {
     }
