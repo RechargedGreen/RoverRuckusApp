@@ -18,8 +18,8 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
         hasHit = false
     }
 
-    private val rThreshold = 50
-    private val bThreshold = 40
+    private val rThreshold = 100
+    private val bThreshold = 60
 
     val color:ColorSensor = robot.hMap.get(ColorSensor::class.java, "color")
 
