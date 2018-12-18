@@ -14,7 +14,6 @@ class DoubleTeamMarker : RR2Auto(StartingPositions.SILVER_HANG){
         sample(SampleCollectionType.DEPOT_EXTENSION)
         robot.drive.pidTurn(CompassDirection.SOUTH.degrees + 10)
         robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + 10, DriveTerrain.AngleFollowSpeeds.PARK)
-        robot.drive.pidTurn(CompassDirection.SOUTH.degrees)
         park(CompassDirection.SOUTH.degrees)
     }
 }
