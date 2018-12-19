@@ -11,8 +11,8 @@ class SilverFull : RR2Auto(StartingPositions.SILVER_HANG){
         silverSampleWallLinup()
         intoDepotSilver()
         teamMarker(true)
-        robot.drive.pidTurn(CompassDirection.SOUTH.degrees + 10)
-        robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + 10, DriveTerrain.AngleFollowSpeeds.PARK)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees + intoWallOffset)
+        robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
         park(CompassDirection.SOUTH.degrees)
     }
 }

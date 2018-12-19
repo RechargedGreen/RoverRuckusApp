@@ -33,6 +33,10 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
             }
             State.UNKNOWN ->{}
         }
+        if(robot.opMode.isAutonomous() && robot.opMode.isStarted){
+            robot.opMode.telemetry.addData("status", "running auto")
+            robot.opMode.telemetry.update()
+        }
         if(robot.opMode.isAutonomous())
             blinken.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK)
         else

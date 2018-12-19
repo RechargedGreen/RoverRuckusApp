@@ -73,7 +73,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     fun intoDepotSilver(){
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
         robot.lift.state = Lift.State.UP
         robot.sensors.lineDetector.reset()
         waitTill { robot.sensors.lineDetector.hasHit }
@@ -204,7 +204,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                 robot.intake.hitSample()
             }
             SampleCollectionType.LANDER_EXTENSION_SILVER -> {
-                robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.HALF)
+                robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                sleepSeconds(0.5)
                 robot.drive.pidTurn(StartingPositions.SILVER_HANG.angle + when(ORDER){
                     SampleRandomizedPositions.LEFT -> extensionSampleOffset
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
@@ -277,6 +278,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.stop()
         sleepTillTime(28.0)
         robot.intake.extensionState = Intake.IntakeExtensionState.OUT
+        robot.intake.manualPowerExtension(1.0, false)//todo remove
         loop()
     }
 }
