@@ -5,6 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
@@ -18,8 +19,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     private val intakeFlip = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlip"))
     private val intakeFlap = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlap"))
-    private val intakeFlipUp = 0.0
-    private val intakeFlipDown = 1.0
+    private val intakeFlipUp = 1.0
+    private val intakeFlipDown = 0.0
     private val intakeGateRelease = 0.0
     private val intakeGateClose = 1.0
     var intakeBucketState = IntakeBucketState.UP
@@ -66,7 +67,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
             extensionControlState = ExtensionControlState.AUTO
         }
 
-    private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake")
+    private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE)
     private val extensionMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "extension")
 
     private var manualExtensionPower = 0.0
@@ -101,16 +102,16 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
         when(intakeBucketState){
             IntakeBucketState.INTAKE -> {
-                internalSetFlapPos(intakeFlipDown)
-                internalSetIntakeFlipPos(intakeGateClose)
+                internalSetIntakeFlipPos(intakeFlipDown)
+                internalSetFlapPos(intakeGateClose)
             }
             IntakeBucketState.UP -> {
-                internalSetFlapPos(intakeFlipUp)
-                internalSetIntakeFlipPos(intakeGateClose)
+                internalSetIntakeFlipPos(intakeFlipUp)
+                internalSetFlapPos(intakeGateClose)
             }
             IntakeBucketState.LOAD_BUCKET -> {
-                internalSetFlapPos(intakeFlipUp)
-                internalSetIntakeFlipPos(intakeGateRelease)
+                internalSetIntakeFlipPos(intakeFlipUp)
+                internalSetFlapPos(intakeGateRelease)
             }
         }
     }
