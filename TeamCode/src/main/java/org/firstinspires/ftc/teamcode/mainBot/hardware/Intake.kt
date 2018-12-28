@@ -4,6 +4,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -78,11 +79,11 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     fun hitSample(){
-        robot.intake.manualPowerExtension(1.0, false)
+        robot.intake.manualPowerExtension(1.0, true)
         robot.opMode.sleepSeconds(2.0)
-        robot.intake.manualPowerExtension(-1.0, false)
-        robot.opMode.sleepSeconds(3.0)
-        robot.intake.manualPowerExtension(0.0, false)
+        val timer = ElapsedTime()
+        robot.intake.extensionState = IntakeExtensionState.IN
+        robot.opMode.waitTill { robot.intake.extensionIn() || timer.seconds() > 3.0 }
 
         /*extensionState = IntakeExtensionState.OUT
         robot.opMode.waitTill { extensionOut() }
@@ -131,7 +132,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     private fun internalSetSort(state:SortState){
-
     }
 
     private fun internalPowerExtension(power: Double, useFailSafe: Boolean) {
@@ -140,13 +140,11 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     init {
         robot.thread.addSubsystem(this)
+        extensionState = IntakeExtensionState.IN
     }
 
-    private val leftInLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))// todo get port numbers
-    private val leftOutLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
-    private val rightInLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
-    private val rightOutLimit = Podoy_KW4_3Z_3_Micro_LimitSwitch(OptimumDigitalInput(robot.getHub(1), 0))
+    private val inTouch = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 5))
 
-    private fun extensionIn() = leftInLimit.pressed() && rightInLimit.pressed()
-    private fun extensionOut() = leftOutLimit.pressed() && rightOutLimit.pressed()
+    private fun extensionIn() = inTouch.pressed()
+    private fun extensionOut() = false
 }
