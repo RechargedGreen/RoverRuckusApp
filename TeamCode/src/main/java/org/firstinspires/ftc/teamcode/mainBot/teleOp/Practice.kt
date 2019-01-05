@@ -26,7 +26,7 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
         val r = c1.ry * (1.0 - c1.rt)
         robot.drive.openLoopPowerWheels(if(l.absoluteValue > deadBand) l else 0.0, if(r.absoluteValue > deadBand) r else 0.0)
 
-        robot.dumper.state = if(c1.lb) Dumper.DumpState.DUMP else Dumper.DumpState.LOAD
+        robot.dumper.state = if(c1.lb && !(c2.dpr && !robot.intake.extensionOut())) Dumper.DumpState.DUMP else Dumper.DumpState.LOAD
 
         liftFailSafesToggle.update(c2.x)
         val lift = c2.ly
@@ -38,21 +38,26 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
         if(liftMode == Mode.MANUAL)
             robot.lift.setOpenLoopPower(if(lift.absoluteValue > deadBand) lift else 0.0, useFailSafes = liftFailSafesToggle.toggled())
         else
-            robot.lift.state = if(c1.rb) Lift.State.UP else Lift.State.DOWN
+            robot.lift.state = if(c2.dpr && !robot.intake.extensionIn()) Lift.State.DOWN else if(c1.rb) Lift.State.UP else Lift.State.DOWN
 
-        robot.intake.intakeState = if(c2.rb || c2.rt > 0.5) Intake.IntakeState.IN else if (c2.lb || c2.lt > 0.5) Intake.IntakeState.OUT else Intake.IntakeState.STOP
-        robot.intake.manualPowerExtension(c2.ry, true)
 
-        if(c2.dpr)
-            robot.intake.intakeBucketState = Intake.IntakeBucketState.LOAD_BUCKET
-        if(c2.dpu)
-            robot.intake.intakeBucketState = Intake.IntakeBucketState.UP
-        if(c2.dpd)
-            robot.intake.intakeBucketState = Intake.IntakeBucketState.INTAKE
+        if(c2.dpr){
+            robot.intake.flipState = Intake.FlipState.LOAD
+            robot.intake.extensionState = Intake.IntakeExtensionState.IN
+            robot.intake.intakeState = if(robot.intake.extensionIn()) Intake.IntakeState.IN else Intake.IntakeState.STOP
+        }else{
+            robot.intake.intakeState = if(c2.rb || c2.rt > 0.5) Intake.IntakeState.IN else if (c2.lb || c2.lt > 0.5) Intake.IntakeState.OUT else Intake.IntakeState.STOP
+            robot.intake.manualPowerExtension(c2.ry, true)
+            if(c2.dpu)
+                robot.intake.flipState = Intake.FlipState.LOAD
+            if(c2.dpd)
+                robot.intake.flipState = Intake.FlipState.INTAKE
+        }
 
         telemetry.addData("lift power", lift)
         telemetry.addData("using liftFailSafes", liftFailSafesToggle.toggled())
         telemetry.addData("lift mode", liftMode)
+        telemetry.addData("extensionIn", robot.intake.extensionIn())
     }
 
     companion object {

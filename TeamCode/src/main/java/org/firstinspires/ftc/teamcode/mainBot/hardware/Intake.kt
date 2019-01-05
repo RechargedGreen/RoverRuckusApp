@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.Podoy_KW4_3Z_3_Micro_LimitSwitch
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -14,26 +13,14 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     enum class IntakeState(internal val power: Double) {
         IN(1.0),
         OUT(-1.0),
-        STOP(0.0),
-        SEND_MARKER(OUT.power)
+        STOP(0.0)
     }
 
     private val intakeFlip = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlip"))
-    private val intakeFlap = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlap"))
-    private val intakeFlipUp = 1.0
-    private val intakeFlipDown = 0.0
-    private val intakeGateRelease = 0.0
-    private val intakeGateClose = 1.0
-    var intakeBucketState = IntakeBucketState.UP
-    enum class IntakeBucketState{
-        INTAKE,
-        UP,
-        LOAD_BUCKET
-    }
-
-    enum class SortState {
-        BLIND,
-        BLOCKS
+    var flipState = FlipState.INTAKE
+    enum class FlipState(internal val pos:Double){
+        LOAD(1.0),
+        INTAKE(0.0)
     }
 
     enum class ExtensionState {
@@ -52,16 +39,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         OUT(1.0)
     }
 
-    val sendingTimer = ElapsedTime()
-
     var intakeState = IntakeState.STOP
-        set(value){
-            if(value == IntakeState.SEND_MARKER)
-                sendingTimer.reset()
-            field = value
-        }
     var extensionControlState = Intake.ExtensionControlState.AUTO
-    var sortState: SortState = SortState.BLIND
     var extensionState = IntakeExtensionState.IN
         set(value) {
             field = value
@@ -79,47 +58,23 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     fun hitSample(){
-        robot.intake.manualPowerExtension(1.0, true)
-        robot.opMode.sleepSeconds(2.0)
         val timer = ElapsedTime()
-        robot.intake.extensionState = IntakeExtensionState.IN
-        robot.opMode.waitTill { robot.intake.extensionIn() || timer.seconds() > 3.0 }
-
-        /*extensionState = IntakeExtensionState.OUT
-        robot.opMode.waitTill { extensionOut() }
+        extensionState = IntakeExtensionState.OUT
+        robot.opMode.waitTill { robot.intake.extensionOut() || timer.seconds() > 2.0 }
         extensionState = IntakeExtensionState.IN
-        robot.opMode.waitTill { extensionIn() }*/
+        robot.opMode.waitTill { robot.intake.extensionIn() || timer.seconds() > 3.0 }
     }
 
     override fun update() {
-        if(intakeState == IntakeState.SEND_MARKER && sendingTimer.seconds() > 2.0)
-            intakeState = IntakeState.STOP
         internalPowerIntake(intakeState.power)
         internalPowerExtension(when (extensionControlState) {
             ExtensionControlState.AUTO -> extensionState.power
             ExtensionControlState.MANUAL_DANGER, ExtensionControlState.MANUAL_SAFE -> manualExtensionPower
         }, extensionControlState != ExtensionControlState.MANUAL_DANGER)
-        internalSetSort(sortState)
 
-        when(intakeBucketState){
-            IntakeBucketState.INTAKE -> {
-                internalSetIntakeFlipPos(intakeFlipDown)
-                internalSetFlapPos(intakeGateClose)
-            }
-            IntakeBucketState.UP -> {
-                internalSetIntakeFlipPos(intakeFlipUp)
-                internalSetFlapPos(intakeGateClose)
-            }
-            IntakeBucketState.LOAD_BUCKET -> {
-                internalSetIntakeFlipPos(intakeFlipUp)
-                internalSetFlapPos(intakeGateRelease)
-            }
-        }
+        internalSetIntakeFlipPos(flipState.pos)
     }
 
-    fun internalSetFlapPos(position: Double){
-        intakeFlap.position = position
-    }
     fun internalSetIntakeFlipPos(position:Double){
         intakeFlip.position = position
     }
@@ -129,9 +84,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     private fun internalPowerIntake(power: Double) {
         intakeMotor.power = power
-    }
-
-    private fun internalSetSort(state:SortState){
     }
 
     private fun internalPowerExtension(power: Double, useFailSafe: Boolean) {
@@ -145,6 +97,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     private val inTouch = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 5))
 
-    private fun extensionIn() = inTouch.pressed()
-    private fun extensionOut() = false
+    fun extensionIn() = inTouch.pressed()
+    fun extensionOut() = false
 }
