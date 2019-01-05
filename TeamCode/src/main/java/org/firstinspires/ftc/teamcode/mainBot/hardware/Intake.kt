@@ -47,7 +47,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
             extensionControlState = ExtensionControlState.AUTO
         }
 
-    private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE)
+    private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake")
     private val extensionMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "extension")
 
     private var manualExtensionPower = 0.0
