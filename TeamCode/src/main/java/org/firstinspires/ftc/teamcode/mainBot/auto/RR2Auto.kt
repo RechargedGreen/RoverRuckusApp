@@ -191,9 +191,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     fun sample(sampleCollectionType: SampleCollectionType) {
-        robot.intake.intakeState = Intake.IntakeState.IN
         if (startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
+        robot.intake.intakeState = Intake.IntakeState.IN
         when (sampleCollectionType) {
             SampleCollectionType.DEPOT_EXTENSION -> {
                 robot.drive.pidTurn(when(ORDER){
@@ -265,8 +265,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     robot.drive.deadReckonPID(outOfDepotTicks, CompassDirection.WEST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
-                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
+                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
+                    robot.intake.intakeState = Intake.IntakeState.STOP
                     park(CompassDirection.SOUTH_EAST.degrees)
+                }
             }
         }
         robot.intake.intakeState = Intake.IntakeState.STOP
@@ -280,7 +282,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.stop()
         sleepTillTime(28.0)
         robot.intake.extensionState = Intake.IntakeExtensionState.OUT
-        robot.intake.manualPowerExtension(1.0, false)//todo remove
         loop()
     }
 }
