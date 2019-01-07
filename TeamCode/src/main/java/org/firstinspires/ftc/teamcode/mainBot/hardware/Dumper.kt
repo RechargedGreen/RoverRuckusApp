@@ -17,7 +17,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
     private val flipR = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipR"))
 
-    var state = DumpState.LOAD
+    var state = DumpState.HOLD
         set(value){
             if(value == DumpState.DUMP && value != field)
                 Static.textToSpeech.speak("Epic gamer moment rmao xd")
