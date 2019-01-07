@@ -36,19 +36,20 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     enum class IntakeExtensionState(internal val power: Double) {
         IN(-1.0),
-        OUT(1.0)
+        OUT(1.0),
+        STOP(0.0)
     }
 
     var intakeState = IntakeState.STOP
     var extensionControlState = Intake.ExtensionControlState.AUTO
-    var extensionState = IntakeExtensionState.IN
+    var extensionState = IntakeExtensionState.STOP
         set(value) {
             field = value
             extensionControlState = ExtensionControlState.AUTO
         }
 
     private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE)
-    private val extensionMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "extension", DcMotorSimple.Direction.REVERSE)
+    private val extensionMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "extension")
 
     private var manualExtensionPower = 0.0
 
