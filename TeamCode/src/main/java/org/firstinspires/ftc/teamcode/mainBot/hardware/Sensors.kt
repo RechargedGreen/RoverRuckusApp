@@ -17,7 +17,7 @@ class Sensors(val robot:HardwareClass) : MTSubsystem{
     private var rightRangeRaw = 0.0
 
     override fun update() {
-        rightRangeRaw = rightRange.getDistance(DistanceUnit.INCH)
+        //rightRangeRaw = rightRange.getDistance(DistanceUnit.INCH)
     }
     override fun start() {
     }
