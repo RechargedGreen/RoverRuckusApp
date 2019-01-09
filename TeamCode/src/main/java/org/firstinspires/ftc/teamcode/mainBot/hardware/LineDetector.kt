@@ -8,8 +8,8 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
     var onLine = false
     var hasHit = false
 
-    val reds = intArrayOf(2)
-    val blues = intArrayOf(2)
+    val reds = intArrayOf(0, 0)
+    val blues = intArrayOf(0, 0)
 
     fun reset(){
         hasHit = false
@@ -32,7 +32,7 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
         val blue = sensor.blue()
         reds[index] = red
         blues[index] = blue
-        return red > redThreshold || blue > blueThreshold
+        return if(index < reds.size && index < blues.size) red > redThreshold || blue > blueThreshold else false
     }
 
     override fun start() {

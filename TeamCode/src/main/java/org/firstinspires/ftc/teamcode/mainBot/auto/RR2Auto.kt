@@ -62,7 +62,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var silverSampleWallLinupDistance = 3000
 
         @JvmField
-        var intoWallOffset = 15.0
+        var intoWallOffset = 10.0
 
         @JvmField
         var depotSampleCenter = 90.0
