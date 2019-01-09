@@ -31,6 +31,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
 ) {
     enum class AngleFollowSpeeds(val controller: PIDController, val speed: Double) {
+        LINE_DETECT(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.1),// 0.05 speed works // 0.15 works almost always
         PARK(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.15),
         FAST(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 1.0),
         SLOW(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.3),

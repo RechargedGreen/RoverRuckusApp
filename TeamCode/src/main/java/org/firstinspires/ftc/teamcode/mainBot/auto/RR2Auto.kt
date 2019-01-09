@@ -73,9 +73,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     fun intoDepotSilver(){
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.PARK, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
-        robot.lift.state = Lift.State.UP
         robot.sensors.lineDetector.reset()
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.LINE_DETECT, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
+        robot.lift.state = Lift.State.UP
         waitTill { robot.sensors.lineDetector.hasHit }
         robot.drive.stop()
     }
