@@ -11,11 +11,8 @@ class CompleteDiagnostics :Practice(){
         telemetry.addData("down limit", robot.lift.isFullyDown())
         telemetry.addData("up limit", robot.lift.isFullyUp())
         telemetry.addData("right wall distance", robot.sensors.getRightDistanceFromWall(0.0))
-        telemetry.addData("r", robot.sensors.lineDetector.r)
-        telemetry.addData("g", robot.sensors.lineDetector.g)
-        telemetry.addData("b", robot.sensors.lineDetector.b)
-        telemetry.addData("alpha", robot.sensors.lineDetector.alpha)
-        telemetry.addData("hue", robot.sensors.lineDetector.hue)
+        telemetry.addData("reds", robot.sensors.lineDetector.reds)
+        telemetry.addData("blues", robot.sensors.lineDetector.blues)
         telemetry.addData("On line", robot.sensors.lineDetector.onLine)
     }
 }

@@ -5,33 +5,34 @@ import com.qualcomm.robotcore.hardware.ColorSensor
 
 class LineDetector (robot:HardwareClass):MTSubsystem{
 
-    var r = 0
-    var g = 0
-    var b = 0
-    var alpha = 0
-    var hue = 0
-
     var onLine = false
     var hasHit = false
+
+    val reds = intArrayOf(2)
+    val blues = intArrayOf(2)
 
     fun reset(){
         hasHit = false
     }
 
-    private val rThreshold = 100
-    private val bThreshold = 60
+    private val redThreshold = 100
+    private val blueThreshold = 60
 
-    val color:ColorSensor = robot.hMap.get(ColorSensor::class.java, "color")
+    private val colorFront:ColorSensor = robot.hMap.get(ColorSensor::class.java, "colorFront")
+    private val colorBack:ColorSensor = robot.hMap.get(ColorSensor::class.java, "colorBack")
 
     override fun update() {
-        r = color.red()
-        //g = color.green()
-        b = color.blue()
-        //alpha = color.alpha()
-        //hue = color.argb()
-        onLine = r > rThreshold || b > bThreshold
+        onLine = check(colorFront, 0) || check(colorBack, 1)
         if(onLine)
             hasHit = true
+    }
+
+    private fun check(sensor:ColorSensor, index:Int) : Boolean{
+        val red = sensor.red()
+        val blue = sensor.blue()
+        reds[index] = red
+        blues[index] = blue
+        return red > redThreshold || blue > blueThreshold
     }
 
     override fun start() {
