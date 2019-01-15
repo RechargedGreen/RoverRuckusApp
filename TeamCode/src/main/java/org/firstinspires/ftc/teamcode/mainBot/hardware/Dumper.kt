@@ -11,13 +11,12 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     enum class DumpState (internal val pos:Double) {
         LOAD(0.15),
         DUMP(1.0),
-        HOLD(0.25)
     }
 
     private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
     private val flipR = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipR"))
 
-    var state = DumpState.HOLD
+    var state = DumpState.LOAD
         set(value){
             if(value == DumpState.DUMP && value != field)
                 Static.textToSpeech.speak("Epic gamer moment rmao xd")
@@ -26,9 +25,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     override fun update() {
         when(state) {
-            DumpState.LOAD -> internalSetFlipPosition(if(robot.lift.getControlState() != Lift.ControlState.MANUAL_DANGER && (robot.lift.state == Lift.State.UP || !robot.lift.isFullyDown())) DumpState.HOLD.pos else DumpState.LOAD.pos)
-            DumpState.DUMP -> internalSetFlipPosition(if(robot.lift.isFullyUp() || robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER) DumpState.DUMP.pos else DumpState.HOLD.pos)
-            DumpState.HOLD -> internalSetFlipPosition(DumpState.HOLD.pos)
+            DumpState.LOAD -> internalSetFlipPosition(DumpState.LOAD.pos)
+            DumpState.DUMP -> internalSetFlipPosition(if(robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER || (robot.lift.isFullyUp() && !(robot.lift.getControlState() == Lift.ControlState.AUTO && robot.lift.state != Lift.State.UP))) DumpState.DUMP.pos else DumpState.LOAD.pos)
         }
     }
 
