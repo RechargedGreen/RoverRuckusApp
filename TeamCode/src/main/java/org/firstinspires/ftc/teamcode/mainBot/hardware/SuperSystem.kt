@@ -35,6 +35,7 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
         }
         if(robot.opMode.isAutonomous() && robot.opMode.isStarted){
             robot.opMode.telemetry.addData("status", "running auto")
+            robot.opMode.telemetry.addLine()
             robot.opMode.telemetry.update()
         }
         if(robot.opMode.isAutonomous())

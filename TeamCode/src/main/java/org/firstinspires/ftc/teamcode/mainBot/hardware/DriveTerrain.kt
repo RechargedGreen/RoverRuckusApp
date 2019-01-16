@@ -52,7 +52,8 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
 
     private var lastLeftTicks = 0
     private var lastRightTicks = 0
-    private fun getDistanceUpdate(): Double {
+
+    override fun getDistanceUpdate(): Double {
         val leftTicks = leftRawTicks()
         val rightTicks = rightRawTicks()
         val leftInches = toInches(leftTicks - lastLeftTicks)
@@ -69,15 +70,15 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         UNDER
     }
 
-    fun drive(inches: Double, angle: Double, maxVel: Double = 40.0, threshold: Double = 1.0) {
-        val angleController = PIDController(mpAnglePID)
+    fun drive(inches: Double, angle: Double, maxVel: Double = 40.0, maxAccel:Double = maxAcceleration, threshold: Double = 1.0) {
+        mp(inches, angle, maxVel, maxAccel, kV, threshold, PIDController(mpAnglePID))
+        robot.opMode.waitWhile { isMP() }
+
+        /*val angleController = PIDController(mpAnglePID)
         getDistanceUpdate()
         var inchesTraveled = 0.0
         var vel = 0.0
         val timer = DeltaTimer()
-
-        val tillFullCruiseTime = maxVel / maxAcceleration
-        val distancePostCruise = vel.absoluteValue * tillFullCruiseTime - 0.5 * maxAcceleration * tillFullCruiseTime.pow(2)
 
         robot.opMode.loopWhile({ (inches - inchesTraveled).absoluteValue > threshold }, {
             inchesTraveled += getDistanceUpdate()
@@ -100,7 +101,11 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
 
             vel += accel
             vel = Range.clip(vel, -maxVel, maxVel)
+            val xVel = vel * kV
+            val headingVel = angleController.update(MathUtil.norm(angle - imu.getZ(), AngleUnit.DEGREES))
 
+            robot.opMode.telemetry.addData("xvel", xVel)
+            robot.opMode.telemetry.addData("headingVel", headingVel)
             robot.opMode.telemetry.addData("inchesTraveled", inchesTraveled)
             robot.opMode.telemetry.addData("distanceLeft", distanceLeft)
             robot.opMode.telemetry.addData("rightRawTicks", rightRawTicks())
@@ -112,9 +117,9 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             robot.opMode.telemetry.addData("maxAcceleration", maxAcceleration)
             robot.opMode.telemetry.update()
 
-            openLoopArcade(vel * kV, angleController.update(MathUtil.norm(angle - imu.getZ(), AngleUnit.DEGREES)))
+            openLoopArcade(vel * kV, headingVel)
         })
-        stop()
+        stop()*/
     }
 
     enum class AngleFollowSpeeds(val controller: PIDController, val speed: Double) {

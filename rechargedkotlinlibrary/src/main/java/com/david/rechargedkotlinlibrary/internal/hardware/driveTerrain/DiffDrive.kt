@@ -18,12 +18,15 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorE
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
+import com.david.rechargedkotlinlibrary.internal.util.DeltaTimer
 import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import java.util.*
 import kotlin.math.absoluteValue
+import kotlin.math.pow
+import kotlin.math.sign
 
 /**
  * Created by David Lukens on 8/7/2018.
@@ -52,9 +55,25 @@ abstract class DiffDrive(
         robot.thread.addSubsystem(this)
     }
 
+    private enum class MPState {
+        OVER,
+        UNDER
+    }
+    private data class MPData(val inches:Double, val heading: Double, val maxVel: Double, val maxAccel: Double, val kV:Double, val threshold: Double, val headingController:PIDController, var currVel:Double = 0.0, var inchesTraveled:Double = 0.0, val timer:DeltaTimer = DeltaTimer())
+    private var mpData = MPData(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()))
+    fun mp(inches:Double, heading:Double, maxVel:Double, maxAccel:Double, kV:Double, threshold:Double, headingController: PIDController){
+        mpData = MPData(inches, heading, maxVel, maxAccel, kV, threshold, headingController)
+        getDistanceUpdate()
+        controlState = ControlLoopStates.MP
+    }
+    fun isMP() = controlState == ControlLoopStates.MP
+
+    abstract fun getDistanceUpdate():Double
+
     enum class ControlLoopStates {
         OPEN_LOOP,
-        DRIVING_AT_ANGLE
+        DRIVING_AT_ANGLE,
+        MP
     }
 
     private var controlState = ControlLoopStates.OPEN_LOOP
@@ -80,6 +99,48 @@ abstract class DiffDrive(
                     AnglePIDType.TURN_AROUND_LEFT -> internalArcade(turn, turn)//todo remove clip
                     AnglePIDType.TURN_AROUND_RIGHT -> internalArcade(-turn, turn)
                 }
+            }
+            ControlLoopStates.MP -> {
+                mpData.inchesTraveled += getDistanceUpdate()
+
+                var accel:Double
+                var state = MPState.UNDER
+                val dt = mpData.timer.seconds()
+                val distanceLeft = mpData.inches - mpData.inchesTraveled
+
+                val timeToStop = mpData.currVel.absoluteValue / mpData.maxAccel
+                val distanceToStop = mpData.currVel.absoluteValue * timeToStop + 0.5 * + -mpData.maxAccel * timeToStop.pow(2)
+
+                if ((distanceLeft.sign - mpData.currVel.sign).absoluteValue > 0.01 && distanceLeft.sign.absoluteValue > 0.01 && mpData.currVel.sign.absoluteValue > 0.01)
+                    state = MPState.OVER
+                if (state == MPState.OVER || distanceLeft.absoluteValue <= distanceToStop.absoluteValue)
+                    accel = dt * mpData.maxAccel * -distanceLeft.sign // todo figure out how to determine if full acceleration is too much
+                else
+                    accel = dt * mpData.maxAccel * distanceLeft.sign // todo figure out how to determine if full acceleration is too much
+
+
+                mpData.currVel += accel
+                mpData.currVel = Range.clip(mpData.currVel, -mpData.maxVel, mpData.maxVel)
+                val xVel = mpData.currVel * mpData.kV
+                val headingVel = mpData.headingController.update(MathUtil.norm(mpData.heading - imu.getZ(), AngleUnit.DEGREES))
+
+                robot.opMode.telemetry.addData("xvel", xVel)
+                robot.opMode.telemetry.addData("headingVel", headingVel)
+                robot.opMode.telemetry.addData("inchesTraveled", mpData.inchesTraveled)
+                robot.opMode.telemetry.addData("distanceLeft", distanceLeft)
+                robot.opMode.telemetry.addData("rightRawTicks", rightRawTicks())
+                robot.opMode.telemetry.addData("leftRawTicks", leftRawTicks())
+                robot.opMode.telemetry.addData("state", state)
+                robot.opMode.telemetry.addData("accel", accel)
+                robot.opMode.telemetry.addData("vel", mpData.currVel)
+                robot.opMode.telemetry.addData("mavVel", mpData.maxVel)
+                robot.opMode.telemetry.addData("maxAcceleration", mpData.maxAccel)
+                robot.opMode.telemetry.addLine()
+
+                if((mpData.inches - mpData.inchesTraveled).absoluteValue > mpData.threshold)
+                    internalArcade(xVel, headingVel)
+                else
+                    openLoopArcade(0.0, 0.0)
             }
         }
     }
