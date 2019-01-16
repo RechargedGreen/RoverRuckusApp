@@ -39,9 +39,9 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
 ) {
     companion object {
         @JvmField
-        var maxAcceleration: Double = 0.0
+        var maxAcceleration: Double = 10.0
         @JvmField
-        var kV: Double = 0.0
+        var kV: Double = 0.01747// calculated with 4.77 fps
         @JvmField
         var mpAnglePID = com.qualcomm.robotcore.hardware.PIDCoefficients(0.0, 0.0, 0.0)
 
@@ -55,11 +55,14 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     private fun getDistanceUpdate(): Double {
         val leftTicks = leftRawTicks()
         val rightTicks = rightRawTicks()
+        val leftInches = toInches(leftTicks - lastLeftTicks)
+        val rightInches = toInches(rightTicks - lastRightTicks)
         lastLeftTicks = leftTicks
         lastRightTicks = rightTicks
-        val averageTicks = (leftTicks + rightTicks) / 2.0
-        return MathUtil.radiansToInches((averageTicks / TICKS_PER_REV) * MathUtil.TAU, RADIUS)
+        return (rightInches + leftInches) / 2.0
     }
+
+    fun toInches(ticks:Int):Double = RADIUS * 2.0 * Math.PI * ticks.toDouble() / TICKS_PER_REV
 
     private enum class FollowingLineState {
         OVER,
@@ -85,26 +88,29 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             val distanceLeft = inches - inchesTraveled
 
             val timeToStop = vel.absoluteValue / maxAcceleration
-            val distanceToStop = vel.absoluteValue * timeToStop + 0.5 * -maxAcceleration *timeToStop.pow(2)
+            val distanceToStop = vel.absoluteValue * timeToStop + 0.5 * + -maxAcceleration * timeToStop.pow(2)
 
-            if (distanceLeft.sign != vel.sign)
+            if (distanceLeft.sign * vel.sign < -0.1)
                 state = FollowingLineState.OVER
-            if (state == FollowingLineState.OVER || distanceLeft.absoluteValue <= distanceToStop)
-                accel = maxAcceleration * -distanceLeft.sign // todo figure out how to determine if full acceleration is too much
+            if (state == FollowingLineState.OVER || distanceLeft.absoluteValue <= distanceToStop.absoluteValue)
+                accel = dt * maxAcceleration * -distanceLeft.sign // todo figure out how to determine if full acceleration is too much
             else
-                accel = maxAcceleration * distanceLeft.sign // todo figure out how to determine if full acceleration is too much
+                accel = dt * maxAcceleration * distanceLeft.sign // todo figure out how to determine if full acceleration is too much
 
 
-            vel += accel * dt
+            vel += accel
             vel = Range.clip(vel, -maxVel, maxVel)
 
             robot.opMode.telemetry.addData("inchesTraveled", inchesTraveled)
             robot.opMode.telemetry.addData("distanceLeft", distanceLeft)
+            robot.opMode.telemetry.addData("rightRawTicks", rightRawTicks())
+            robot.opMode.telemetry.addData("leftRawTicks", leftRawTicks())
             robot.opMode.telemetry.addData("state", state)
             robot.opMode.telemetry.addData("accel", accel)
             robot.opMode.telemetry.addData("vel", vel)
             robot.opMode.telemetry.addData("mavVel", maxVel)
             robot.opMode.telemetry.addData("maxAcceleration", maxAcceleration)
+            robot.opMode.telemetry.update()
 
             openLoopArcade(vel * kV, angleController.update(MathUtil.norm(angle - imu.getZ(), AngleUnit.DEGREES)))
         })
