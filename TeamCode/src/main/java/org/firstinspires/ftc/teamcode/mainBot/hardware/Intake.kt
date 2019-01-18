@@ -15,6 +15,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         OUT(-1.0),
         STOP(0.0)
     }
+    var intakePower = 0.0
 
     private val intakeFlip = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlip"))
     var flipState = FlipState.INTAKE
@@ -41,6 +42,10 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     var intakeState = IntakeState.STOP
+        set(value){
+            intakePower = value.power
+            field = value
+        }
     var extensionControlState = Intake.ExtensionControlState.AUTO
     var extensionState = IntakeExtensionState.STOP
         set(value) {
@@ -67,7 +72,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     override fun update() {
-        internalPowerIntake(intakeState.power)
+        internalPowerIntake(intakePower)
         internalPowerExtension(when (extensionControlState) {
             ExtensionControlState.AUTO -> extensionState.power
             ExtensionControlState.MANUAL_DANGER, ExtensionControlState.MANUAL_SAFE -> manualExtensionPower
