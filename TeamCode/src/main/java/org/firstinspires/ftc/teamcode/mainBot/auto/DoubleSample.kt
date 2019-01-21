@@ -11,7 +11,7 @@ class DoubleSample : RR2Auto(StartingPositions.SILVER_HANG){
         silverSampleWallLinup()
         intoDepotSilver()
         teamMarker(true)
-        sample(SampleCollectionType.DEPOT_EXTENSION)
+        sample(SampleCollectionType.DRIVE_DEPOT)
         /*robot.drive.pidTurn(CompassDirection.SOUTH.degrees + intoWallOffset)
         robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)*/
         park(CompassDirection.SOUTH.degrees)

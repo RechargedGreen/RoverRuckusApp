@@ -27,7 +27,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField var rightOffsetSilverSample = 25.0
 
         @JvmField var rightTicksSilverSample = 2000
-        @JvmField var rightBackTicksSilverSample = 300
+        @JvmField var rightBackTicksSilverSample = 230
         @JvmField var leftTicksSilverSample = 900
 
         @JvmField var centerTicksSilverSample = 2000
@@ -36,7 +36,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
         @JvmField var leftPostTicksSilverSample = 1500
         @JvmField var centerPostTicksSilverSample = 2000
-        @JvmField var rightPostTicksSilverSample = 2800
+        @JvmField var rightPostTicksSilverSample = 3000
         @JvmField var intoWallOffsetSilverSample = 17.0
         @JvmField var intoWallTicksSilverSample = 2000
 
@@ -72,12 +72,13 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField
         var intoWallOffset = 10.0
 
-        @JvmField
-        var depotSampleCenter = 120.0
-        @JvmField
-        var depotSampleLeft = 87.0
-        @JvmField
-        var depotSampleRight = 160.0
+        /////////// depot sample
+        @JvmField var depotSampleCenterAngle = 135.0
+        @JvmField var depotSampleLeftAngle = 100.0
+        @JvmField var depotSampleRightAngle = 162.0
+        @JvmField var depotSampleLeftTicks = 1000
+        @JvmField var depotSampleCenterTicks = 1000
+        @JvmField var depotSampleRightTicks = 1000
     }
 
     fun intoDepotSilver(){
@@ -166,7 +167,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         LANDER_DRIVE_FAST_BACKUP,
         LANDER_DRIVE_FAST_TEAM_MARKER,
         LANDER_EXTENSION_SILVER,
-        DEPOT_EXTENSION,
+        DRIVE_DEPOT,
         DRIVE_SILVER
     }
 
@@ -237,13 +238,30 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     SampleRandomizedPositions.RIGHT -> rightPostTicksSilverSample
                 }, lastAngleSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)
             }
-            SampleCollectionType.DEPOT_EXTENSION -> {
-                robot.drive.pidTurn(when(ORDER){
-                    SampleRandomizedPositions.LEFT -> depotSampleLeft
-                    SampleRandomizedPositions.RIGHT -> depotSampleRight
-                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> depotSampleCenter
-                })
-                robot.intake.hitSample()
+            SampleCollectionType.DRIVE_DEPOT -> {
+                waitTill { robot.lift.isFullyDown() }
+                robot.drive.runTime(-0.3, 1.5)
+                when(ORDER){
+                    SampleRandomizedPositions.LEFT -> {
+                        robot.drive.pidTurn(depotSampleLeftAngle)
+                        robot.drive.deadReckonPID(depotSampleLeftTicks, depotSampleLeftAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.intake.intakeState = Intake.IntakeState.STOP
+                        robot.drive.deadReckonPID(depotSampleLeftTicks, depotSampleLeftAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                    }
+                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
+                        robot.drive.pidTurn(depotSampleCenterAngle)
+                        robot.drive.deadReckonPID(depotSampleCenterTicks, depotSampleCenterAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.intake.intakeState = Intake.IntakeState.STOP
+                        robot.drive.deadReckonPID(depotSampleCenterTicks, depotSampleCenterAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                    }
+                    SampleRandomizedPositions.RIGHT -> {
+                        robot.drive.pidTurn(depotSampleRightAngle)
+                        robot.drive.deadReckonPID(depotSampleRightTicks, depotSampleRightAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.intake.intakeState = Intake.IntakeState.STOP
+                        robot.drive.deadReckonPID(depotSampleRightTicks, depotSampleRightAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                    }
+                }
+                robot.drive.runTime(-0.3, 1.5)
             }
             SampleCollectionType.LANDER_EXTENSION_SILVER -> {
                 robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
