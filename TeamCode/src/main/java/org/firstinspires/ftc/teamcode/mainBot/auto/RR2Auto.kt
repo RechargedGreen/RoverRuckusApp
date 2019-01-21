@@ -24,10 +24,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     companion object {
         //////// silver sample
         @JvmField var leftOffsetSilverSample = 30.0
-        @JvmField var rightOffsetSilverSample = 30.0
+        @JvmField var rightOffsetSilverSample = 25.0
 
         @JvmField var rightTicksSilverSample = 2000
-        @JvmField var rightBackTicksSilverSample = 500
+        @JvmField var rightBackTicksSilverSample = 300
         @JvmField var leftTicksSilverSample = 900
 
         @JvmField var centerTicksSilverSample = 2000
@@ -35,8 +35,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField var lastAngleSilverSample = CompassDirection.SOUTH_WEST.degrees
 
         @JvmField var leftPostTicksSilverSample = 1500
-        @JvmField var centerPostTicksSilverSample = 500
-        @JvmField var rightPostTicksSilverSample = 1000
+        @JvmField var centerPostTicksSilverSample = 2000
+        @JvmField var rightPostTicksSilverSample = 2800
         @JvmField var intoWallOffsetSilverSample = 17.0
         @JvmField var intoWallTicksSilverSample = 2000
 
@@ -73,11 +73,11 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var intoWallOffset = 10.0
 
         @JvmField
-        var depotSampleCenter = 90.0
+        var depotSampleCenter = 120.0
         @JvmField
-        var depotSampleLeft = 60.0
+        var depotSampleLeft = 87.0
         @JvmField
-        var depotSampleRight = 30.0
+        var depotSampleRight = 160.0
     }
 
     fun intoDepotSilver(){
@@ -224,6 +224,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     SampleRandomizedPositions.RIGHT -> {
                         robot.drive.strafeAroundRight(degree - rightOffsetSilverSample)
                         robot.drive.deadReckonPID(rightTicksSilverSample, degree - rightOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
+                        sleepSeconds(0.5)
                         robot.intake.intakeState = Intake.IntakeState.STOP
                         robot.drive.deadReckonPID(-rightBackTicksSilverSample, degree - rightOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
                         robot.drive.strafeAroundLeft(lastAngleSilverSample)
