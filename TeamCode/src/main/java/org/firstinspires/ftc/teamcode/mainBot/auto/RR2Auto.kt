@@ -22,14 +22,25 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     companion object {
-        @JvmField
-        var landerSlowSampleDriveStartDistance = 300
-        @JvmField
-        var landerSlowSampleDriveSideSampleDistance = 2000
-        @JvmField
-        var landerSlowSampleDriveSideSampleOffSet = 30.0
-        @JvmField
-        var landerSlowSampleDriveCenterSampleDistance = 1400
+        //////// silver sample
+        @JvmField var leftOffsetSilverSample = 30.0
+        @JvmField var rightOffsetSilverSample = 30.0
+
+        @JvmField var rightTicksSilverSample = 2000
+        @JvmField var rightBackTicksSilverSample = 500
+        @JvmField var leftTicksSilverSample = 900
+
+        @JvmField var centerTicksSilverSample = 2000
+        @JvmField var centerBackTicksSilverSample = 100
+        @JvmField var lastAngleSilverSample = CompassDirection.SOUTH_WEST.degrees
+
+        @JvmField var leftPostTicksSilverSample = 1500
+        @JvmField var centerPostTicksSilverSample = 500
+        @JvmField var rightPostTicksSilverSample = 1000
+        @JvmField var intoWallOffsetSilverSample = 17.0
+        @JvmField var intoWallTicksSilverSample = 2000
+
+        ////////
 
         @JvmField
         var landerFastSampleDriveSideStartDistance = 0
@@ -57,9 +68,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var extensionSampleOffset = 45.0
         @JvmField
         var extensionSampleForwardDistance = 800
-
-        @JvmField
-        var silverSampleWallLinupDistance = 3000
 
         @JvmField
         var intoWallOffset = 10.0
@@ -146,10 +154,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
     fun silverSampleWallLinup(){
-        robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
-        robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.FAST)
-        robot.drive.pidTurn(CompassDirection.SOUTH.degrees - intoWallOffset)
-        robot.drive.deadReckonPID(-1000, CompassDirection.SOUTH.degrees - intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
+        /*robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
+        robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.FAST)*/
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees - intoWallOffsetSilverSample)
+        robot.drive.deadReckonPID(-intoWallTicksSilverSample, CompassDirection.SOUTH.degrees - intoWallOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
         robot.drive.pidTurn(CompassDirection.SOUTH.degrees)
     }
 
@@ -158,7 +166,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         LANDER_DRIVE_FAST_BACKUP,
         LANDER_DRIVE_FAST_TEAM_MARKER,
         LANDER_EXTENSION_SILVER,
-        DEPOT_EXTENSION
+        DEPOT_EXTENSION,
+        DRIVE_SILVER
     }
 
     enum class WallFollowSituation(val robotSide: RobotSide, val direction:CompassDirection, driveReverse:Boolean){
@@ -195,6 +204,38 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
         robot.intake.intakeState = Intake.IntakeState.IN
         when (sampleCollectionType) {
+            SampleCollectionType.DRIVE_SILVER -> {
+                val degree = StartingPositions.SILVER_HANG.angle
+                when (ORDER){
+                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
+                        robot.drive.deadReckonPID(centerTicksSilverSample, degree, DriveTerrain.AngleFollowSpeeds.SLOW)
+                        sleepSeconds(0.5)
+                        robot.intake.intakeState = Intake.IntakeState.STOP
+                        robot.drive.deadReckonPID(-centerBackTicksSilverSample, degree, DriveTerrain.AngleFollowSpeeds.SLOW)
+                        robot.drive.strafeAroundLeft(lastAngleSilverSample)
+                    }
+                    SampleRandomizedPositions.LEFT -> {
+                        robot.drive.strafeAroundLeft(degree + leftOffsetSilverSample)
+                        robot.drive.deadReckonPID(leftTicksSilverSample, degree + leftOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.strafeAroundRight(degree)
+                        robot.drive.strafeAroundLeft(lastAngleSilverSample)
+                        robot.intake.intakeState = Intake.IntakeState.STOP
+                    }
+                    SampleRandomizedPositions.RIGHT -> {
+                        robot.drive.strafeAroundRight(degree - rightOffsetSilverSample)
+                        robot.drive.deadReckonPID(rightTicksSilverSample, degree - rightOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
+                        robot.intake.intakeState = Intake.IntakeState.STOP
+                        robot.drive.deadReckonPID(-rightBackTicksSilverSample, degree - rightOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
+                        robot.drive.strafeAroundLeft(lastAngleSilverSample)
+                    }
+                }
+
+                robot.drive.deadReckonPID(-when(ORDER){
+                    SampleRandomizedPositions.LEFT -> leftPostTicksSilverSample
+                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> centerPostTicksSilverSample
+                    SampleRandomizedPositions.RIGHT -> rightPostTicksSilverSample
+                }, lastAngleSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)
+            }
             SampleCollectionType.DEPOT_EXTENSION -> {
                 robot.drive.pidTurn(when(ORDER){
                     SampleRandomizedPositions.LEFT -> depotSampleLeft
@@ -274,8 +315,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.intake.intakeState = Intake.IntakeState.STOP
     }
 
-    fun park(angle:Double){
-        robot.drive.pidTurn(angle)
+    fun park(angle:Double, turnFirst:Boolean = true){
+        if(turnFirst)
+            robot.drive.pidTurn(angle)
         prepCraterSense()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
