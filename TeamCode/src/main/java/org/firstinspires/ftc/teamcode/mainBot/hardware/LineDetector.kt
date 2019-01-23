@@ -22,10 +22,19 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
     private val colorBack:ColorSensor = robot.hMap.get(ColorSensor::class.java, "colorBack")
 
     override fun update() {
-        onLine = check(colorFront, 0) || check(colorBack, 1)
-        if(onLine)
-            hasHit = true
+        if(enabled) {
+            onLine = check(colorFront, 0) || check(colorBack, 1)
+            if (onLine)
+                hasHit = true
+        }
     }
+
+    var enabled = false
+        set(value){
+            field = value
+            if(value)
+                reset()
+        }
 
     private fun check(sensor:ColorSensor, index:Int) : Boolean{
         val red = sensor.red()
