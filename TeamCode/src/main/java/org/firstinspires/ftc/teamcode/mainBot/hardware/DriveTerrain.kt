@@ -33,7 +33,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         ),
         CROSSTRACK_PID = PIDCoefficients(0.0, 0.0, 0.0),
         DISPLACEMENT_PID = PIDCoefficients(0.0, 0.0, 0.0),
-        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.hMap, "imu", true, BNO055IMU.SensorMode.IMU), AxesOrder.XZX),
+        imu = SimplifiedBNO055(HardwareMaker.BNO055IMU.make(robot.getHub(0).delegate, 0, true, BNO055IMU.SensorMode.IMU), AxesOrder.XZX),
         encoderTicksToInches = { ticks -> DriveConstants.encoderTicksToInches(ticks) },
         baseConstraints = DriveConstants.BASE_CONSTRAINTS
 ) {

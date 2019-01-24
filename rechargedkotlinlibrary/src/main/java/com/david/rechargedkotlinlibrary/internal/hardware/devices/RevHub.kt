@@ -7,7 +7,7 @@ import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataCommand
 import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse
 
 class RevHub(val robot: RobotTemplate, config: String) {
-    private val delegate = robot.hMap.get(LynxModule::class.java, config)
+    val delegate = robot.hMap.get(LynxModule::class.java, config)
     private var response: LynxGetBulkInputDataResponse? = null
 
     init {

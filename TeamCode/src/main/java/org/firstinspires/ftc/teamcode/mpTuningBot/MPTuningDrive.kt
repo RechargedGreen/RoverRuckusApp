@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mpTuningBot
 import com.acmerobotics.roadrunner.drive.TankDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
@@ -29,7 +30,7 @@ class MPTuningDrive (private val opMode: LinearOpMode) : TankDrive(DriveConstant
         rb.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
-    val imu = HardwareMaker.BNO055IMU.make(opMode.hardwareMap, "imu", true, BNO055IMU.SensorMode.IMU)
+    val imu = HardwareMaker.BNO055IMU.make(opMode.hardwareMap.get(LynxModule::class.java, "imu"), 0, true, BNO055IMU.SensorMode.IMU)
 
     override fun getWheelPositions() = listOf(
             DriveConstants.encoderTicksToInches(lf.currentPosition),

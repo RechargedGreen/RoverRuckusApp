@@ -1,5 +1,8 @@
 package com.david.rechargedkotlinlibrary.internal.hardware
 
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.i2c.LynxOptimizedI2cFactory
+import com.qualcomm.hardware.lynx.LynxEmbeddedIMU
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -39,8 +42,9 @@ object HardwareMaker {
         val AXIS_MAP_CONFIG_BYTE: Byte = 0x6 // swap x and z
         val AXIS_MAP_SIGN_BYTE: Byte = 0x1 // negate z
 
-        fun make(hMap: HardwareMap, name: String, vertical: Boolean, mode: com.qualcomm.hardware.bosch.BNO055IMU.SensorMode): com.qualcomm.hardware.bosch.BNO055IMU {
-            val imu = hMap.get(com.qualcomm.hardware.bosch.BNO055IMU::class.java, name)
+        fun make(module: LynxModule, bus:Int, vertical: Boolean, mode: com.qualcomm.hardware.bosch.BNO055IMU.SensorMode): LynxEmbeddedIMU {
+
+            val imu = LynxOptimizedI2cFactory.createLynxEmbeddedIMU(module, bus)
 
             val params = com.qualcomm.hardware.bosch.BNO055IMU.Parameters()
             params.angleUnit = com.qualcomm.hardware.bosch.BNO055IMU.AngleUnit.DEGREES
