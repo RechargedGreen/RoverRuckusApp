@@ -47,7 +47,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     fun clearingLift() = clearingDown() && clearingUp()
     fun clearingUp() = true
-    fun clearingDown() = dumpTimer.seconds() > 0.5
+    fun clearingDown() = state != DumpState.DUMP && dumpTimer.seconds() > 0.5
 
     fun readyToLoad() = true
 
