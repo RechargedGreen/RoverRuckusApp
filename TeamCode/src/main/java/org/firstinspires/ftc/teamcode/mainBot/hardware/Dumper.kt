@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
+import com.qualcomm.robotcore.util.ElapsedTime
 
 @Config
 class Dumper(val robot: HardwareClass) : MTSubsystem {
@@ -17,12 +18,19 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
     private val flipR = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipR"))
 
+    private var lastState:DumpState? = null
+
     var state = DumpState.LOAD
         set(value){
             if(value == DumpState.DUMP && value != field)
                 Static.textToSpeech.speak("Epic gamer moment rmao xd")
+            else if(lastState == DumpState.DUMP && value != DumpState.DUMP)
+                dumpTimer.reset()
+            lastState = field
             field = value
         }
+
+    val dumpTimer = ElapsedTime()
 
     override fun update() {
         when(state) {
@@ -37,7 +45,9 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         flipR.position = 1.0 - pos
     }
 
-    fun clearingLift() = true
+    fun clearingLift() = clearingDown() && clearingUp()
+    fun clearingUp() = true
+    fun clearingDown() = dumpTimer.seconds() > 0.5
 
     fun readyToLoad() = true
 

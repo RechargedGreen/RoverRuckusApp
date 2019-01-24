@@ -100,7 +100,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     init {
         robot.thread.addSubsystem(this)
-        extensionState = IntakeExtensionState.IN
     }
 
     private val inTouch = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 5))

@@ -30,7 +30,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     private val latch = CachedServo(HardwareMaker.Servo.make(robot.hMap, "latch"))
 
     private fun internalSetMotorPowers(power: Double, safe: Boolean) {
-        val power = if (safe) Range.clip(power, if (isFullyDown()) 0.0 else -1.0, if (isFullyUp()) 0.0 else 1.0) else power
+        val power = if (safe) Range.clip(power, if (isFullyDown() || !robot.dumper.clearingDown()) 0.0 else -1.0, if (isFullyUp() || !robot.dumper.clearingUp()) 0.0 else 1.0) else power
         motorL.power = power
         motorR.power = power
     }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.i2c.LynxOptimizedI2cFactory
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
 import com.qualcomm.robotcore.hardware.ColorSensor
 
@@ -18,8 +19,8 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
     private val redThreshold = 100
     private val blueThreshold = 60
 
-    private val colorFront:ColorSensor = robot.hMap.get(ColorSensor::class.java, "colorFront")
-    private val colorBack:ColorSensor = robot.hMap.get(ColorSensor::class.java, "colorBack")
+    private val colorFront = /*LynxOptimizedI2cFactory.createLynxI2cColorRangeSensor(robot.getHub(0).delegate, 0)*/ robot.hMap.get(ColorSensor::class.java, "colorFront")
+    private val colorBack = /*LynxOptimizedI2cFactory.createLynxI2cColorRangeSensor(robot.getHub(0).delegate, 1)*/ robot.hMap.get(ColorSensor::class.java, "colorBack")
 
     override fun update() {
         if(enabled) {
