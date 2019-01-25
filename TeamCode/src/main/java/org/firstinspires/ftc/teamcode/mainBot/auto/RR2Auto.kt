@@ -23,12 +23,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     companion object {
         //////// silver sample
-        @JvmField var leftOffsetSilverSample = 30.0
+        @JvmField var leftOffsetSilverSample = 32.0
         @JvmField var rightOffsetSilverSample = 25.0
 
         @JvmField var rightTicksSilverSample = 2000
         @JvmField var rightBackTicksSilverSample = 230
-        @JvmField var leftTicksSilverSample = 900
+        @JvmField var leftTicksSilverSample = 1000
 
         @JvmField var centerTicksSilverSample = 2000
         @JvmField var centerBackTicksSilverSample = 100
@@ -142,8 +142,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
-        sleepSeconds(1.0)
-        robot.superSystem.state = SuperSystem.State.LOWER_LIFT_AFTER_MARKER
+        sleepSeconds(0.5)
+        robot.lift.state = Lift.State.DOWN
+        robot.dumper.state = Dumper.DumpState.LOAD
         if(!stayStill)
             robot.drive.runTime(-0.15, 1.0)
     }

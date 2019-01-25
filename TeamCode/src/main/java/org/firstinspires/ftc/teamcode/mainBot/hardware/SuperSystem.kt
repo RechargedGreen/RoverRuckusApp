@@ -10,8 +10,7 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     val hangTimePattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED
 
     enum class State {
-        UNKNOWN,
-        LOWER_LIFT_AFTER_MARKER
+        UNKNOWN
     }
 
     val timeAfterStateChange = ElapsedTime()
@@ -24,13 +23,6 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
 
     override fun update() {
         when(state){
-            State.LOWER_LIFT_AFTER_MARKER -> {
-                robot.dumper.state = Dumper.DumpState.LOAD
-                if(timeAfterStateChange.seconds() > 2.0){
-                    robot.lift.state = Lift.State.DOWN
-                    state = State.UNKNOWN
-                }
-            }
             State.UNKNOWN ->{}
         }
         if(robot.opMode.isAutonomous() && robot.opMode.isStarted){
