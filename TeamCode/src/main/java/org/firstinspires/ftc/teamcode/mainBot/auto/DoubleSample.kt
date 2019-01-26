@@ -14,6 +14,8 @@ class DoubleSample : RR2Auto(StartingPositions.SILVER_HANG){
         sample(SampleCollectionType.DRIVE_DEPOT)
         /*robot.drive.pidTurn(CompassDirection.SOUTH.degrees + intoWallOffset)
         robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)*/
-        park(CompassDirection.SOUTH.degrees)
+        robot.drive.pidTurn(CompassDirection.SOUTH.degrees + 5.0)
+        robot.drive.deadReckonPID(1000, CompassDirection.SOUTH.degrees + 5.0, DriveTerrain.AngleFollowSpeeds.FAST)
+        //park(CompassDirection.SOUTH.degrees, false)
     }
 }

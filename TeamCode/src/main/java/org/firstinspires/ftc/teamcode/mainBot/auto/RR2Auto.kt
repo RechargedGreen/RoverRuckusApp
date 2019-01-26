@@ -73,12 +73,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var intoWallOffset = 10.0
 
         /////////// depot sample
-        @JvmField var depotSampleCenterAngle = 135.0
+        @JvmField var depotSampleCenterAngle = 130.0
         @JvmField var depotSampleLeftAngle = 100.0
         @JvmField var depotSampleRightAngle = 162.0
-        @JvmField var depotSampleLeftTicks = 1000
-        @JvmField var depotSampleCenterTicks = 1000
-        @JvmField var depotSampleRightTicks = 1000
+        @JvmField var depotSampleLeftTicks = 1500
+        @JvmField var depotSampleCenterTicks = 2000
+        @JvmField var depotSampleRightTicks = 2000
     }
 
     fun intoDepotSilver(){
@@ -142,11 +142,13 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
-        sleepSeconds(0.5)
+        sleepSeconds(1.0)
         robot.lift.state = Lift.State.DOWN
         robot.dumper.state = Dumper.DumpState.LOAD
-        if(!stayStill)
+        if(!stayStill) {
+            waitTill { robot.lift.isFullyDown() }
             robot.drive.runTime(-0.15, 1.0)
+        }
     }
 
     fun prepCraterSense(){
@@ -248,22 +250,21 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                         robot.drive.pidTurn(depotSampleLeftAngle)
                         robot.drive.deadReckonPID(depotSampleLeftTicks, depotSampleLeftAngle, DriveTerrain.AngleFollowSpeeds.FAST)
                         robot.intake.intakeState = Intake.IntakeState.STOP
-                        robot.drive.deadReckonPID(depotSampleLeftTicks, depotSampleLeftAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.deadReckonPID(-depotSampleLeftTicks, depotSampleLeftAngle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
                         robot.drive.pidTurn(depotSampleCenterAngle)
                         robot.drive.deadReckonPID(depotSampleCenterTicks, depotSampleCenterAngle, DriveTerrain.AngleFollowSpeeds.FAST)
                         robot.intake.intakeState = Intake.IntakeState.STOP
-                        robot.drive.deadReckonPID(depotSampleCenterTicks, depotSampleCenterAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.deadReckonPID(-depotSampleCenterTicks, depotSampleCenterAngle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
                     SampleRandomizedPositions.RIGHT -> {
                         robot.drive.pidTurn(depotSampleRightAngle)
                         robot.drive.deadReckonPID(depotSampleRightTicks, depotSampleRightAngle, DriveTerrain.AngleFollowSpeeds.FAST)
                         robot.intake.intakeState = Intake.IntakeState.STOP
-                        robot.drive.deadReckonPID(depotSampleRightTicks, depotSampleRightAngle, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.deadReckonPID(-depotSampleRightTicks, depotSampleRightAngle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
                 }
-                robot.drive.runTime(-0.3, 1.5)
             }
             SampleCollectionType.LANDER_EXTENSION_SILVER -> {
                 robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
@@ -343,7 +344,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
         robot.drive.stop()
-        sleepTillTime(28.0)
+        sleepTillTime(29.0)
         robot.intake.extensionState = Intake.IntakeExtensionState.OUT
         loop()
     }
