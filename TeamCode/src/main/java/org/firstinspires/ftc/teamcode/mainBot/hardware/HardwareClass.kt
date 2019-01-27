@@ -5,6 +5,7 @@ import com.david.rechargedkotlinlibrary.internal.opMode.RechargedLinearOpMode
 import com.david.rechargedkotlinlibrary.internal.util.AutoTransitionerKotlin
 import org.firstinspires.ftc.teamcode.data.VisionConstants
 import org.firstinspires.ftc.teamcode.mainBot.teleOp.Competition
+import org.firstinspires.ftc.teamcode.mainBot.teleOp.PracticeJVoExtension
 import org.firstinspires.ftc.teamcode.vision.MasterVision
 
 class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplate(opMode, arrayOf("leftHub", "rightHub")) {
@@ -18,7 +19,7 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
 
     override fun autoPostInit() {
         if(Static.transitionOnAutoEnd)
-            AutoTransitionerKotlin.transitionOnStop(opMode, Competition.NAME)
+            AutoTransitionerKotlin.transitionOnStop(opMode, PracticeJVoExtension.NAME)
         vision.init()
         vision.enable()
     }

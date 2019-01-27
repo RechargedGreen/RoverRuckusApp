@@ -16,7 +16,7 @@ class LineDetector (robot:HardwareClass):MTSubsystem{
         hasHit = false
     }
 
-    private val redThreshold = 100
+    private val redThreshold = 65
     private val blueThreshold = 60
 
     private val colorFront = /*LynxOptimizedI2cFactory.createLynxI2cColorRangeSensor(robot.getHub(0).delegate, 0)*/ robot.hMap.get(ColorSensor::class.java, "colorFront")

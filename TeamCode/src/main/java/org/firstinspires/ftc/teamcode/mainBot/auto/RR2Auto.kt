@@ -24,7 +24,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     companion object {
         //////// silver sample
         @JvmField var leftOffsetSilverSample = 32.0
-        @JvmField var rightOffsetSilverSample = 25.0
+        @JvmField var rightOffsetSilverSample = 30.0
 
         @JvmField var rightTicksSilverSample = 2000
         @JvmField var rightBackTicksSilverSample = 230
@@ -36,7 +36,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
         @JvmField var leftPostTicksSilverSample = 1500
         @JvmField var centerPostTicksSilverSample = 2000
-        @JvmField var rightPostTicksSilverSample = 3000
+        @JvmField var rightPostTicksSilverSample = 2500
         @JvmField var intoWallOffsetSilverSample = 17.0
         @JvmField var intoWallTicksSilverSample = 2000
 
@@ -45,15 +45,15 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField
         var landerFastSampleDriveSideStartDistance = 0
         @JvmField
-        var landerFastSampleDriveSideSampleDistance = 1700
+        var landerFastSampleDriveSideSampleDistance = 1400
         @JvmField
         var landerFastSampleDriveSideSampleOffSet = 33.0
         @JvmField
-        var landerFastSampleDriveCenterSampleDistance = 2000
+        var landerFastSampleDriveCenterSampleDistance = 1000
         @JvmField
         var landerFastSampleDriveTeamMarkerCenterSampleDistance = 4000
         @JvmField
-        var landerFastSampleDriveTeamMarkerSideSampleDistance = 1750
+        var landerFastSampleDriveTeamMarkerSideSampleDistance = 1500 // was 1750
         @JvmField
         var teamMarkerPostSampleOffset = 45.0
 
@@ -143,8 +143,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
         sleepSeconds(1.0)
-        robot.lift.state = Lift.State.DOWN
         robot.dumper.state = Dumper.DumpState.LOAD
+        sleepSeconds(1.0)
+        robot.lift.state = Lift.State.DOWN
         if(!stayStill) {
             waitTill { robot.lift.isFullyDown() }
             robot.drive.runTime(-0.15, 1.0)
@@ -344,8 +345,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
         robot.drive.stop()
-        sleepTillTime(29.0)
+        /*sleepTillTime(29.0)
         robot.intake.extensionState = Intake.IntakeExtensionState.OUT
-        loop()
+        loop()*/
     }
 }
