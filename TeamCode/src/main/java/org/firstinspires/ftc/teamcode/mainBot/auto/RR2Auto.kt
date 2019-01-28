@@ -237,11 +237,17 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     }
                 }
 
-                robot.drive.deadReckonPID(-when(ORDER){
+                robot.sensors.backIntoWallDetector.enabled = true
+                robot.drive.startFollowingAngle_setConstants(angle = lastAngleSilverSample, reverse = true, type = DiffDrive.AnglePIDType.STRAIGHT)
+                waitTill { robot.sensors.backIntoWallDetector.close() }
+                robot.drive.stop()
+                robot.sensors.backIntoWallDetector.enabled = false
+
+                /*robot.drive.deadReckonPID(-when(ORDER){
                     SampleRandomizedPositions.LEFT -> leftPostTicksSilverSample
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> centerPostTicksSilverSample
                     SampleRandomizedPositions.RIGHT -> rightPostTicksSilverSample
-                }, lastAngleSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)
+                }, lastAngleSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)*/
             }
             SampleCollectionType.DRIVE_DEPOT -> {
                 waitTill { robot.lift.isFullyDown() }
