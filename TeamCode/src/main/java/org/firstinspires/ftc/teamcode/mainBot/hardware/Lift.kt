@@ -77,7 +77,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     private enum class InternalLatchState(val pos: Double) {
         LATCHED(1.0),
-        FREE(0.65)
+        FREE(0.55)
     }
 
     private enum class InternalState(val power: Double) {
