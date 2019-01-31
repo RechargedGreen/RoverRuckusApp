@@ -237,17 +237,17 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     }
                 }
 
-                robot.sensors.backIntoWallDetector.enabled = true
+                /*robot.sensors.backIntoWallDetector.enabled = true
                 robot.drive.startFollowingAngle_setConstants(angle = lastAngleSilverSample, reverse = true, type = DiffDrive.AnglePIDType.STRAIGHT)
                 waitTill { robot.sensors.backIntoWallDetector.close() }
                 robot.drive.stop()
-                robot.sensors.backIntoWallDetector.enabled = false
+                robot.sensors.backIntoWallDetector.enabled = false*/
 
-                /*robot.drive.deadReckonPID(-when(ORDER){
+                robot.drive.deadReckonPID(-when(ORDER){
                     SampleRandomizedPositions.LEFT -> leftPostTicksSilverSample
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> centerPostTicksSilverSample
                     SampleRandomizedPositions.RIGHT -> rightPostTicksSilverSample
-                }, lastAngleSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)*/
+                }, lastAngleSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)
             }
             SampleCollectionType.DRIVE_DEPOT -> {
                 waitTill { robot.lift.isFullyDown() }
@@ -351,8 +351,5 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
         robot.drive.stop()
-        /*sleepTillTime(29.0)
-        robot.intake.extensionState = Intake.IntakeExtensionState.OUT
-        loop()*/
     }
 }

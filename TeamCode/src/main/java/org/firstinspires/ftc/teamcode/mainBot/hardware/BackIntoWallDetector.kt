@@ -11,7 +11,7 @@ class BackIntoWallDetector(robot: HardwareClass) : MTSubsystem {
 
     var threshold = 0
 
-    private val sensor = robot.hMap.get(ModernRoboticsI2cRangeSensor::class.java, "backIntoWallUltrasonic")
+    //private val sensor = robot.hMap.get(ModernRoboticsI2cRangeSensor::class.java, "backIntoWallUltrasonic")
 
     var lastKnownDistance: Double? = null
     var enabled = false
@@ -24,7 +24,7 @@ class BackIntoWallDetector(robot: HardwareClass) : MTSubsystem {
     fun far() = !close()
 
     override fun update() {
-        lastKnownDistance = if (enabled) sensor.cmUltrasonic() / 2.54 else null
+      //  lastKnownDistance = if (enabled) sensor.cmUltrasonic() / 2.54 else null
     }
 
     override fun start() {}
