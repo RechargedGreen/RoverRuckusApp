@@ -142,7 +142,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
-        sleepSeconds(1.0)
+        sleepSeconds(2.0)
         robot.dumper.state = Dumper.DumpState.LOAD
         sleepSeconds(1.0)
         robot.lift.state = Lift.State.DOWN
