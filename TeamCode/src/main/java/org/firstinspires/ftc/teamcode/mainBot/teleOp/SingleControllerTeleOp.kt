@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.Lift
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
-@TeleOp(group = OpModeGroups.TELEOP)
+//@TeleOp(group = OpModeGroups.TELEOP)
 class SingleControllerTeleOp : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }){
     val stateToggle = BooleanToggle(false)
     var flipState = Intake.FlipState.LOAD
