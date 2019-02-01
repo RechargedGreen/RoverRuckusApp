@@ -345,6 +345,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     fun park(angle:Double, turnFirst:Boolean = true){
+        robot.intake.flipState = Intake.FlipState.LOAD
         if(turnFirst)
             robot.drive.pidTurn(angle)
         prepCraterSense()
