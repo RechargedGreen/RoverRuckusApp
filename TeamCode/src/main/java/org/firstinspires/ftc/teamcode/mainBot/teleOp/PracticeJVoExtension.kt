@@ -21,6 +21,8 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
 
     private var liftMode = Mode.AUTO
 
+    private var flipState = Intake.FlipState.LOAD
+
     override fun onLoop() {
         val l = c1.ly
         val r = c1.ry
@@ -42,17 +44,19 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
 
 
         if(c2.dp){
-            robot.intake.flipState = Intake.FlipState.LOAD
+            flipState = Intake.FlipState.LOAD
             robot.intake.extensionState = Intake.IntakeExtensionState.IN
             robot.intake.intakeState = if(robot.intake.extensionIn()) Intake.IntakeState.IN else Intake.IntakeState.STOP
         }else{
             robot.intake.intakePower = c2.rt - c2.lt
             robot.intake.manualPowerExtension(c1.rt - c1.lt, true)
             if(c2.rb)
-                robot.intake.flipState = Intake.FlipState.LOAD
+                flipState = Intake.FlipState.LOAD
             if(c2.lb)
-                robot.intake.flipState = Intake.FlipState.INTAKE
+                flipState = Intake.FlipState.INTAKE
         }
+
+        robot.intake.flipState = flipState
 
         telemetry.addData("lift power", lift)
         telemetry.addData("using liftFailSafes", liftFailSafesToggle.toggled())

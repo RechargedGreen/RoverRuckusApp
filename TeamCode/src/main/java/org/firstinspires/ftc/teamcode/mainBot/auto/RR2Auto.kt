@@ -28,7 +28,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
         @JvmField var rightTicksSilverSample = 2000
         @JvmField var rightBackTicksSilverSample = 230
-        @JvmField var leftTicksSilverSample = 1000
+        @JvmField var leftTicksSilverSample = 900
 
         @JvmField var centerTicksSilverSample = 2000
         @JvmField var centerBackTicksSilverSample = 100
@@ -222,7 +222,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     }
                     SampleRandomizedPositions.LEFT -> {
                         robot.drive.strafeAroundLeft(degree + leftOffsetSilverSample)
-                        robot.drive.deadReckonPID(leftTicksSilverSample, degree + leftOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.FAST)
+                        robot.drive.deadReckonPID(leftTicksSilverSample, degree + leftOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
                         robot.drive.strafeAroundRight(degree)
                         robot.drive.strafeAroundLeft(lastAngleSilverSample)
                         robot.intake.intakeState = Intake.IntakeState.STOP
