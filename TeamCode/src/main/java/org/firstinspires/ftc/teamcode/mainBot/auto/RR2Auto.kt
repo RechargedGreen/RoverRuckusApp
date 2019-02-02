@@ -26,9 +26,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         @JvmField var leftOffsetSilverSample = 32.0
         @JvmField var rightOffsetSilverSample = 30.0
 
-        @JvmField var rightTicksSilverSample = 2000
+        @JvmField var rightTicksSilverSample = 1700
         @JvmField var rightBackTicksSilverSample = 230
-        @JvmField var leftTicksSilverSample = 750
+        @JvmField var leftTicksSilverSample = 650
 
         @JvmField var centerTicksSilverSample = 2000
         @JvmField var centerBackTicksSilverSample = 100
@@ -70,7 +70,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var extensionSampleForwardDistance = 800
 
         @JvmField
-        var intoWallOffset = 10.0
+        var intoWallOffset = 7.0
 
         /////////// depot sample
         @JvmField var depotSampleCenterAngle = 130.0
