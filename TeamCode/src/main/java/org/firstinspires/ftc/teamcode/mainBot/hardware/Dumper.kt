@@ -15,8 +15,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         HOLD(0.4)
     }
 
-    private val flipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipL"))
-    private val flipR = CachedServo(HardwareMaker.Servo.make(robot.hMap, "flipR"))
+    private val flipL = HardwareMaker.Servo.make(robot.hMap, "flipL")
+    private val flipR = HardwareMaker.Servo.make(robot.hMap, "flipR")
 
     private var lastState:DumpState? = null
 

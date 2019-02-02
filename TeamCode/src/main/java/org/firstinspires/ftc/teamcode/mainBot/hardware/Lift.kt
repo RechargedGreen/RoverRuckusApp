@@ -27,7 +27,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     private val motorL = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftL", DcMotorSimple.Direction.REVERSE), robot.getHub(1))
     private val motorR = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftR"), robot.getHub(1))
 
-    private val latch = CachedServo(HardwareMaker.Servo.make(robot.hMap, "latch"))
+    private val latch = HardwareMaker.Servo.make(robot.hMap, "latch")
 
     private fun internalSetMotorPowers(power: Double, safe: Boolean) {
         val power = if (safe) Range.clip(power, if (isFullyDown() || !robot.dumper.clearingDown()) 0.0 else -1.0, if (isFullyUp() || !robot.dumper.clearingUp()) 0.0 else 1.0) else power

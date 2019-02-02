@@ -17,8 +17,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
     var intakePower = 0.0
 
-    private val intakeFlipR = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlipR"))
-    private val intakeFlipL = CachedServo(HardwareMaker.Servo.make(robot.hMap, "intakeFlipL"))
+    private val intakeFlipR = HardwareMaker.Servo.make(robot.hMap, "intakeFlipR")
+    private val intakeFlipL = HardwareMaker.Servo.make(robot.hMap, "intakeFlipL")
     var flipState = FlipState.INTAKE
     enum class FlipState(internal val pos:Double){
         LOAD(1.0),
