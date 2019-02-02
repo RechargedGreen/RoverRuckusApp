@@ -28,13 +28,13 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
         @JvmField var rightTicksSilverSample = 2000
         @JvmField var rightBackTicksSilverSample = 230
-        @JvmField var leftTicksSilverSample = 900
+        @JvmField var leftTicksSilverSample = 750
 
         @JvmField var centerTicksSilverSample = 2000
         @JvmField var centerBackTicksSilverSample = 100
         @JvmField var lastAngleSilverSample = CompassDirection.SOUTH_WEST.degrees
 
-        @JvmField var leftPostTicksSilverSample = 1500
+        @JvmField var leftPostTicksSilverSample = 1200
         @JvmField var centerPostTicksSilverSample = 2000
         @JvmField var rightPostTicksSilverSample = 3300
         @JvmField var intoWallOffsetSilverSample = 17.0
