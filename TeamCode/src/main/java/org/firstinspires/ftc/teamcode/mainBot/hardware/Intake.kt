@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
+import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
@@ -10,6 +11,13 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
 class Intake(val robot: HardwareClass) : MTSubsystem {
+
+    companion object {
+        var spoolSize = 1.25
+        var gearRatio = 28.0 / 44.0
+        var cpr = 560.0
+    }
+
     enum class IntakeState(internal val power: Double) {
         IN(1.0),
         OUT(-1.0),
@@ -54,8 +62,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
             extensionControlState = ExtensionControlState.AUTO
         }
 
-    private val intakeMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE)
-    private val extensionMotor = HardwareMaker.DcMotorEx.make(robot.hMap, "extension")
+    private val intakeMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE), robot.getHub(0))
+    private val extensionMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "extension"), robot.getHub(1))
 
     private var manualExtensionPower = 0.0
 
@@ -63,6 +71,10 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         manualExtensionPower = power
         extensionControlState = if (useFailSafe) ExtensionControlState.MANUAL_SAFE else ExtensionControlState.MANUAL_DANGER
     }
+
+    fun extensionTicks() = extensionMotor.encoder.getRawTicks()
+    fun extensionInches() = (extensionReset - extensionTicks()) / ticksPerInch()
+    fun ticksPerInch() = gearRatio * cpr / spoolSize
 
     fun hitSample(){
         val timer = ElapsedTime()
@@ -72,7 +84,11 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         robot.opMode.waitTill { robot.intake.extensionIn() || timer.seconds() > 3.0 }
     }
 
+    private var extensionReset = 0
+
     override fun update() {
+        if(extensionIn())
+            extensionReset = extensionTicks()
         internalPowerIntake(intakePower)
         internalPowerExtension(when (extensionControlState) {
             ExtensionControlState.AUTO -> extensionState.power

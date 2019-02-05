@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.mainBot.diagnostics
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
-import org.firstinspires.ftc.teamcode.mainBot.teleOp.Practice
+import org.firstinspires.ftc.teamcode.mainBot.teleOp.PracticeJVoExtension
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
-class CompleteDiagnostics :Practice(){
+class CompleteDiagnostics :PracticeJVoExtension(){
     override fun onStart() {
         super.onStart()
         robot.sensors.lineDetector.enabled = true
@@ -20,5 +20,7 @@ class CompleteDiagnostics :Practice(){
         robot.sensors.lineDetector.blues.forEach { telemetry.addData("blues", it) }
         telemetry.addData("blues", robot.sensors.lineDetector.blues)
         telemetry.addData("On line", robot.sensors.lineDetector.onLine)
+        telemetry.addData("extensionTicks", robot.intake.extensionTicks())
+        telemetry.addData("extensionInches", robot.intake.extensionInches())
     }
 }
