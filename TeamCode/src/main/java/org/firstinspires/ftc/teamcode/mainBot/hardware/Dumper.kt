@@ -19,7 +19,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         @JvmField var loadPos = 0.15
         @JvmField var dumpPos = 1.0
         @JvmField var holdPos = 0.4
-        @JvmField var slightDumpPos = 0.6
+        @JvmField var slightDumpPos = 0.65
     }
 
     private val flipL = HardwareMaker.Servo.make(robot.hMap, "flipL")
