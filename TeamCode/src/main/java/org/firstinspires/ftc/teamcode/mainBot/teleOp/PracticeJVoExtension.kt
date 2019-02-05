@@ -28,7 +28,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
         val r = c1.ry
         robot.drive.openLoopPowerWheels(if(l.absoluteValue > deadBand) l else 0.0, if(r.absoluteValue > deadBand) r else 0.0)
 
-        robot.dumper.state = if(c1.lb && !(c2.dpr && !robot.intake.extensionOut())) Dumper.DumpState.DUMP else Dumper.DumpState.LOAD
+        robot.dumper.state = if(c1.lb && !(c2.dpr && !robot.intake.extensionOut())) (if(c2.a) Dumper.DumpState.SLIGHT_DUMP else Dumper.DumpState.DUMP) else Dumper.DumpState.LOAD
 
         liftFailSafesToggle.update(c2.x)
         val lift = c2.ly
