@@ -31,7 +31,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         set(value){
             if(value == DumpState.DUMP && value != field)
                 Static.textToSpeech.speak("Epic gamer moment rmao xd")
-            else if(lastState == DumpState.DUMP && value != DumpState.DUMP)
+            else if(value == DumpState.SLIGHT_DUMP || value == DumpState.DUMP)
                 dumpTimer.reset()
             lastState = field
             field = value
@@ -54,7 +54,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     fun clearingLift() = clearingDown() && clearingUp()
     fun clearingUp() = true
-    fun clearingDown() = state != DumpState.DUMP && dumpTimer.seconds() > 0.5
+    fun clearingDown() = state != DumpState.DUMP && state != DumpState.SLIGHT_DUMP && dumpTimer.seconds() > 0.5
 
     fun readyToLoad() = true
 
