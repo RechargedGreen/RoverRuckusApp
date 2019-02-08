@@ -42,7 +42,7 @@ object HardwareMaker {
         val AXIS_MAP_CONFIG_BYTE: Byte = 0x6 // swap x and z
         val AXIS_MAP_SIGN_BYTE: Byte = 0x1 // negate z
 
-        fun make(module: LynxModule, bus:Int, vertical: Boolean, mode: com.qualcomm.hardware.bosch.BNO055IMU.SensorMode): LynxEmbeddedIMU {
+        fun make(module: LynxModule, bus: Int, vertical: Boolean, mode: com.qualcomm.hardware.bosch.BNO055IMU.SensorMode): LynxEmbeddedIMU {
 
             val imu = LynxOptimizedI2cFactory.createLynxEmbeddedIMU(module, bus)
 

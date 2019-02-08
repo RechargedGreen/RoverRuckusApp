@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor
 
 @Config
 class BackIntoWallDetector(robot: HardwareClass) : MTSubsystem {
@@ -24,7 +23,7 @@ class BackIntoWallDetector(robot: HardwareClass) : MTSubsystem {
     fun far() = !close()
 
     override fun update() {
-      //  lastKnownDistance = if (enabled) sensor.cmUltrasonic() / 2.54 else null
+        //  lastKnownDistance = if (enabled) sensor.cmUltrasonic() / 2.54 else null
     }
 
     override fun start() {}

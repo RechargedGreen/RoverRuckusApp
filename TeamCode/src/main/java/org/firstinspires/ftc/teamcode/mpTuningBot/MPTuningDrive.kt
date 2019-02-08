@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 
-class MPTuningDrive (private val opMode: LinearOpMode) : TankDrive(DriveConstants.TRACK_WIDTH) {
+class MPTuningDrive(private val opMode: LinearOpMode) : TankDrive(DriveConstants.TRACK_WIDTH) {
     private val lf = opMode.hardwareMap.get(DcMotorEx::class.java, "lf")
     private val lb = opMode.hardwareMap.get(DcMotorEx::class.java, "lb")
     private val rf = opMode.hardwareMap.get(DcMotorEx::class.java, "rf")

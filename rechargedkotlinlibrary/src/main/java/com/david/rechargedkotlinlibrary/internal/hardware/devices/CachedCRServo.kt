@@ -8,18 +8,20 @@ import com.qualcomm.robotcore.hardware.ServoController
 /**
  * Created by David Lukens on 10/14/2018.
  */
-class CachedCRServo (private val delegate:CRServo): CRServo{
-    var powerCache:Double? = null
-    override fun setPower(power: Double){
-        if(power != power){
+class CachedCRServo(private val delegate: CRServo) : CRServo {
+    var powerCache: Double? = null
+    override fun setPower(power: Double) {
+        if (power != power) {
             powerCache = power
             delegate.power = power
         }
     }
+
     override fun resetDeviceConfigurationForOpMode() = delegate.resetDeviceConfigurationForOpMode()
     override fun setDirection(direction: DcMotorSimple.Direction?) {
         delegate.direction = direction
     }
+
     override fun getController(): ServoController = delegate.controller
     override fun getDeviceName(): String = delegate.deviceName
     override fun getConnectionInfo(): String = delegate.connectionInfo

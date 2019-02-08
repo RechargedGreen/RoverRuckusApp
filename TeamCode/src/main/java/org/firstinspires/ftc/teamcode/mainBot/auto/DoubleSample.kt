@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @Autonomous(group = OpModeGroups.MAIN_AUTO)
-class DoubleSample : RR2Auto(StartingPositions.SILVER_HANG){
+class DoubleSample : RR2Auto(StartingPositions.SILVER_HANG) {
     override fun postDeploy() {
         sample(SampleCollectionType.DRIVE_SILVER)
         silverSampleWallLinup()

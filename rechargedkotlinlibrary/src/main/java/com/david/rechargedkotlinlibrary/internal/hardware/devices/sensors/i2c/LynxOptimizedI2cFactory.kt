@@ -17,7 +17,8 @@ object LynxOptimizedI2cFactory {
     private class BetterI2cDeviceSynchImplOnSimple(simple: I2cDeviceSynchSimple, isSimpleOwned: Boolean) : I2cDeviceSynchImplOnSimple(simple, isSimpleOwned) {
         override fun setReadWindow(window: I2cDeviceSynch.ReadWindow?) {}
     }
-    fun createLynxI2cDeviceSynch(module:LynxModule, bus:Int):I2cDeviceSynch = BetterI2cDeviceSynchImplOnSimple(LynxFirmwareVersionManager.createLynxI2cDeviceSynch(AppUtil.getDefContext(), module, bus), true)
-    fun createLynxEmbeddedIMU(module:LynxModule, bus: Int) = LynxEmbeddedIMU(createLynxI2cDeviceSynch(module, bus))
-    fun createLynxI2cColorRangeSensor(module:LynxModule, bus: Int) = LynxI2cColorRangeSensor(createLynxI2cDeviceSynch(module, bus))
+
+    fun createLynxI2cDeviceSynch(module: LynxModule, bus: Int): I2cDeviceSynch = BetterI2cDeviceSynchImplOnSimple(LynxFirmwareVersionManager.createLynxI2cDeviceSynch(AppUtil.getDefContext(), module, bus), true)
+    fun createLynxEmbeddedIMU(module: LynxModule, bus: Int) = LynxEmbeddedIMU(createLynxI2cDeviceSynch(module, bus))
+    fun createLynxI2cColorRangeSensor(module: LynxModule, bus: Int) = LynxI2cColorRangeSensor(createLynxI2cDeviceSynch(module, bus))
 }

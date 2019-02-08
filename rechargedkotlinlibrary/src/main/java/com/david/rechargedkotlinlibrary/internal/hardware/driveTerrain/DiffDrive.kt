@@ -59,16 +59,19 @@ abstract class DiffDrive(
         OVER,
         UNDER
     }
-    private data class MPData(val inches:Double, val heading: Double, val maxVel: Double, val maxAccel: Double, val kV:Double, val threshold: Double, val headingController:PIDController, var currVel:Double = 0.0, var inchesTraveled:Double = 0.0, val timer:DeltaTimer = DeltaTimer())
+
+    private data class MPData(val inches: Double, val heading: Double, val maxVel: Double, val maxAccel: Double, val kV: Double, val threshold: Double, val headingController: PIDController, var currVel: Double = 0.0, var inchesTraveled: Double = 0.0, val timer: DeltaTimer = DeltaTimer())
+
     private var mpData = MPData(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()))
-    fun mp(inches:Double, heading:Double, maxVel:Double, maxAccel:Double, kV:Double, threshold:Double, headingController: PIDController){
+    fun mp(inches: Double, heading: Double, maxVel: Double, maxAccel: Double, kV: Double, threshold: Double, headingController: PIDController) {
         mpData = MPData(inches, heading, maxVel, maxAccel, kV, threshold, headingController)
         getDistanceUpdate()
         controlState = ControlLoopStates.MP
     }
+
     fun isMP() = controlState == ControlLoopStates.MP
 
-    abstract fun getDistanceUpdate():Double
+    abstract fun getDistanceUpdate(): Double
 
     enum class ControlLoopStates {
         OPEN_LOOP,
@@ -81,7 +84,7 @@ abstract class DiffDrive(
     override fun update() {
         imu.clearCaches()
         imu.checkAngleCache()
-        if(controlState != ControlLoopStates.DRIVING_AT_ANGLE)
+        if (controlState != ControlLoopStates.DRIVING_AT_ANGLE)
             lastAngleFollowerError = null
         when (controlState) {
             ControlLoopStates.OPEN_LOOP -> {
@@ -93,7 +96,7 @@ abstract class DiffDrive(
                 val data = followAngleData
                 lastAngleFollowerError = err
                 val turn = Range.clip(-followAngleData.controller.update(err), -data.maxTurnPower, data.maxTurnPower)
-                when(followAngleData.type){
+                when (followAngleData.type) {
                     AnglePIDType.POINT_TURN -> internalArcade(0.0, turn)
                     AnglePIDType.STRAIGHT -> internalArcade(data.power, turn)
                     AnglePIDType.TURN_AROUND_LEFT -> internalArcade(turn, turn)//todo remove clip
@@ -103,13 +106,13 @@ abstract class DiffDrive(
             ControlLoopStates.MP -> {
                 mpData.inchesTraveled += getDistanceUpdate()
 
-                var accel:Double
+                var accel: Double
                 var state = MPState.UNDER
                 val dt = mpData.timer.seconds()
                 val distanceLeft = mpData.inches - mpData.inchesTraveled
 
                 val timeToStop = mpData.currVel.absoluteValue / mpData.maxAccel
-                val distanceToStop = mpData.currVel.absoluteValue * timeToStop + 0.5 * + -mpData.maxAccel * timeToStop.pow(2)
+                val distanceToStop = mpData.currVel.absoluteValue * timeToStop + 0.5 * +-mpData.maxAccel * timeToStop.pow(2)
 
                 if ((distanceLeft.sign - mpData.currVel.sign).absoluteValue > 0.01 && distanceLeft.sign.absoluteValue > 0.01 && mpData.currVel.sign.absoluteValue > 0.01)
                     state = MPState.OVER
@@ -137,7 +140,7 @@ abstract class DiffDrive(
                 robot.opMode.telemetry.addData("maxAcceleration", mpData.maxAccel)
                 robot.opMode.telemetry.addLine()
 
-                if((mpData.inches - mpData.inchesTraveled).absoluteValue > mpData.threshold)
+                if ((mpData.inches - mpData.inchesTraveled).absoluteValue > mpData.threshold)
                     internalArcade(xVel, headingVel)
                 else
                     openLoopArcade(0.0, 0.0)
@@ -145,7 +148,7 @@ abstract class DiffDrive(
         }
     }
 
-    private fun internalArcade(x:Double, heading:Double){
+    private fun internalArcade(x: Double, heading: Double) {
         val left = x - heading
         val right = x + heading
         val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
@@ -198,7 +201,7 @@ abstract class DiffDrive(
 
     private var maxTurnPower = 1.0
 
-    enum class AnglePIDType{
+    enum class AnglePIDType {
         POINT_TURN,
         TURN_AROUND_LEFT,
         TURN_AROUND_RIGHT,
@@ -214,19 +217,19 @@ abstract class DiffDrive(
 
     private data class SidePowers(val l: Double, val r: Double)
 
-    fun openLoopArcade(x:Double = 0.0, heading:Double = 0.0){
+    fun openLoopArcade(x: Double = 0.0, heading: Double = 0.0) {
         val l = x - heading
         val r = x + heading
         val max = Collections.max(listOf(l.absoluteValue, r.absoluteValue, 1.0))
         openLoopPowerWheels(l = l / max, r = r / max)
     }
 
-    var lastAngleFollowerError:Double? = null
+    var lastAngleFollowerError: Double? = null
     private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0, AnglePIDType.STRAIGHT, 1.0)
 
-    data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double, val type:AnglePIDType, val maxTurnPower:Double)
+    data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double, val type: AnglePIDType, val maxTurnPower: Double)
 
-    fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double, type:AnglePIDType, maxTurnPower: Double = 1.0) {
+    fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double, type: AnglePIDType, maxTurnPower: Double = 1.0) {
         followAngleData = FollowAngleData(controller = controller, power = power, angle = angle, type = type, maxTurnPower = maxTurnPower)
         controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }

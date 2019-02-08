@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
-class IMUTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }){
+class IMUTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     override fun onLoop() {
         telemetry.addData("raw z", robot.drive.imu.getRawZ())
         telemetry.addData("raw x", robot.drive.imu.getRawX())
@@ -14,11 +14,11 @@ class IMUTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) 
         telemetry.addData("z", robot.drive.imu.getZ())
         telemetry.addData("x", robot.drive.imu.getX())
         telemetry.addData("y", robot.drive.imu.getY())
-        if(c1.x) robot.drive.imu.resetX()
+        if (c1.x) robot.drive.imu.resetX()
         telemetry.addLine("x to reset x")
-        if(c1.y) robot.drive.imu.resetY()
+        if (c1.y) robot.drive.imu.resetY()
         telemetry.addLine("y to reset y")
-        if(c1.b) robot.drive.imu.resetZ()
+        if (c1.b) robot.drive.imu.resetZ()
         telemetry.addLine("b to reset z")
     }
 }

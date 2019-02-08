@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.mainBot.auto.RR2Auto
 import org.firstinspires.ftc.teamcode.mainBot.hardware.DriveTerrain
 
 @Autonomous
-class LineDetectTest : RR2Auto(StartingPositions.ANY_HANG, 0.0){
+class LineDetectTest : RR2Auto(StartingPositions.ANY_HANG, 0.0) {
     override fun postDeploy() {
         robot.sensors.lineDetector.reset()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.LINE_DETECT, 0.0, true, DiffDrive.AnglePIDType.STRAIGHT)

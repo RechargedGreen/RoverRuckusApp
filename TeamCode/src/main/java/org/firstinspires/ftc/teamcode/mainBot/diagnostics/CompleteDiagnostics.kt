@@ -5,12 +5,13 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import org.firstinspires.ftc.teamcode.mainBot.teleOp.PracticeJVoExtension
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
-class CompleteDiagnostics :PracticeJVoExtension(){
+class CompleteDiagnostics : PracticeJVoExtension() {
     override fun onStart() {
         super.onStart()
         robot.sensors.lineDetector.enabled = true
         robot.sensors.backIntoWallDetector.enabled = true
     }
+
     override fun onLoop() {
         super.onLoop()
         telemetry.addData("close", robot.sensors.craterRimDetector.close())

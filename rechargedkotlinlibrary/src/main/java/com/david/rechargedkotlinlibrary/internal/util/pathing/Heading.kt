@@ -7,19 +7,19 @@ class Heading {
     private var degrees = 0.0
     private var radians = 0.0
 
-    fun createFromRadians(radians:Double):Heading{
+    fun createFromRadians(radians: Double): Heading {
         val heading = Heading()
         heading.setRadians(radians)
         return heading
     }
 
-    fun createFromDegrees(degrees:Double):Heading{
+    fun createFromDegrees(degrees: Double): Heading {
         val heading = Heading()
         heading.setDegrees(degrees)
         return heading
     }
 
-    fun setRadians(radians: Double){
+    fun setRadians(radians: Double) {
         val newRadians = MathUtil.norm(radians, AngleUnit.RADIANS)
         this.radians = newRadians
         degrees = Math.toDegrees(newRadians)

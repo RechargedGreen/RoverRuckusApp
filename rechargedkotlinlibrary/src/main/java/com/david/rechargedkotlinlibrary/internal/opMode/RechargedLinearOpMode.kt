@@ -14,7 +14,7 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
 
     val runtime: ElapsedTime = ElapsedTime()
 
-    lateinit var dash:FtcDashboard
+    lateinit var dash: FtcDashboard
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
@@ -24,7 +24,7 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
             robot.start()
         if (autonomous)
             robot.autoPostInit()
-        while(!isStarted && !isStopRequested)
+        while (!isStarted && !isStopRequested)
             tillStart()
         telemetry.addData("status", "started")
         if (autonomous)
@@ -45,7 +45,7 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
         loopWhile({ true }, action)
     }
 
-    fun loopWhile(condition: () -> Boolean = {true}, action: () -> Unit = {}) {
+    fun loopWhile(condition: () -> Boolean = { true }, action: () -> Unit = {}) {
         while (condition() && opModeIsActive())
             action()
     }
@@ -54,12 +54,12 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
 
     fun waitWhile(condition: () -> Boolean) = loopWhile(condition = condition)
 
-    fun loopTill(condition: () -> Boolean = {true}, action: () -> Unit = {}){
+    fun loopTill(condition: () -> Boolean = { true }, action: () -> Unit = {}) {
         while (!condition() && opModeIsActive())
             action()
     }
 
-    fun sleepSeconds(seconds:Double) = sleep((seconds * 1000).toLong())
+    fun sleepSeconds(seconds: Double) = sleep((seconds * 1000).toLong())
 
     fun waitTill(condition: () -> Boolean) = loopTill(condition)
 

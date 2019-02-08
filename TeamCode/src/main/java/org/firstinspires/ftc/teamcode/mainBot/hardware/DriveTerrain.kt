@@ -8,17 +8,12 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorE
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.SimplifiedBNO055
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.hardware.management.RobotTemplate
-import com.david.rechargedkotlinlibrary.internal.util.DeltaTimer
-import com.david.rechargedkotlinlibrary.internal.util.MathUtil
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import org.firstinspires.ftc.teamcode.mpTuningBot.DriveConstants
 import kotlin.math.absoluteValue
-import kotlin.math.pow
-import kotlin.math.sign
 
 @Config
 class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
@@ -63,14 +58,14 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         return (rightInches + leftInches) / 2.0
     }
 
-    fun toInches(ticks:Int):Double = RADIUS * 2.0 * Math.PI * ticks.toDouble() / TICKS_PER_REV
+    fun toInches(ticks: Int): Double = RADIUS * 2.0 * Math.PI * ticks.toDouble() / TICKS_PER_REV
 
     private enum class FollowingLineState {
         OVER,
         UNDER
     }
 
-    fun drive(inches: Double, angle: Double, maxVel: Double = 40.0, maxAccel:Double = maxAcceleration, threshold: Double = 1.0) {
+    fun drive(inches: Double, angle: Double, maxVel: Double = 40.0, maxAccel: Double = maxAcceleration, threshold: Double = 1.0) {
         mp(inches, angle, maxVel, maxAccel, kV, threshold, PIDController(mpAnglePID))
         robot.opMode.waitWhile { isMP() }
 

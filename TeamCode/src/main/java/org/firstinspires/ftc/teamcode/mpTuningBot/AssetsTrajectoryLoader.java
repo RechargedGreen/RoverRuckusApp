@@ -31,6 +31,7 @@ public class AssetsTrajectoryLoader {
 
     /**
      * Loads a trajectory with the given name.
+     *
      * @see #loadConfig(String)
      */
     public static Trajectory load(String name) throws IOException {

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mainBot.hardware
 
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
-import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedServo
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
@@ -23,12 +22,14 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         OUT(-1.0),
         STOP(0.0)
     }
+
     var intakePower = 0.0
 
     private val intakeFlipR = HardwareMaker.Servo.make(robot.hMap, "intakeFlipR")
     private val intakeFlipL = HardwareMaker.Servo.make(robot.hMap, "intakeFlipL")
     var flipState = FlipState.INTAKE
-    enum class FlipState(internal val pos:Double){
+
+    enum class FlipState(internal val pos: Double) {
         LOAD(1.0),
         INTAKE(0.0)
     }
@@ -51,7 +52,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     var intakeState = IntakeState.STOP
-        set(value){
+        set(value) {
             intakePower = value.power
             field = value
         }
@@ -76,7 +77,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     fun extensionInches() = (extensionReset - extensionTicks()) / ticksPerInch()
     fun ticksPerInch() = gearRatio * cpr / spoolSize
 
-    fun hitSample(){
+    fun hitSample() {
         val timer = ElapsedTime()
         extensionState = IntakeExtensionState.OUT
         robot.opMode.waitTill { robot.intake.extensionOut() || timer.seconds() > 2.0 }
@@ -87,7 +88,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private var extensionReset = 0
 
     override fun update() {
-        if(extensionIn())
+        if (extensionIn())
             extensionReset = extensionTicks()
         internalPowerIntake(intakePower)
         internalPowerExtension(when (extensionControlState) {
@@ -98,7 +99,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         internalSetIntakeFlipPos(flipState.pos)
     }
 
-    fun internalSetIntakeFlipPos(position:Double){
+    fun internalSetIntakeFlipPos(position: Double) {
         intakeFlipR.position = position
         intakeFlipL.position = 1.0 - position
     }

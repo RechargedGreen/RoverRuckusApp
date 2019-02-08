@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.prototypes
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass

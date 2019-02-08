@@ -55,14 +55,14 @@ class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSub
 
     override fun setMode(mode: DigitalChannel.Mode?) {
         when (mode) {
-            DigitalChannel.Mode.INPUT  -> modeCache = DigitalChannel.Mode.INPUT
+            DigitalChannel.Mode.INPUT -> modeCache = DigitalChannel.Mode.INPUT
             DigitalChannel.Mode.OUTPUT -> modeCache = DigitalChannel.Mode.OUTPUT
         }
     }
 
     override fun setMode(mode: DigitalChannelController.Mode?) {
         when (mode) {
-            DigitalChannelController.Mode.INPUT  -> modeCache = DigitalChannel.Mode.INPUT
+            DigitalChannelController.Mode.INPUT -> modeCache = DigitalChannel.Mode.INPUT
             DigitalChannelController.Mode.OUTPUT -> modeCache = DigitalChannel.Mode.OUTPUT
         }
     }

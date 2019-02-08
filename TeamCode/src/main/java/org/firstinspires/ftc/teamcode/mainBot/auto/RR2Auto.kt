@@ -13,7 +13,7 @@ import kotlin.math.absoluteValue
  * Created by David Lukens on 11/18/2018.
  */
 @Config
-abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWait:Double = 0.0) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWait: Double = 0.0) : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
 
     enum class StartingPositions(val angle: Double) {
         GOLD_HANG(-45.0),
@@ -23,22 +23,35 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     companion object {
         //////// silver sample
-        @JvmField var leftOffsetSilverSample = 32.0
-        @JvmField var rightOffsetSilverSample = 30.0
+        @JvmField
+        var leftOffsetSilverSample = 32.0
+        @JvmField
+        var rightOffsetSilverSample = 30.0
 
-        @JvmField var rightTicksSilverSample = 1700
-        @JvmField var rightBackTicksSilverSample = 230
-        @JvmField var leftTicksSilverSample = 650
+        @JvmField
+        var rightTicksSilverSample = 1700
+        @JvmField
+        var rightBackTicksSilverSample = 230
+        @JvmField
+        var leftTicksSilverSample = 650
 
-        @JvmField var centerTicksSilverSample = 2000
-        @JvmField var centerBackTicksSilverSample = 100
-        @JvmField var lastAngleSilverSample = CompassDirection.SOUTH_WEST.degrees
+        @JvmField
+        var centerTicksSilverSample = 2000
+        @JvmField
+        var centerBackTicksSilverSample = 100
+        @JvmField
+        var lastAngleSilverSample = CompassDirection.SOUTH_WEST.degrees
 
-        @JvmField var leftPostTicksSilverSample = 1200
-        @JvmField var centerPostTicksSilverSample = 2000
-        @JvmField var rightPostTicksSilverSample = 3300
-        @JvmField var intoWallOffsetSilverSample = 17.0
-        @JvmField var intoWallTicksSilverSample = 2000
+        @JvmField
+        var leftPostTicksSilverSample = 1200
+        @JvmField
+        var centerPostTicksSilverSample = 2000
+        @JvmField
+        var rightPostTicksSilverSample = 3300
+        @JvmField
+        var intoWallOffsetSilverSample = 17.0
+        @JvmField
+        var intoWallTicksSilverSample = 2000
 
         ////////
 
@@ -73,15 +86,21 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var intoWallOffset = 7.0
 
         /////////// depot sample
-        @JvmField var depotSampleCenterAngle = 130.0
-        @JvmField var depotSampleLeftAngle = 100.0
-        @JvmField var depotSampleRightAngle = 162.0
-        @JvmField var depotSampleLeftTicks = 1500
-        @JvmField var depotSampleCenterTicks = 2000
-        @JvmField var depotSampleRightTicks = 2000
+        @JvmField
+        var depotSampleCenterAngle = 130.0
+        @JvmField
+        var depotSampleLeftAngle = 100.0
+        @JvmField
+        var depotSampleRightAngle = 162.0
+        @JvmField
+        var depotSampleLeftTicks = 1500
+        @JvmField
+        var depotSampleCenterTicks = 2000
+        @JvmField
+        var depotSampleRightTicks = 2000
     }
 
-    fun intoDepotSilver(){
+    fun intoDepotSilver() {
         robot.sensors.lineDetector.enabled = true
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.LINE_DETECT, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
         robot.lift.state = Lift.State.UP
@@ -108,14 +127,14 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         val lb = gamepad1.left_bumper
         val rb = gamepad1.right_bumper
         val buttonState = x || y || lb || rb
-        if(buttonState && !lastButtonState){
-            if(x)
+        if (buttonState && !lastButtonState) {
+            if (x)
                 postDeployWait += 1.0
-            if(y)
+            if (y)
                 postDeployWait -= 1.0
-            if(lb)
+            if (lb)
                 postDeployWait += 0.1
-            if(rb)
+            if (rb)
                 postDeployWait -= 0.1
         }
 
@@ -136,9 +155,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     abstract fun postDeploy()
 
-    fun teamMarker(stayStill:Boolean){
+    fun teamMarker(stayStill: Boolean) {
         robot.lift.state = Lift.State.UP
-        if(!stayStill)
+        if (!stayStill)
             robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
         robot.dumper.state = Dumper.DumpState.DUMP
         waitTill { robot.lift.isFullyUp() }
@@ -146,20 +165,20 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.dumper.state = Dumper.DumpState.LOAD
         sleepSeconds(1.0)
         robot.lift.state = Lift.State.DOWN
-        if(!stayStill) {
+        if (!stayStill) {
             waitTill { robot.lift.isFullyDown() }
             robot.drive.runTime(-0.15, 1.0)
         }
     }
 
-    fun prepCraterSense(){
+    fun prepCraterSense() {
         robot.drive.imu.resetX()
         robot.drive.imu.resetY()
     }
 
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
 
-    fun silverSampleWallLinup(){
+    fun silverSampleWallLinup() {
         /*robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
         robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.FAST)*/
         robot.drive.pidTurn(CompassDirection.SOUTH.degrees - intoWallOffsetSilverSample)
@@ -176,12 +195,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         DRIVE_SILVER
     }
 
-    enum class WallFollowSituation(val robotSide: RobotSide, val direction:CompassDirection, driveReverse:Boolean){
+    enum class WallFollowSituation(val robotSide: RobotSide, val direction: CompassDirection, driveReverse: Boolean) {
         LEFT_SAMPLE_DEPOT(RobotSide.LEFT, CompassDirection.EAST, false),
         RIGHT_SAMPLE_DEPOT(RobotSide.RIGHT, CompassDirection.NORTH, false)
     }
 
-    enum class CompassDirection(val degrees:Double){
+    enum class CompassDirection(val degrees: Double) {
         NORTH(0.0),
         SOUTH(180.0),
         EAST(-90.0),
@@ -192,15 +211,15 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         SOUTH_WEST(135.0),
     }
 
-    enum class RobotSide{
+    enum class RobotSide {
         LEFT,
         RIGHT,
         FRONT,
         BACK
     }
 
-    fun followWall(situation:WallFollowSituation){
-        when(situation){
+    fun followWall(situation: WallFollowSituation) {
+        when (situation) {
             WallFollowSituation.LEFT_SAMPLE_DEPOT, WallFollowSituation.RIGHT_SAMPLE_DEPOT -> robot.drive.deadReckonPID(intoDepotTicks, situation.direction.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
         }
     }
@@ -212,7 +231,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         when (sampleCollectionType) {
             SampleCollectionType.DRIVE_SILVER -> {
                 val degree = StartingPositions.SILVER_HANG.angle
-                when (ORDER){
+                when (ORDER) {
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
                         robot.drive.deadReckonPID(centerTicksSilverSample, degree, DriveTerrain.AngleFollowSpeeds.SLOW)
                         sleepSeconds(0.5)
@@ -243,7 +262,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                 robot.drive.stop()
                 robot.sensors.backIntoWallDetector.enabled = false*/
 
-                robot.drive.deadReckonPID(-when(ORDER){
+                robot.drive.deadReckonPID(-when (ORDER) {
                     SampleRandomizedPositions.LEFT -> leftPostTicksSilverSample
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> centerPostTicksSilverSample
                     SampleRandomizedPositions.RIGHT -> rightPostTicksSilverSample
@@ -252,7 +271,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             SampleCollectionType.DRIVE_DEPOT -> {
                 waitTill { robot.lift.isFullyDown() }
                 robot.drive.runTime(-0.3, 1.5)
-                when(ORDER){
+                when (ORDER) {
                     SampleRandomizedPositions.LEFT -> {
                         robot.drive.pidTurn(depotSampleLeftAngle)
                         robot.drive.deadReckonPID(depotSampleLeftTicks, depotSampleLeftAngle, DriveTerrain.AngleFollowSpeeds.FAST)
@@ -276,7 +295,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
             SampleCollectionType.LANDER_EXTENSION_SILVER -> {
                 robot.drive.deadReckonPID(extensionSampleForwardDistance, StartingPositions.SILVER_HANG.angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                 sleepSeconds(0.5)
-                robot.drive.pidTurn(StartingPositions.SILVER_HANG.angle + when(ORDER){
+                robot.drive.pidTurn(StartingPositions.SILVER_HANG.angle + when (ORDER) {
                     SampleRandomizedPositions.LEFT -> extensionSampleOffset
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
                     SampleRandomizedPositions.RIGHT -> -extensionSampleOffset
@@ -284,46 +303,44 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                 robot.intake.hitSample()
             }
             SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER, SampleCollectionType.LANDER_DRIVE_FAST_PARK, SampleCollectionType.LANDER_DRIVE_FAST_BACKUP -> {
-                val angle = startingPosition.angle + when(ORDER){
+                val angle = startingPosition.angle + when (ORDER) {
                     SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> 0.0
                     SampleRandomizedPositions.LEFT -> landerFastSampleDriveSideSampleOffSet
                     SampleRandomizedPositions.RIGHT -> -landerFastSampleDriveSideSampleOffSet
                 }
-                when(ORDER){
-                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN  -> {
-                        if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) {
+                when (ORDER) {
+                    SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
+                        if (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) {
                             robot.drive.deadReckonPID(landerFastSampleDriveTeamMarkerCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
                             sleepSeconds(0.5)
-                        }
-                        else
+                        } else
                             robot.drive.deadReckonPID(landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                        if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
+                        if (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
                             robot.drive.deadReckonPID(-landerFastSampleDriveCenterSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
                     SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
                         robot.drive.deadReckonPID(landerFastSampleDriveSideStartDistance, startingPosition.angle, DriveTerrain.AngleFollowSpeeds.SLOW, false)
-                        if(ORDER == SampleRandomizedPositions.LEFT)
+                        if (ORDER == SampleRandomizedPositions.LEFT)
                             robot.drive.strafeAroundLeft(angle, stop = false)
                         else
                             robot.drive.strafeAroundRight(angle, stop = false)
-                        robot.drive.deadReckonPID(if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) landerFastSampleDriveTeamMarkerSideSampleDistance else landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
-                        if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
+                        robot.drive.deadReckonPID(if (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) landerFastSampleDriveTeamMarkerSideSampleDistance else landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.SLOW)
+                        if (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_BACKUP)
                             robot.drive.deadReckonPID(-landerFastSampleDriveSideSampleDistance, angle, DriveTerrain.AngleFollowSpeeds.FAST)
                     }
                 }
 
-                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER){
-                    when(ORDER){
+                if (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER) {
+                    when (ORDER) {
                         SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
 
                         }
                         SampleRandomizedPositions.LEFT, SampleRandomizedPositions.RIGHT -> {
-                            var angle = startingPosition.angle + ((if(ORDER == SampleRandomizedPositions.LEFT) -1.0 else 1.0 ) * teamMarkerPostSampleOffset)
-                            if(ORDER == SampleRandomizedPositions.LEFT) {
+                            var angle = startingPosition.angle + ((if (ORDER == SampleRandomizedPositions.LEFT) -1.0 else 1.0) * teamMarkerPostSampleOffset)
+                            if (ORDER == SampleRandomizedPositions.LEFT) {
                                 robot.drive.strafeAroundRight(angle)
                                 followWall(WallFollowSituation.LEFT_SAMPLE_DEPOT)
-                            }
-                            else {
+                            } else {
                                 robot.drive.strafeAroundLeft(angle)
                                 followWall(WallFollowSituation.RIGHT_SAMPLE_DEPOT)
                             }
@@ -332,10 +349,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
                     robot.intake.intakeState = Intake.IntakeState.STOP
                     teamMarker(false)
                     robot.drive.pidTurn(CompassDirection.WEST.degrees - intoWallOffset)
-                    robot.drive.deadReckonPID(outOfDepotTicks, CompassDirection.WEST.degrees -intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
+                    robot.drive.deadReckonPID(outOfDepotTicks, CompassDirection.WEST.degrees - intoWallOffset, DriveTerrain.AngleFollowSpeeds.SLOW)
                 }
 
-                if(sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
+                if (sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK) {
                     robot.intake.intakeState = Intake.IntakeState.STOP
                     park(CompassDirection.SOUTH_EAST.degrees)
                 }
@@ -344,9 +361,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.intake.intakeState = Intake.IntakeState.STOP
     }
 
-    fun park(angle:Double, turnFirst:Boolean = true){
+    fun park(angle: Double, turnFirst: Boolean = true) {
         robot.intake.flipState = Intake.FlipState.LOAD
-        if(turnFirst)
+        if (turnFirst)
             robot.drive.pidTurn(angle)
         prepCraterSense()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)

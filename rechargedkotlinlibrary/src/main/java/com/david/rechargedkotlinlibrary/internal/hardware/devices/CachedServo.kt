@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.util.Range
  * Created by David Lukens on 8/3/2018.
  */
 
-class CachedServo(private val delegate:Servo) : Servo {
+class CachedServo(private val delegate: Servo) : Servo {
     private var cachedPosition: Double? = null
 
     override fun setPosition(position: Double) {
-        if(position != cachedPosition){
+        if (position != cachedPosition) {
             cachedPosition = position
             delegate.position = position
         }
@@ -25,6 +25,7 @@ class CachedServo(private val delegate:Servo) : Servo {
     override fun setDirection(direction: Servo.Direction?) {
         delegate.direction = direction
     }
+
     override fun resetDeviceConfigurationForOpMode() = delegate.resetDeviceConfigurationForOpMode()
     override fun getDirection(): Servo.Direction = delegate.direction
     override fun getController(): ServoController = delegate.controller

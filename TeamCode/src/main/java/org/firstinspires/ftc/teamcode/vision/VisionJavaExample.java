@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.vision;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 @TeleOp
 @Disabled
-public class VisionJavaExample extends LinearOpMode{
+public class VisionJavaExample extends LinearOpMode {
     MasterVision vision;
     SampleRandomizedPositions goldPosition;
 
@@ -29,10 +28,10 @@ public class VisionJavaExample extends LinearOpMode{
 
         goldPosition = vision.getTfLite().getLastKnownSampleOrder();
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             telemetry.addData("goldPosition was", goldPosition);// giving feedback
 
-            switch (goldPosition){ // using for things in the autonomous program
+            switch (goldPosition) { // using for things in the autonomous program
                 case LEFT:
                     telemetry.addLine("going to the left");
                     break;

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 /**
  * Created by David Lukens on 8/7/2018.
  */
-class CachedDcMotorEx(private val delegate:DcMotorEx, private val HUB:RevHub) : DcMotorEx {
+class CachedDcMotorEx(private val delegate: DcMotorEx, private val HUB: RevHub) : DcMotorEx {
     val PORT = delegate.portNumber
     private val MOTOR_TYPE = delegate.motorType
     val TICKS_PER_REV = MOTOR_TYPE.ticksPerRev
@@ -27,7 +27,7 @@ class CachedDcMotorEx(private val delegate:DcMotorEx, private val HUB:RevHub) : 
     }
 
     override fun setPower(power: Double) {
-        if(powerCache != power){
+        if (powerCache != power) {
             delegate.power = power
             powerCache = power
         }

@@ -12,7 +12,7 @@ class TimeOfFlightTest : LinearOpMode() {
     override fun runOpMode() {
         val sensor = hardwareMap.get(DistanceSensor::class.java, "tof") as Rev2mDistanceSensor
         waitForStart()
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             telemetry.addData("distance in INCH", sensor.getDistance(DistanceUnit.INCH))
             telemetry.update()
         }

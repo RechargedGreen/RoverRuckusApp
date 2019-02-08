@@ -25,8 +25,8 @@ abstract class RobotTemplate(val opMode: RechargedLinearOpMode<out RobotTemplate
     open fun onStart() {}
     abstract fun autoPostInit()
 
-    open fun onPressingAutoPlay(){}
-    open fun onPressingTeleOpPlay(){}
+    open fun onPressingAutoPlay() {}
+    open fun onPressingTeleOpPlay() {}
 
     fun start() {
         thread.start()

@@ -43,7 +43,7 @@ repositories {
     mavenLocal()
     google()
     maven {
-        url  "https://dl.bintray.com/acmerobotics/maven"
+        url "https://dl.bintray.com/acmerobotics/maven"
     }
 }
 
