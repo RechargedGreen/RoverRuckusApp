@@ -10,6 +10,7 @@ class CompleteDiagnostics : PracticeJVoExtension() {
         super.onStart()
         robot.sensors.lineDetector.enabled = true
         robot.sensors.backIntoWallDetector.enabled = true
+        robot.sensors.craterRimDetector.enabled = true
     }
 
     override fun onLoop() {

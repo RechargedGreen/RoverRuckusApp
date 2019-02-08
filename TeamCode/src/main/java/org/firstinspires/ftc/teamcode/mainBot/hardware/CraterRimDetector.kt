@@ -40,4 +40,8 @@ class CraterRimDetector(robot: HardwareClass) : MTSubsystem {
 
     override fun start() {
     }
+
+    init {
+        robot.thread.addSubsystem(this)
+    }
 }
