@@ -15,19 +15,18 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         SLIGHT_DUMP
     }
 
-    companion object {
+    companion object {// full pwm signal messes with savox servos
         @JvmField
-        var loadPos = 0.15
+        var loadPos = 0.83
         @JvmField
-        var dumpPos = 1.0
+        var dumpPos = 0.15
         @JvmField
-        var holdPos = 0.4
+        var holdPos = 0.63
         @JvmField
-        var slightDumpPos = 0.65
+        var slightDumpPos = 0.3
     }
 
-    private val flipL = HardwareMaker.Servo.make(robot.hMap, "flipL")
-    private val flipR = HardwareMaker.Servo.make(robot.hMap, "flipR")
+    private val flip = HardwareMaker.Servo.make(robot.hMap, "flip")
 
     private var lastState: DumpState? = null
 
@@ -52,8 +51,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     }
 
     private fun internalSetFlipPosition(pos: Double) {
-        flipL.position = pos
-        flipR.position = 1.0 - pos
+        flip.position = pos
     }
 
     fun clearingLift() = clearingDown() && clearingUp()
