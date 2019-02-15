@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode.iterative.lib
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import org.firstinspires.ftc.teamcode.iterative.lib.commandLib.CommandSchedulerImpl
 import org.firstinspires.ftc.teamcode.iterative.lib.subsystems.SubsystemManager
 
 abstract class IterativeOpMode(val autonomous:Boolean) : LinearOpMode(){
-    abstract fun eventLoop()
+    val commandScheduler = CommandSchedulerImpl()
+
+    open fun eventLoop(){
+        if(!commandScheduler.isRunningCommands())
+            end()
+    }
 
     val subsystemManager = SubsystemManager()
 

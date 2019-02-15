@@ -5,11 +5,14 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorE
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.RevTouchSensor
 import com.david.rechargedkotlinlibrary.internal.hardware.management.MTSubsystem
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
 class Intake(val robot: HardwareClass) : MTSubsystem {
+
+    var brakingExtension = false
 
     companion object {
         var spoolSize = 1.25
@@ -64,7 +67,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         }
 
     private val intakeMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE), robot.getHub(0))
-    private val extensionMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "extension"), robot.getHub(1))
+    private val extensionMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "extension", zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE), robot.getHub(1))
 
     private var manualExtensionPower = 0.0
 
@@ -88,6 +91,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private var extensionReset = 0
 
     override fun update() {
+        extensionMotor.zeroPowerBehavior = if(brakingExtension) DcMotor.ZeroPowerBehavior.BRAKE else DcMotor.ZeroPowerBehavior.FLOAT
         if (extensionIn())
             extensionReset = extensionTicks()
         internalPowerIntake(intakePower)

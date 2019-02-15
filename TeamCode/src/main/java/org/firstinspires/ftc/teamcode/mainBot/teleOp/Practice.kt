@@ -43,10 +43,12 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
 
 
         if (c2.dp) {
+            robot.intake.brakingExtension = true
             robot.intake.flipState = Intake.FlipState.LOAD
             robot.intake.extensionState = Intake.IntakeExtensionState.IN
             robot.intake.intakeState = if (robot.intake.extensionIn()) Intake.IntakeState.IN else Intake.IntakeState.STOP
         } else {
+            robot.intake.brakingExtension = false
             robot.intake.intakePower = c2.rt - c2.lt
             robot.intake.manualPowerExtension(c2.ry, true)
             if (c2.rb)

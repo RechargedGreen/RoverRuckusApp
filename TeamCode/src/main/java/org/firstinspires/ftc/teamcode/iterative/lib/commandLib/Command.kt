@@ -4,5 +4,5 @@ interface Command {
     fun start()
     fun periodic()
     fun isComplete():Boolean
-    fun stop()
+    fun end()
 }
