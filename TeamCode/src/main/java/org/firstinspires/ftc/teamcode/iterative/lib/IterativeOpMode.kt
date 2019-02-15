@@ -14,7 +14,9 @@ abstract class IterativeOpMode(val autonomous:Boolean) : LinearOpMode(){
             waitForStart()
         }
         else{
+            waitingForStart()
         }
+        onStart()
         startEventLoop()
         end()
     }
@@ -27,6 +29,10 @@ abstract class IterativeOpMode(val autonomous:Boolean) : LinearOpMode(){
     }
 
     open fun onStop(){
+
+    }
+
+    open fun onStart(){
 
     }
 
