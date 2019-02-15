@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.iterative.lib.subsystems
 
-interface TeleOpStartables {
+interface TeleOpStartable {
     fun start()
 }
