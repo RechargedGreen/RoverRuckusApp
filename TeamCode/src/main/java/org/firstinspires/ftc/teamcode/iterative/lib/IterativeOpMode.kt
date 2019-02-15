@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode.iterative.lib
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.iterative.lib.commandLib.CommandSchedulerImpl
+import org.firstinspires.ftc.teamcode.iterative.lib.subsystems.IterativeBotTemplate
 import org.firstinspires.ftc.teamcode.iterative.lib.subsystems.SubsystemManager
 
-abstract class IterativeOpMode(val autonomous:Boolean) : LinearOpMode(){
+abstract class IterativeOpMode<Bot:IterativeBotTemplate>(val bot:Bot, val autonomous:Boolean) : LinearOpMode(){
     val commandScheduler = CommandSchedulerImpl()
 
     open fun eventLoop(){
@@ -15,12 +16,16 @@ abstract class IterativeOpMode(val autonomous:Boolean) : LinearOpMode(){
     val subsystemManager = SubsystemManager()
 
     override fun runOpMode() {
+        bot.initHardware(hardwareMap, autonomous, subsystemManager)
         if (autonomous) {
             subsystemManager.autoPostInit()
             waitForStart()
+            subsystemManager.autoStart()
         }
         else{
+            subsystemManager.teleOpPostInit()
             waitingForStart()
+            subsystemManager.teleOpStart()
         }
         onStart()
         startEventLoop()
@@ -32,6 +37,8 @@ abstract class IterativeOpMode(val autonomous:Boolean) : LinearOpMode(){
         onStop()
         if(autonomous)
             subsystemManager.autoEnd()
+        else
+            subsystemManager.teleOpEnd()
     }
 
     open fun onStop(){

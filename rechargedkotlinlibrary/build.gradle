@@ -48,7 +48,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.acmerobotics.roadrunner:core:0.2.2'
+    implementation 'com.acmerobotics.roadrunner:core:0.2.6'
     implementation 'com.acmerobotics.dashboard:dashboard:0.2.0'
     implementation project(':FtcRobotController')
     compile project(':FtcRobotController')
