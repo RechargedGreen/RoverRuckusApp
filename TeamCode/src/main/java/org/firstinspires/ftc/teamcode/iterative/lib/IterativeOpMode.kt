@@ -9,6 +9,7 @@ abstract class IterativeOpMode<Bot:IterativeBotTemplate>(val bot:Bot, val autono
     val commandScheduler = CommandSchedulerImpl()
 
     open fun eventLoop(){
+        commandScheduler.periodic()
         if(!commandScheduler.isRunningCommands())
             end()
     }
@@ -16,15 +17,27 @@ abstract class IterativeOpMode<Bot:IterativeBotTemplate>(val bot:Bot, val autono
     val subsystemManager = SubsystemManager()
 
     override fun runOpMode() {
+        telemetry.addLine("initiating bot")
+        telemetry.update()
         bot.initHardware(hardwareMap, autonomous, subsystemManager)
+        telemetry.addLine("bot initiated")
+        telemetry.update()
         if (autonomous) {
+            telemetry.addData("Status", "autoPostInit")
+            telemetry.update()
             subsystemManager.autoPostInit()
             waitForStart()
+            telemetry.addData("Status", "autoStart")
+            telemetry.update()
             subsystemManager.autoStart()
         }
         else{
+            telemetry.addData("Status", "teleOpPostInit")
+            telemetry.update()
             subsystemManager.teleOpPostInit()
             waitingForStart()
+            telemetry.addData("Status", "teleOpStart")
+            telemetry.update()
             subsystemManager.teleOpStart()
         }
         onStart()
@@ -54,6 +67,7 @@ abstract class IterativeOpMode<Bot:IterativeBotTemplate>(val bot:Bot, val autono
             telemetry.addData("status", "eventLoop")
             eventLoop()
             subsystemManager.update()
+            telemetry.update()
         }
     }
 
@@ -62,6 +76,7 @@ abstract class IterativeOpMode<Bot:IterativeBotTemplate>(val bot:Bot, val autono
             tillStart()
             if(autonomous)
                 subsystemManager.update()
+            telemetry.update()
         }
     }
 

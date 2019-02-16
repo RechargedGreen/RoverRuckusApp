@@ -48,12 +48,15 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
 
 
         if(c2.b){
+            robot.intake.brakingExtension = true
             robot.intake.manualPowerExtension(-holdInPower, false)
             controlA()
         }else if(c2.dp){
+            robot.intake.brakingExtension = true
             robot.intake.extensionState = Intake.IntakeExtensionState.IN
             controlB()
         } else{
+            robot.intake.brakingExtension = false
             robot.intake.manualPowerExtension(c1.rt - c1.lt, true)
             controlA()
         }

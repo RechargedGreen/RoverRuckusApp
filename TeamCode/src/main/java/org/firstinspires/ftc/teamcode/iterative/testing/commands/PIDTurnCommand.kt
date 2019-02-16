@@ -29,17 +29,17 @@ class PIDTurnCommand(private val targetHeading: Double, private val turnType: Tu
 
     override fun start() {}
     override fun periodic() {
-        val turn = controller.update(MathUtil.norm(currentHeading() - targetHeading))
+        val turn = controller.update(error())
         when (turnType) {
             TurnType.POINT_TURN          -> drive.robotCentric(0.0, 0.0, turn)
             TurnType.AROUND_LEFT_WHEELS  -> drive.robotCentric(-turn, 0.0, turn)
             TurnType.AROUND_RIGHT_WHEELS -> drive.robotCentric(turn, 0.0, turn)
-            TurnType.AROUND_FRONT_WHEELS -> drive.robotCentric(0.0, turn, turn)
-            TurnType.AROUND_BACK_WHEELS  -> drive.robotCentric(0.0, -turn, turn)
+            TurnType.AROUND_FRONT_WHEELS -> drive.robotCentric(0.0, -turn, turn)
+            TurnType.AROUND_BACK_WHEELS  -> drive.robotCentric(0.0, turn, turn)
         }
     }
 
-    override fun isComplete() = (currentHeading() - targetHeading).absoluteValue < threshold
+    override fun isComplete() = error().absoluteValue < threshold
     override fun end() = drive.stop()
-    private fun currentHeading() = imu.getZ(AngleUnit.DEGREES)
+    private fun error() = MathUtil.norm(imu.getZ(AngleUnit.DEGREES) - targetHeading)
 }

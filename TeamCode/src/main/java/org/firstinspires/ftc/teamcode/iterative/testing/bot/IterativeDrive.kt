@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.iterative.lib.subsystems.SubsystemManager
@@ -40,9 +41,9 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
 
     fun initHardware(hMap: HardwareMap, autonomous: Boolean, subsystemManager: SubsystemManager) {
         lf = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lf"), IterativeBot.leftHub)
-        lb = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lf"), IterativeBot.leftHub)
-        rf = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lf"), IterativeBot.leftHub)
-        rb = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lf"), IterativeBot.leftHub)
+        lb = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lb"), IterativeBot.leftHub)
+        rf = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "rf", DcMotorSimple.Direction.REVERSE), IterativeBot.rightHub)
+        rb = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "rb", DcMotorSimple.Direction.REVERSE), IterativeBot.rightHub)
         motors.add(lf)
         motors.add(lb)
         motors.add(rf)
@@ -53,6 +54,7 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
         constraints = MecanumConstraints(DriveConstants.baseConstraints, DriveConstants.trackWidth)
         trajectoryFollower = MecanumPIDVAFollower(this, DriveConstants.translationalPID, DriveConstants.headingPID, DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic)
 
+        driveSignals = DriveSignals(0.0, 0.0, 0.0, 0.0)
         subsystemManager.addUpdatable(this)
     }
 
@@ -87,10 +89,13 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
         driveSignals = DriveSignals(0.0, 0.0, 0.0, 0.0)
     }
 
-    fun robotCentric(forward:Double, right:Double, clockwise:Double){
+    fun robotCentric(forward:Double, right:Double, clockwise:Double) {
         val lf = forward + right + clockwise
         val lb = forward - right + clockwise
         val rf = forward - right - clockwise
         val rb = forward + right - clockwise
+        setMotorPowers(lf, lb, rb, rf)
     }
+    fun tank(left:Double, right:Double) = setMotorPowers(left, left, right, right)
+    fun tankArcade(x:Double, clockwise: Double) = tank(x + clockwise, x - clockwise)
 }

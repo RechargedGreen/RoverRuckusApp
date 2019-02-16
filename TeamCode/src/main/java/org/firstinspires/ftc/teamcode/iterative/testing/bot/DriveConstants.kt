@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients
  */
 @Config
 object DriveConstants {
-    var pidConstants = PIDCoefficients()
+    var pidConstants = PIDCoefficients(0.005, 0.0, 0.0005)
 
     var translationalPID = com.acmerobotics.roadrunner.control.PIDCoefficients()
     var headingPID = com.acmerobotics.roadrunner.control.PIDCoefficients()

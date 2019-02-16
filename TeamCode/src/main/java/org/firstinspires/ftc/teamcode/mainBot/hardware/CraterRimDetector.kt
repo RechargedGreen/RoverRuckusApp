@@ -15,7 +15,7 @@ class CraterRimDetector(robot: HardwareClass) : MTSubsystem {
         var mediumThreshold = 0.0
     }
 
-    private val sensor = robot.opMode.hardwareMap.get(DistanceSensor::class.java, "craterRimDetector") as Rev2mDistanceSensor
+    //private val sensor = robot.opMode.hardwareMap.get(DistanceSensor::class.java, "craterRimDetector") as Rev2mDistanceSensor
 
     private var distance: Double? = null
     var enabled = true
@@ -35,7 +35,7 @@ class CraterRimDetector(robot: HardwareClass) : MTSubsystem {
     fun getDistance() = distance
 
     override fun update() {
-        distance = if (enabled) sensor.getDistance(DistanceUnit.INCH) else null
+      //  distance = if (enabled) sensor.getDistance(DistanceUnit.INCH) else null
     }
 
     override fun start() {

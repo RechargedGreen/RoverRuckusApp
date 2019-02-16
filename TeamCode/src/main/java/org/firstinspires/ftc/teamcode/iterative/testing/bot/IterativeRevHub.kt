@@ -11,13 +11,10 @@ class IterativeRevHub {
 
     fun initHardware(hMap: HardwareMap, config: String){
         delegate = hMap.get(LynxModule::class.java, config)
+        enablePhoneCharging(false)
     }
 
     private var response: LynxGetBulkInputDataResponse? = null
-
-    init {
-        enablePhoneCharging(false)
-    }
 
     fun pull() {
         val command = LynxGetBulkInputDataCommand(delegate)

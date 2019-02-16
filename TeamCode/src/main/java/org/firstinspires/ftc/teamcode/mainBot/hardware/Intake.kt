@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.Range
 
 class Intake(val robot: HardwareClass) : MTSubsystem {
 
-    var brakingExtension = false
+    var brakingExtension = true
 
     companion object {
         var spoolSize = 1.25
