@@ -23,9 +23,9 @@ object DriveConstants {
 
     val trackWidth = 1.0
     var wheelBase = 1.0
-    var wheelRadius = 0.0
+    var wheelRadius = 2.0
     var ticksPerRev = 560.0
-    var gearRatio = 1.0
+    var gearRatio = 44.0 / 42.0
     var maxRPM = 300.0
 
     fun encoderTicksToInches(ticks:Int):Double = wheelRadius * MathUtil.TAU * gearRatio * ticks / ticksPerRev

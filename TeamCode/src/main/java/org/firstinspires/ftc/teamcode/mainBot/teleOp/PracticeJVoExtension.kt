@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainBot.teleOp
 
+import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
 import com.david.rechargedkotlinlibrary.internal.util.BooleanToggle
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.Lift
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
+@Config
 @TeleOp(name = PracticeJVoExtension.NAME, group = OpModeGroups.TELEOP)
 open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     val deadBand = 0.05
@@ -44,17 +46,16 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
             robot.lift.state = if (c2.dpr && !robot.intake.extensionIn()) Lift.State.DOWN else if (c1.rb) Lift.State.UP else Lift.State.DOWN
 
 
-        if (c2.dp) {
-            flipState = Intake.FlipState.LOAD
+
+        if(c2.b){
+            robot.intake.manualPowerExtension(-holdInPower, false)
+            controlA()
+        }else if(c2.dp){
             robot.intake.extensionState = Intake.IntakeExtensionState.IN
-            robot.intake.intakeState = if (robot.intake.extensionIn()) Intake.IntakeState.IN else Intake.IntakeState.STOP
-        } else {
-            robot.intake.intakePower = c2.rt - c2.lt
+            controlB()
+        } else{
             robot.intake.manualPowerExtension(c1.rt - c1.lt, true)
-            if (c2.rb)
-                flipState = Intake.FlipState.LOAD
-            if (c2.lb)
-                flipState = Intake.FlipState.INTAKE
+            controlA()
         }
 
         robot.intake.flipState = flipState
@@ -65,7 +66,20 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
         telemetry.addData("extensionIn", robot.intake.extensionIn())
     }
 
+    private fun controlA(){
+        robot.intake.intakePower = c2.rt - c2.lt
+        if (c2.rb)
+            flipState = Intake.FlipState.LOAD
+        if (c2.lb)
+            flipState = Intake.FlipState.INTAKE
+    }
+    private fun controlB(){
+        flipState = Intake.FlipState.LOAD
+        robot.intake.intakeState = if (robot.intake.extensionIn()) Intake.IntakeState.IN else Intake.IntakeState.STOP
+    }
+
     companion object {
         const val NAME = "PracticeJVoExtension"
+        var holdInPower = 0.1
     }
 }
