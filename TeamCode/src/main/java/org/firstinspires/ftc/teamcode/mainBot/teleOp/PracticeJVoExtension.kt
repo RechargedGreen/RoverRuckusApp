@@ -37,7 +37,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
         val lift = c2.ly
         if (lift.absoluteValue > deadBand || !liftFailSafesToggle.toggled())
             liftMode = Mode.MANUAL
-        if (c2.y && liftFailSafesToggle.toggled()) {
+        if ((c1.y || c2.y) && liftFailSafesToggle.toggled()) {
             liftMode = Mode.AUTO
         }
         if (liftMode == Mode.MANUAL)
