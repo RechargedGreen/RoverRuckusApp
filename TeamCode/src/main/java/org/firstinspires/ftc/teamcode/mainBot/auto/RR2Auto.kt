@@ -22,6 +22,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     companion object {
+        @JvmField var parkThreshold = 4.0
         //////// silver sample
         @JvmField
         var leftOffsetSilverSample = 32.0
@@ -156,17 +157,20 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     abstract fun postDeploy()
 
     fun teamMarker(stayStill: Boolean) {
-        robot.lift.state = Lift.State.UP
-        if (!stayStill)
+        if (stayStill) {
+            robot.lift.state = Lift.State.UP
+            robot.dumper.state = Dumper.DumpState.DUMP
+            waitTill { robot.lift.isFullyUp() }
+            sleepSeconds(1.0)
+            robot.dumper.state = Dumper.DumpState.HOLD
+            robot.lift.state = Lift.State.DOWN
+        } else {
+            if (ORDER != SampleRandomizedPositions.CENTER && ORDER != SampleRandomizedPositions.UNKNOWN)
+                robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees)
+            robot.intake.intakeState = Intake.IntakeState.OUT
+            sleepSeconds(1.0)
+            robot.intake.intakeState = Intake.IntakeState.STOP
             robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees)
-        robot.dumper.state = Dumper.DumpState.DUMP
-        waitTill { robot.lift.isFullyUp() }
-        sleepSeconds(2.0)
-        robot.dumper.state = Dumper.DumpState.LOAD
-        sleepSeconds(1.0)
-        robot.lift.state = Lift.State.DOWN
-        if (!stayStill) {
-            waitTill { robot.lift.isFullyDown() }
             robot.drive.runTime(-0.15, 1.0)
         }
     }
@@ -176,7 +180,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.imu.resetY()
     }
 
-    fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > 7.0
+    fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > parkThreshold
 
     fun silverSampleWallLinup() {
         /*robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
@@ -227,7 +231,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     fun sample(sampleCollectionType: SampleCollectionType) {
         if (startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
-        robot.intake.intakeState = Intake.IntakeState.IN
+        //robot.intake.intakeState = Intake.IntakeState.IN
         when (sampleCollectionType) {
             SampleCollectionType.DRIVE_SILVER -> {
                 val degree = StartingPositions.SILVER_HANG.angle
@@ -369,5 +373,6 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
         robot.drive.stop()
+        sleepSeconds(2.0)
     }
 }
