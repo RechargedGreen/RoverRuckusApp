@@ -20,22 +20,24 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
     override fun runOpMode() {
         dash = FtcDashboard.getInstance()
         robot = createRobot(this)
-        if (autonomous)
+        if (autonomous) {
             robot.start()
-        if (autonomous)
             robot.autoPostInit()
+        }
         while (!isStarted && !isStopRequested)
             tillStart()
-        telemetry.addData("status", "started")
-        if (autonomous)
-            robot.onPressingAutoPlay()
-        else {
-            robot.start()
-            robot.onPressingTeleOpPlay()
-        }
+        if(opModeIsActive()) {
+            telemetry.addData("status", "started")
+            if (autonomous)
+                robot.onPressingAutoPlay()
+            else {
+                robot.start()
+                robot.onPressingTeleOpPlay()
+            }
 
-        runtime.reset()
-        run()
+            runtime.reset()
+            run()
+        }
     }
 
     @Throws(InterruptedException::class)

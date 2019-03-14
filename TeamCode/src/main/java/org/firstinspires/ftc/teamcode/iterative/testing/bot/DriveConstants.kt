@@ -28,6 +28,6 @@ object DriveConstants {
     var gearRatio = 44.0 / 42.0
     var maxRPM = 300.0
 
-    fun encoderTicksToInches(ticks:Int):Double = wheelRadius * MathUtil.TAU * gearRatio * ticks / ticksPerRev
-    fun rpmToVelocity(rpm:Double) = rpm * gearRatio * MathUtil.TAU * wheelRadius / 60.0
+    fun encoderTicksToInches(ticks: Int): Double = wheelRadius * MathUtil.TAU * gearRatio * ticks / ticksPerRev
+    fun rpmToVelocity(rpm: Double) = rpm * gearRatio * MathUtil.TAU * wheelRadius / 60.0
 }

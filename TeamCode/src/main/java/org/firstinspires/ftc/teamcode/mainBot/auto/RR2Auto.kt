@@ -22,7 +22,8 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     companion object {
-        @JvmField var parkThreshold = 4.0
+        @JvmField
+        var parkThreshold = 4.0
         //////// silver sample
         @JvmField
         var leftOffsetSilverSample = 32.0

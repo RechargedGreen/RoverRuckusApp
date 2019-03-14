@@ -21,8 +21,9 @@ import kotlin.math.absoluteValue
 class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
 
     data class DriveSignals(var lf: Double, var lb: Double, var rf: Double, var rb: Double) {
-        fun norm() : DriveSignals {
-            val max = listOf(lf.absoluteValue, lb.absoluteValue, rf.absoluteValue, rb.absoluteValue, 1.0).max()?:1.0
+        fun norm(): DriveSignals {
+            val max = listOf(lf.absoluteValue, lb.absoluteValue, rf.absoluteValue, rb.absoluteValue, 1.0).max()
+                    ?: 1.0
             lf /= max
             lb /= max
             rf /= max
@@ -67,8 +68,8 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
         rb.power = signals.rb
     }
 
-    private lateinit var constraints:DriveConstraints
-    lateinit var trajectoryFollower:TrajectoryFollower
+    private lateinit var constraints: DriveConstraints
+    lateinit var trajectoryFollower: TrajectoryFollower
 
     override fun getExternalHeading(): Double = IterativeBot.imu.getZ(AngleUnit.RADIANS)
 
@@ -85,17 +86,18 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
 
     fun trajectoryBuilder() = TrajectoryBuilder(poseEstimate, constraints)
 
-    fun stop(){
+    fun stop() {
         driveSignals = DriveSignals(0.0, 0.0, 0.0, 0.0)
     }
 
-    fun robotCentric(forward:Double, right:Double, clockwise:Double) {
+    fun robotCentric(forward: Double, right: Double, clockwise: Double) {
         val lf = forward + right + clockwise
         val lb = forward - right + clockwise
         val rf = forward - right - clockwise
         val rb = forward + right - clockwise
         setMotorPowers(lf, lb, rb, rf)
     }
-    fun tank(left:Double, right:Double) = setMotorPowers(left, left, right, right)
-    fun tankArcade(x:Double, clockwise: Double) = tank(x + clockwise, x - clockwise)
+
+    fun tank(left: Double, right: Double) = setMotorPowers(left, left, right, right)
+    fun tankArcade(x: Double, clockwise: Double) = tank(x + clockwise, x - clockwise)
 }

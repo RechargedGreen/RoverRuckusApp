@@ -23,6 +23,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     enum class IntakeState(internal val power: Double) {
         IN(1.0),
         OUT(-1.0),
+        MARKER(-1.0),
         STOP(0.0)
     }
 
@@ -31,6 +32,12 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private val intakeFlipR = HardwareMaker.Servo.make(robot.hMap, "intakeFlipR")
     private val intakeFlipL = HardwareMaker.Servo.make(robot.hMap, "intakeFlipL")
     var flipState = FlipState.INTAKE
+
+    fun doMarker(){
+        intakeState = IntakeState.MARKER
+        robot.opMode.sleepSeconds(0.5)
+        intakeState = IntakeState.STOP
+    }
 
     enum class FlipState(internal val pos: Double) {
         LOAD(1.0),
@@ -91,7 +98,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private var extensionReset = 0
 
     override fun update() {
-        extensionMotor.zeroPowerBehavior = if(brakingExtension) DcMotor.ZeroPowerBehavior.BRAKE else DcMotor.ZeroPowerBehavior.FLOAT
+        extensionMotor.zeroPowerBehavior = if (brakingExtension) DcMotor.ZeroPowerBehavior.BRAKE else DcMotor.ZeroPowerBehavior.FLOAT
         if (extensionIn())
             extensionReset = extensionTicks()
         internalPowerIntake(intakePower)

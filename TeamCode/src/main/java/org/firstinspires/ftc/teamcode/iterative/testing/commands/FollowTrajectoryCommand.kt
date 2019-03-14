@@ -7,10 +7,11 @@ import org.firstinspires.ftc.teamcode.iterative.testing.bot.IterativeBot
 /**
  * Created by David Lukens on 2/15/2019.
  */
-class FollowTrajectoryCommand(private val createTrajectory:()->Trajectory) : Command{
+class FollowTrajectoryCommand(private val createTrajectory: () -> Trajectory) : Command {
     init {
         requireNotNull(IterativeBot.drive)
     }
+
     val drive = IterativeBot.drive
     override fun start() = drive.trajectoryFollower.followTrajectory(createTrajectory())
     override fun periodic() = drive.trajectoryFollower.update(drive.poseEstimate)

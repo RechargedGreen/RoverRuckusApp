@@ -7,9 +7,9 @@ import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 class IterativeRevHub {
-    lateinit var delegate:LynxModule
+    lateinit var delegate: LynxModule
 
-    fun initHardware(hMap: HardwareMap, config: String){
+    fun initHardware(hMap: HardwareMap, config: String) {
         delegate = hMap.get(LynxModule::class.java, config)
         enablePhoneCharging(false)
     }

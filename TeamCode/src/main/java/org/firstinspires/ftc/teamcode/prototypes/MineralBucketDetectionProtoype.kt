@@ -7,13 +7,13 @@ import com.qualcomm.robotcore.hardware.DistanceSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
 @TeleOp
-class MineralBucketDetectionProtoype: LinearOpMode(){
+class MineralBucketDetectionProtoype : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         val color = hardwareMap.colorSensor.get("color")
         val tof = hardwareMap.get(DistanceSensor::class.java, "tof") as Rev2mDistanceSensor
         waitForStart()
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             telemetry.addData("alpha", color.alpha())
             telemetry.addData("red", color.red())
             telemetry.addData("green", color.green())

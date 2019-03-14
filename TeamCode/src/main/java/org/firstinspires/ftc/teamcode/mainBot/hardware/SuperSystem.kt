@@ -9,6 +9,8 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     val normalPattern = RevBlinkinLedDriver.BlinkinPattern.GREEN
     val hangTimePattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED
 
+    val bucketSense = BucketSense(robot.hMap)
+
     enum class State {
         UNKNOWN
     }
@@ -22,6 +24,8 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
         }
 
     override fun update() {
+        if (!robot.opMode.isAutonomous())
+            bucketSense.updateCache()
         when (state) {
             State.UNKNOWN -> {
             }

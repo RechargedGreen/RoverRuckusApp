@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.iterative.testing.commands
 
 import org.firstinspires.ftc.teamcode.iterative.lib.commandLib.Command
 
-class DeployCommand : Command{
+class DeployCommand : Command {
     override fun start() {
     }
 
@@ -11,6 +11,6 @@ class DeployCommand : Command{
 
     override fun isComplete(): Boolean = false
 
-    override fun end(){
+    override fun end() {
     }
 }

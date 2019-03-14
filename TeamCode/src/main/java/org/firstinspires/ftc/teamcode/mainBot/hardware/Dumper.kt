@@ -15,7 +15,8 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         SLIGHT_DUMP
     }
 
-    companion object {// full pwm signal messes with savox servos
+    companion object {
+        // full pwm signal messes with savox servos
         @JvmField
         var loadPos = 0.83
         @JvmField

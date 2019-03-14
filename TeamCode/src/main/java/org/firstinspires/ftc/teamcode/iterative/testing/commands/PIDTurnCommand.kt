@@ -31,11 +31,11 @@ class PIDTurnCommand(private val targetHeading: Double, private val turnType: Tu
     override fun periodic() {
         val turn = controller.update(error())
         when (turnType) {
-            TurnType.POINT_TURN          -> drive.robotCentric(0.0, 0.0, turn)
-            TurnType.AROUND_LEFT_WHEELS  -> drive.robotCentric(-turn, 0.0, turn)
+            TurnType.POINT_TURN -> drive.robotCentric(0.0, 0.0, turn)
+            TurnType.AROUND_LEFT_WHEELS -> drive.robotCentric(-turn, 0.0, turn)
             TurnType.AROUND_RIGHT_WHEELS -> drive.robotCentric(turn, 0.0, turn)
             TurnType.AROUND_FRONT_WHEELS -> drive.robotCentric(0.0, -turn, turn)
-            TurnType.AROUND_BACK_WHEELS  -> drive.robotCentric(0.0, turn, turn)
+            TurnType.AROUND_BACK_WHEELS -> drive.robotCentric(0.0, turn, turn)
         }
     }
 

@@ -17,7 +17,7 @@ object IterativeBot : Updatable, IterativeBotTemplate {
     val rightHub = IterativeRevHub()
     lateinit var imu: SimplifiedBNO055
 
-    lateinit var extensionMotorTempBraker:DcMotor
+    lateinit var extensionMotorTempBraker: DcMotor
 
     override fun initHardware(hMap: HardwareMap, autonomous: Boolean, subsystemManager: SubsystemManager) {
         subsystemManager.addUpdatable(this)
