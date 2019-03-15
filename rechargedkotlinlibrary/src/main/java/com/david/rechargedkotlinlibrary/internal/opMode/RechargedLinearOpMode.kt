@@ -26,7 +26,7 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
         }
         while (!isStarted && !isStopRequested)
             tillStart()
-        if(opModeIsActive()) {
+        if (opModeIsActive()) {
             telemetry.addData("status", "started")
             if (autonomous)
                 robot.onPressingAutoPlay()
@@ -56,19 +56,25 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
 
     @Throws(InterruptedException::class)
     fun sleepTillTime(seconds: Double) = waitWhile { runtime.seconds() < seconds }
+
     @Throws(InterruptedException::class)
     fun waitWhile(condition: () -> Boolean) = loopWhile(condition = condition)
+
     @Throws(InterruptedException::class)
     fun loopTill(condition: () -> Boolean = { true }, action: () -> Unit = {}) {
         while (!condition() && opModeIsActive())
             action()
     }
+
     @Throws(InterruptedException::class)
     fun sleepSeconds(seconds: Double) = sleep((seconds * 1000).toLong())
+
     @Throws(InterruptedException::class)
     fun waitTill(condition: () -> Boolean) = loopTill(condition)
+
     @Throws(InterruptedException::class)
     open fun tillStart() = preventTimeOut()
+
     @Throws(InterruptedException::class)
     private fun preventTimeOut() {
         telemetry.addData("Status", "Waiting in Init")

@@ -28,7 +28,9 @@ class PIDTurnCommand(private val targetHeading: Double, private val turnType: Tu
     private val controller = PIDController(DriveConstants.pidConstants)
 
     @Throws(InterruptedException::class)
-    override fun start() {}
+    override fun start() {
+    }
+
     @Throws(InterruptedException::class)
     override fun periodic() {
         val turn = controller.update(error())
@@ -43,8 +45,10 @@ class PIDTurnCommand(private val targetHeading: Double, private val turnType: Tu
 
     @Throws(InterruptedException::class)
     override fun isComplete() = error().absoluteValue < threshold
+
     @Throws(InterruptedException::class)
     override fun end() = drive.stop()
+
     @Throws(InterruptedException::class)
     private fun error() = MathUtil.norm(imu.getZ(AngleUnit.DEGREES) - targetHeading)
 }

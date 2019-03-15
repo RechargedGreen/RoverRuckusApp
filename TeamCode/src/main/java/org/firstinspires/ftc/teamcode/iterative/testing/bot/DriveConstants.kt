@@ -30,6 +30,7 @@ object DriveConstants {
 
     @Throws(InterruptedException::class)
     fun encoderTicksToInches(ticks: Int): Double = wheelRadius * MathUtil.TAU * gearRatio * ticks / ticksPerRev
+
     @Throws(InterruptedException::class)
     fun rpmToVelocity(rpm: Double) = rpm * gearRatio * MathUtil.TAU * wheelRadius / 60.0
 }

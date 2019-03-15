@@ -28,8 +28,10 @@ class CraterRimDetector(robot: HardwareClass) : MTSubsystem {
 
     @Throws(InterruptedException::class)
     fun close(): Boolean = checkThreshold(closeThreshold)
+
     @Throws(InterruptedException::class)
     fun medium() = checkThreshold(mediumThreshold)
+
     @Throws(InterruptedException::class)
     fun far() = !(medium() || close())
 

@@ -109,6 +109,7 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
 
     @Throws(InterruptedException::class)
     fun tank(left: Double, right: Double) = setMotorPowers(left, left, right, right)
+
     @Throws(InterruptedException::class)
     fun tankArcade(x: Double, clockwise: Double) = tank(x + clockwise, x - clockwise)
 }

@@ -9,6 +9,7 @@ object MathUtil {
     const val TAU = 2.0 * Math.PI
     @Throws(InterruptedException::class)
     fun radiansToInches(radians: Double, radius: Double) = TAU * radians * radius
+
     @Throws(InterruptedException::class)
     fun norm(angle: Double, angleUnit: AngleUnit = AngleUnit.DEGREES): Double {
         var angle = if (angleUnit == AngleUnit.RADIANS) angle else Math.toRadians(angle)

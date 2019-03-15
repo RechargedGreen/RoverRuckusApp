@@ -20,6 +20,7 @@ class CachedDcMotorEx(private val delegate: DcMotorEx, private val HUB: RevHub) 
 
     @Throws(InterruptedException::class)
     override fun isBusy(): Boolean = HUB.isAtTarget(PORT)
+
     @Throws(InterruptedException::class)
     override fun getPortNumber() = PORT
 
@@ -40,30 +41,43 @@ class CachedDcMotorEx(private val delegate: DcMotorEx, private val HUB: RevHub) 
 
     @Throws(InterruptedException::class)
     override fun getPower(): Double = powerCache
+
     @Throws(InterruptedException::class)
     override fun getMotorType(): MotorConfigurationType = MOTOR_TYPE
+
     @Throws(InterruptedException::class)
     override fun setMotorDisable() = delegate.setMotorDisable()
+
     @Throws(InterruptedException::class)
     override fun setMotorEnable() = delegate.setMotorEnable()
+
     @Throws(InterruptedException::class)
     override fun isMotorEnabled() = delegate.isMotorEnabled
+
     @Throws(InterruptedException::class)
     override fun getTargetPositionTolerance() = delegate.targetPositionTolerance
+
     @Throws(InterruptedException::class)
     override fun setPowerFloat() = delegate.setPowerFloat()
+
     @Throws(InterruptedException::class)
     override fun getPowerFloat() = delegate.powerFloat
+
     @Throws(InterruptedException::class)
     override fun resetDeviceConfigurationForOpMode() = delegate.resetDeviceConfigurationForOpMode()
+
     @Throws(InterruptedException::class)
     override fun getPIDCoefficients(mode: DcMotor.RunMode?) = delegate.getPIDCoefficients(mode)
+
     @Throws(InterruptedException::class)
     override fun setPIDCoefficients(mode: DcMotor.RunMode?, pidCoefficients: PIDCoefficients?) = delegate.setPIDCoefficients(mode, pidCoefficients)
+
     @Throws(InterruptedException::class)
     override fun getZeroPowerBehavior() = delegate.zeroPowerBehavior
+
     @Throws(InterruptedException::class)
     override fun getDirection() = delegate.direction
+
     @Throws(InterruptedException::class)
     override fun setDirection(direction: DcMotorSimple.Direction?) {
         delegate.direction = direction
@@ -73,16 +87,22 @@ class CachedDcMotorEx(private val delegate: DcMotorEx, private val HUB: RevHub) 
 
     @Throws(InterruptedException::class)
     override fun getTargetPosition() = delegate.targetPosition
+
     @Throws(InterruptedException::class)
     override fun setVelocity(angularRate: Double, unit: AngleUnit?) = delegate.setVelocity(angularRate, unit)
+
     @Throws(InterruptedException::class)
     override fun getController() = delegate.controller
+
     @Throws(InterruptedException::class)
     override fun close() = delegate.close()
+
     @Throws(InterruptedException::class)
     override fun getVersion() = delegate.version
+
     @Throws(InterruptedException::class)
     override fun getDeviceName() = delegate.deviceName
+
     @Throws(InterruptedException::class)
     override fun setTargetPosition(position: Int) {
         delegate.targetPosition = position
@@ -90,12 +110,16 @@ class CachedDcMotorEx(private val delegate: DcMotorEx, private val HUB: RevHub) 
 
     @Throws(InterruptedException::class)
     override fun getMode(): DcMotor.RunMode = delegate.mode
+
     @Throws(InterruptedException::class)
     override fun getConnectionInfo() = delegate.connectionInfo
+
     @Throws(InterruptedException::class)
     override fun getVelocity(unit: AngleUnit?) = delegate.getVelocity(unit)
+
     @Throws(InterruptedException::class)
     override fun getManufacturer() = delegate.manufacturer
+
     @Throws(InterruptedException::class)
     override fun setMode(mode: DcMotor.RunMode?) {
         delegate.mode = mode
@@ -127,6 +151,7 @@ class CachedDcMotorEx(private val delegate: DcMotorEx, private val HUB: RevHub) 
 
     @Throws(InterruptedException::class)
     override fun getVelocity(): Double = delegate.velocity
+
     @Throws(InterruptedException::class)
     override fun setPIDFCoefficients(mode: DcMotor.RunMode?, pidfCoefficients: PIDFCoefficients?) = delegate.setPIDFCoefficients(mode, pidfCoefficients)
 

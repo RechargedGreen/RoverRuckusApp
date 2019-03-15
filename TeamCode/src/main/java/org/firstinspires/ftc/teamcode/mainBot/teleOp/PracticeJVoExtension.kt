@@ -41,13 +41,13 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
 
         robot.dumper.state = if (c1.lb && !(c2.dpr && !robot.intake.extensionOut())) (if (c2.a) Dumper.DumpState.SLIGHT_DUMP else Dumper.DumpState.DUMP) else Dumper.DumpState.LOAD
 
-        if(!(robot.superSystem.bucketSense.left() && robot.superSystem.bucketSense.right()))
+        if (!(robot.superSystem.bucketSense.left() && robot.superSystem.bucketSense.right()))
             hasBeenLoadedTime.reset()
         else
             hasBeenEmptyTime.reset()
-        if(hasBeenLoadedTime.seconds() > 0.01 || (c1.lb && robot.lift.getControlState() == Lift.ControlState.AUTO))
+        if (hasBeenLoadedTime.seconds() > 0.01 || (c1.lb && robot.lift.getControlState() == Lift.ControlState.AUTO))
             autoRaise = true
-        else if(hasBeenEmptyTime.seconds() > 0.25)
+        else if (hasBeenEmptyTime.seconds() > 0.25)
             autoRaise = false
 
         liftFailSafesToggle.update(c2.x)

@@ -58,6 +58,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         UP,
         LATCH_ENGAGED
     }
+
     @Throws(InterruptedException::class)
     override fun update() {
         setInternalLatchState(if (state == State.LATCH_ENGAGED) InternalLatchState.LATCHED else InternalLatchState.FREE)
@@ -71,6 +72,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
             ControlState.MANUAL_SAFE -> internalSetMotorPowers(openLoop, true)
         }
     }
+
     @Throws(InterruptedException::class)
     private fun setInternalLatchState(state: InternalLatchState) {
         latch.position = state.pos
@@ -90,8 +92,10 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     private fun setInternalState(state: InternalState) = internalSetMotorPowers(state.power, true)
     @Throws(InterruptedException::class)
     fun isFullyDown(): Boolean = downSensor.pressed()
+
     @Throws(InterruptedException::class)
     fun isFullyUp(): Boolean = upSensor.pressed()
+
     @Throws(InterruptedException::class)
     override fun start() {
     }

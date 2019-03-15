@@ -10,6 +10,7 @@ class RevPotentiometer(port: Int, hub: RevHub) {
 
     @Throws(InterruptedException::class)
     fun getDegrees() = delegate.getVoltage() * SCALER
+
     @Throws(InterruptedException::class)
     fun getRadians() = Math.toRadians(getDegrees())
 

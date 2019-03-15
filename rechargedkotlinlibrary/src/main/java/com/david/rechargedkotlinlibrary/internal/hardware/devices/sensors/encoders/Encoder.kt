@@ -18,6 +18,7 @@ open class Encoder(private val HUB: RevHub, private val PORT: Int, private val P
 
     @Throws(InterruptedException::class)
     fun getRawTicks() = HUB.getEncoder(PORT) * secant
+
     @Throws(InterruptedException::class)
     fun reset() {
         resetTicks = getRawTicks()
@@ -25,8 +26,10 @@ open class Encoder(private val HUB: RevHub, private val PORT: Int, private val P
 
     @Throws(InterruptedException::class)
     fun getTicks() = getRawTicks() - resetTicks
+
     @Throws(InterruptedException::class)
     fun getRadians() = toRadians(getTicks())
+
     @Throws(InterruptedException::class)
     fun getRawRadians() = toRadians(getRawTicks())
 

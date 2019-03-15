@@ -30,7 +30,8 @@ class BackIntoWallDetector(robot: HardwareClass) : MTSubsystem {
     }
 
     @Throws(InterruptedException::class)
-    override fun start() {}
+    override fun start() {
+    }
 
     init {
         robot.thread.addSubsystem(this)

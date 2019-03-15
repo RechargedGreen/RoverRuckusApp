@@ -51,6 +51,7 @@ object AutoTransitionerKotlin : Thread() {
             this.opModeManager = onStop.internalOpModeServices as OpModeManagerImpl
         }
     }
+
     @Throws(InterruptedException::class)
     fun transitionOnStop(onStop: OpMode, transitionTo: String) {
         setNewTransition(onStop, transitionTo)

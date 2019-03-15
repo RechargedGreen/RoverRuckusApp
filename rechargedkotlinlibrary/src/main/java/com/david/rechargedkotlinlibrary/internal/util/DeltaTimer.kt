@@ -8,11 +8,13 @@ class DeltaTimer() {
     private var dt: Long = 0
     @Throws(InterruptedException::class)
     fun seconds() = milliSeconds().toDouble() / 1000.0
+
     @Throws(InterruptedException::class)
     fun milliSeconds(): Long {
         update()
         return dt
     }
+
     @Throws(InterruptedException::class)
     private fun update() {
         val currTime = System.currentTimeMillis()

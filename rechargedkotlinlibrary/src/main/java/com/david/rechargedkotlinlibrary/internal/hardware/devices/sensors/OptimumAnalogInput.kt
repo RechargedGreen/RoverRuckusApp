@@ -8,6 +8,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.RevHub
 class OptimumAnalogInput(private val PORT: Int, private val HUB: RevHub) {
     @Throws(InterruptedException::class)
     fun getVoltage() = HUB.getVoltage(PORT)
+
     @Throws(InterruptedException::class)
     fun getMaxVoltage() = 3.3
 }

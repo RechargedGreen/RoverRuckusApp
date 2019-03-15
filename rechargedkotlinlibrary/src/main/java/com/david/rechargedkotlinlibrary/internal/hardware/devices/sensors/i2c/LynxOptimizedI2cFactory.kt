@@ -16,13 +16,16 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil
 object LynxOptimizedI2cFactory {
     private class BetterI2cDeviceSynchImplOnSimple(simple: I2cDeviceSynchSimple, isSimpleOwned: Boolean) : I2cDeviceSynchImplOnSimple(simple, isSimpleOwned) {
         @Throws(InterruptedException::class)
-        override fun setReadWindow(window: I2cDeviceSynch.ReadWindow?) {}
+        override fun setReadWindow(window: I2cDeviceSynch.ReadWindow?) {
+        }
     }
 
     @Throws(InterruptedException::class)
     fun createLynxI2cDeviceSynch(module: LynxModule, bus: Int): I2cDeviceSynch = BetterI2cDeviceSynchImplOnSimple(LynxFirmwareVersionManager.createLynxI2cDeviceSynch(AppUtil.getDefContext(), module, bus), true)
+
     @Throws(InterruptedException::class)
     fun createLynxEmbeddedIMU(module: LynxModule, bus: Int) = LynxEmbeddedIMU(createLynxI2cDeviceSynch(module, bus))
+
     @Throws(InterruptedException::class)
     fun createLynxI2cColorRangeSensor(module: LynxModule, bus: Int) = LynxI2cColorRangeSensor(createLynxI2cDeviceSynch(module, bus))
 }

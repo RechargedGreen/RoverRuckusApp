@@ -8,6 +8,7 @@ class CommandSchedulerImpl : CommandScheduler {
         command.start()
         runningCommands.add(command)
     }
+
     @Throws(InterruptedException::class)
     override fun periodic() {
         runningCommands.forEach { command ->
@@ -18,6 +19,7 @@ class CommandSchedulerImpl : CommandScheduler {
         }
         runningCommands.removeAll { it.isComplete() }
     }
+
     @Throws(InterruptedException::class)
     fun isRunningCommands() = !runningCommands.isEmpty()
 }

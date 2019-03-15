@@ -8,6 +8,8 @@ abstract class ThreadedSubsystem(robot: RobotTemplate) : Subsystem(robot), MTSub
     init {
         robot.thread.addSubsystem(this)
     }
+
     @Throws(InterruptedException::class)
-    override fun start() {}
+    override fun start() {
+    }
 }

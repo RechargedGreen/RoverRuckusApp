@@ -8,6 +8,7 @@ class HardwareThread(val robot: RobotTemplate) : Thread() {
     private val components = LinkedHashSet<MTSubsystem>()
     @Throws(InterruptedException::class)
     fun addSubsystem(subsystem: MTSubsystem) = components.add(subsystem)
+
     override fun run() {
         try {
             components.forEach({ it.start() })
@@ -16,8 +17,7 @@ class HardwareThread(val robot: RobotTemplate) : Thread() {
                 components.forEach({ it.update() })
                 robot.revHubs.forEach({ it.push() })
             }
-        }
-        catch (e:InterruptedException){
+        } catch (e: InterruptedException) {
             currentThread().interrupt()
         }
     }

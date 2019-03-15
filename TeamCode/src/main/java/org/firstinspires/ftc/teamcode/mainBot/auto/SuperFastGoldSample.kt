@@ -17,9 +17,9 @@ object SuperFastGoldSample {
     var sideOffsetToDepotIntoWall = 0
 
     @Throws(InterruptedException::class)
-    fun doStuff(opMode:RR2Auto){
+    fun doStuff(opMode: RR2Auto) {
         var startAngle = RR2Auto.StartingPositions.GOLD_HANG.angle
-        when(opMode.ORDER){
+        when (opMode.ORDER) {
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> opMode.robot.drive.deadReckonPID(centerToMineralTicks, RR2Auto.StartingPositions.GOLD_HANG.angle)
             SampleRandomizedPositions.LEFT -> {
                 var degree = startAngle + sideOffsetToMineral
@@ -51,7 +51,7 @@ object SuperFastGoldSample {
     var intoWallOutOfDepotOffset = 5.0
 
     @Throws(InterruptedException::class)
-    private fun goOutOfDepot(opMode: RR2Auto){
+    private fun goOutOfDepot(opMode: RR2Auto) {
         var angle = RR2Auto.CompassDirection.WEST.degrees - intoWallOutOfDepotOffset
         opMode.robot.drive.pidTurn(angle)
         opMode.robot.drive.deadReckonPID(intoWallOutOfDepotTicks, angle)

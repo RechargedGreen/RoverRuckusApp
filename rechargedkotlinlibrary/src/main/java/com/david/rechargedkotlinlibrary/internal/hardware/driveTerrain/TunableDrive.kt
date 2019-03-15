@@ -7,14 +7,19 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.imu.Si
 interface TunableDrive {
     @Throws(InterruptedException::class)
     fun setVel(vel: Pose2d)
+
     @Throws(InterruptedException::class)
     fun getMaxWheelMotorRPM(): Double
+
     @Throws(InterruptedException::class)
     fun getWheelRadius(): Double
+
     @Throws(InterruptedException::class)
     fun getWheelGearRatio(): Double
+
     @Throws(InterruptedException::class)
     fun getGyro(): SimplifiedBNO055
+
     @Throws(InterruptedException::class)
     fun getDrive(): Drive
 }

@@ -59,8 +59,10 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     @Throws(InterruptedException::class)
     fun clearingLift() = clearingDown() && clearingUp()
+
     @Throws(InterruptedException::class)
     fun clearingUp() = true
+
     @Throws(InterruptedException::class)
     fun clearingDown() = state != DumpState.DUMP && state != DumpState.SLIGHT_DUMP && dumpTimer.seconds() > 0.5
 

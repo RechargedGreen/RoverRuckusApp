@@ -9,6 +9,7 @@ class BooleanToggle(private var toggle: Boolean = false) {
         lastState = state
         return toggled()
     }
+
     @Throws(InterruptedException::class)
     fun toggled() = toggle
 }

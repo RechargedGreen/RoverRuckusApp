@@ -6,6 +6,7 @@ package com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors
 class RevTouchSensor(val delegate: OptimumDigitalInput) {
     @Throws(InterruptedException::class)
     fun pressed() = !released()
+
     @Throws(InterruptedException::class)
     fun released() = delegate.state()
 }

@@ -37,6 +37,7 @@ class Heading {
 
     @Throws(InterruptedException::class)
     fun getRadians() = radians
+
     @Throws(InterruptedException::class)
     fun getDegrees() = degrees
 }
