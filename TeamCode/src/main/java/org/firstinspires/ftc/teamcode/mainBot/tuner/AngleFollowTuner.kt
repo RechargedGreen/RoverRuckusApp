@@ -35,6 +35,8 @@ class AngleFollowTuner : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMo
     var lastKD = 0.0
     var lastVel = 0.0
     var lastTarget = 0.0
+
+    @Throws(InterruptedException::class)
     override fun run() {
         val dash = FtcDashboard.getInstance()
         val packet = TelemetryPacket()

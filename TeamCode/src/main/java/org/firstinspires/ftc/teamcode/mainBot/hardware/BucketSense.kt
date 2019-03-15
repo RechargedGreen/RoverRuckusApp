@@ -26,6 +26,7 @@ class BucketSense(hMap: HardwareMap) {
     var rightAlpha = 0
     var rightARGB = 0
 
+    @Throws(InterruptedException::class)
     fun updateCache() {
         //leftRed = left.red()
         //leftGreen = left.green()
@@ -40,6 +41,9 @@ class BucketSense(hMap: HardwareMap) {
         rightARGB = right.argb()
     }
 
+    @Throws(InterruptedException::class)
     fun left() = leftARGB > threshold
+
+    @Throws(InterruptedException::class)
     fun right() = rightARGB > threshold
 }

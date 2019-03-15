@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_MISC)
 class DashTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         packet.put("lt", c1.lt)
         packet.put("rt", c1.rt)

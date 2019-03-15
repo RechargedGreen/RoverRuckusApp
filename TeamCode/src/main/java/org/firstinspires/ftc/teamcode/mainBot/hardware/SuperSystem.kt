@@ -23,6 +23,7 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
             field = value
         }
 
+    @Throws(InterruptedException::class)
     override fun update() {
         if (!robot.opMode.isAutonomous())
             bucketSense.updateCache()
@@ -41,6 +42,7 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
             blinken.setPattern(if (120.0 - robot.opMode.runtime.seconds() < 10.0) hangTimePattern else normalPattern)
     }
 
+    @Throws(InterruptedException::class)
     override fun start() {}
 
     init {

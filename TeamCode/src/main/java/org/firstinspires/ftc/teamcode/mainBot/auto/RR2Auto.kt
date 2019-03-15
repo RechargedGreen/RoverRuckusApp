@@ -102,6 +102,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         var depotSampleRightTicks = 2000
     }
 
+    @Throws(InterruptedException::class)
     fun intoDepotSilver() {
         robot.sensors.lineDetector.enabled = true
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.LINE_DETECT, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
@@ -113,6 +114,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     var ORDER = SampleRandomizedPositions.UNKNOWN
     var lastButtonState = false
+    @Throws(InterruptedException::class)
     override fun tillStart() {
         ORDER = robot.vision.tfLite.lastKnownSampleOrder
         telemetry.addLine("must be lined up at starting position $startingPosition")
@@ -147,6 +149,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         telemetry.update()
     }
 
+    @Throws(InterruptedException::class)
     override fun run() {
         robot.drive.imu.setZ(startingPosition.angle, AngleUnit.DEGREES)
         robot.lift.deploy()
@@ -155,8 +158,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         postDeploy()
     }
 
+    @Throws(InterruptedException::class)
     abstract fun postDeploy()
 
+    @Throws(InterruptedException::class)
     fun teamMarker(stayStill: Boolean) {
         if (stayStill) {
             robot.lift.state = Lift.State.UP
@@ -176,13 +181,16 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         }
     }
 
+    @Throws(InterruptedException::class)
     fun prepCraterSense() {
         robot.drive.imu.resetX()
         robot.drive.imu.resetY()
     }
 
+    @Throws(InterruptedException::class)
     fun hittingCrater() = robot.drive.imu.getX().absoluteValue + robot.drive.imu.getY().absoluteValue > parkThreshold
 
+    @Throws(InterruptedException::class)
     fun silverSampleWallLinup() {
         /*robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
         robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.FAST)*/
@@ -223,12 +231,14 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         BACK
     }
 
+    @Throws(InterruptedException::class)
     fun followWall(situation: WallFollowSituation) {
         when (situation) {
             WallFollowSituation.LEFT_SAMPLE_DEPOT, WallFollowSituation.RIGHT_SAMPLE_DEPOT -> robot.drive.deadReckonPID(intoDepotTicks, situation.direction.degrees, DriveTerrain.AngleFollowSpeeds.SLOW)
         }
     }
 
+    @Throws(InterruptedException::class)
     fun sample(sampleCollectionType: SampleCollectionType) {
         if (startingPosition != StartingPositions.SILVER_HANG && sampleCollectionType == SampleCollectionType.LANDER_DRIVE_FAST_PARK)
             throw IllegalArgumentException("Illegal argument $sampleCollectionType is incompatible with the $startingPosition starting position")
@@ -366,6 +376,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         robot.intake.intakeState = Intake.IntakeState.STOP
     }
 
+    @Throws(InterruptedException::class)
     fun park(angle: Double, turnFirst: Boolean = true) {
         robot.intake.flipState = Intake.FlipState.LOAD
         if (turnFirst)

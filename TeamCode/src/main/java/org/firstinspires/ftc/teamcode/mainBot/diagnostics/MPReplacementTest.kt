@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
  */
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class MPReplacementTest : RR2Auto(StartingPositions.ANY_HANG) {
+    @Throws(InterruptedException::class)
     override fun postDeploy() {
         loop {
             robot.drive.drive(48.0, 0.0)

@@ -33,6 +33,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
     private val hasBeenLoadedTime = ElapsedTime()
     private val hasBeenEmptyTime = ElapsedTime()
 
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         val l = c1.ly
         val r = c1.ry
@@ -86,6 +87,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
         telemetry.addData("extensionIn", robot.intake.extensionIn())
     }
 
+    @Throws(InterruptedException::class)
     private fun controlA() {
         robot.intake.intakePower = c2.rt - c2.lt
         if (c2.rb)
@@ -94,6 +96,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
             flipState = Intake.FlipState.INTAKE
     }
 
+    @Throws(InterruptedException::class)
     private fun controlB() {
         flipState = Intake.FlipState.LOAD
         robot.intake.intakeState = if (robot.intake.extensionIn()) Intake.IntakeState.IN else Intake.IntakeState.STOP

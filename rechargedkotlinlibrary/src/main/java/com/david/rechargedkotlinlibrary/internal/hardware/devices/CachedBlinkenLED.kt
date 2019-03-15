@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ServoControllerEx
 class CachedBlinkenLED(controller: ServoControllerEx, port: Int) : RevBlinkinLedDriver(controller, port) {
     var cachedPattern: RevBlinkinLedDriver.BlinkinPattern? = null
 
+    @Throws(InterruptedException::class)
     override fun setPattern(pattern: BlinkinPattern?) {
         if (pattern != cachedPattern)
             setPattern(pattern)

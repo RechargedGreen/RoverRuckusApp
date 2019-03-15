@@ -21,6 +21,7 @@ import kotlin.math.absoluteValue
 class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
 
     data class DriveSignals(var lf: Double, var lb: Double, var rf: Double, var rb: Double) {
+        @Throws(InterruptedException::class)
         fun norm(): DriveSignals {
             val max = listOf(lf.absoluteValue, lb.absoluteValue, rf.absoluteValue, rb.absoluteValue, 1.0).max()
                     ?: 1.0
@@ -40,6 +41,7 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
     private lateinit var rb: IterativeCachedDcMotorEx
     private val motors = ArrayList<IterativeCachedDcMotorEx>()
 
+    @Throws(InterruptedException::class)
     fun initHardware(hMap: HardwareMap, autonomous: Boolean, subsystemManager: SubsystemManager) {
         lf = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lf"), IterativeBot.leftHub)
         lb = IterativeCachedDcMotorEx(HardwareMaker.DcMotorEx.make(hMap, "lb"), IterativeBot.leftHub)
@@ -59,6 +61,7 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
         subsystemManager.addUpdatable(this)
     }
 
+    @Throws(InterruptedException::class)
     override fun update() {
         updatePoseEstimate()
         val signals = driveSignals.copy().norm()
@@ -71,8 +74,10 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
     private lateinit var constraints: DriveConstraints
     lateinit var trajectoryFollower: TrajectoryFollower
 
+    @Throws(InterruptedException::class)
     override fun getExternalHeading(): Double = IterativeBot.imu.getZ(AngleUnit.RADIANS)
 
+    @Throws(InterruptedException::class)
     override fun getWheelPositions(): List<Double> = listOf(
             DriveConstants.encoderTicksToInches(lf.encoder.getRawTicks()),
             DriveConstants.encoderTicksToInches(lb.encoder.getRawTicks()),
@@ -80,16 +85,20 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
             DriveConstants.encoderTicksToInches(rf.encoder.getRawTicks())
     )
 
+    @Throws(InterruptedException::class)
     override fun setMotorPowers(lf: Double, lb: Double, rb: Double, rf: Double) {
         driveSignals = DriveSignals(lf, lb, rf, rb)
     }
 
+    @Throws(InterruptedException::class)
     fun trajectoryBuilder() = TrajectoryBuilder(poseEstimate, constraints)
 
+    @Throws(InterruptedException::class)
     fun stop() {
         driveSignals = DriveSignals(0.0, 0.0, 0.0, 0.0)
     }
 
+    @Throws(InterruptedException::class)
     fun robotCentric(forward: Double, right: Double, clockwise: Double) {
         val lf = forward + right + clockwise
         val lb = forward - right + clockwise
@@ -98,6 +107,8 @@ class IterativeDrive : Updatable, MecanumDrive(DriveConstants.trackWidth) {
         setMotorPowers(lf, lb, rb, rf)
     }
 
+    @Throws(InterruptedException::class)
     fun tank(left: Double, right: Double) = setMotorPowers(left, left, right, right)
+    @Throws(InterruptedException::class)
     fun tankArcade(x: Double, clockwise: Double) = tank(x + clockwise, x - clockwise)
 }

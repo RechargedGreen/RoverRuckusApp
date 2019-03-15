@@ -43,30 +43,33 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
     @Throws(InterruptedException::class)
     abstract fun run()
 
+    @Throws(InterruptedException::class)
     fun loop(action: () -> Unit) {
         loopWhile({ true }, action)
     }
 
+    @Throws(InterruptedException::class)
     fun loopWhile(condition: () -> Boolean = { true }, action: () -> Unit = {}) {
         while (condition() && opModeIsActive())
             action()
     }
 
+    @Throws(InterruptedException::class)
     fun sleepTillTime(seconds: Double) = waitWhile { runtime.seconds() < seconds }
-
+    @Throws(InterruptedException::class)
     fun waitWhile(condition: () -> Boolean) = loopWhile(condition = condition)
-
+    @Throws(InterruptedException::class)
     fun loopTill(condition: () -> Boolean = { true }, action: () -> Unit = {}) {
         while (!condition() && opModeIsActive())
             action()
     }
-
+    @Throws(InterruptedException::class)
     fun sleepSeconds(seconds: Double) = sleep((seconds * 1000).toLong())
-
+    @Throws(InterruptedException::class)
     fun waitTill(condition: () -> Boolean) = loopTill(condition)
-
+    @Throws(InterruptedException::class)
     open fun tillStart() = preventTimeOut()
-
+    @Throws(InterruptedException::class)
     private fun preventTimeOut() {
         telemetry.addData("Status", "Waiting in Init")
         telemetry.update()

@@ -8,7 +8,9 @@ import com.david.rechargedkotlinlibrary.internal.hardware.devices.RevHub
 class RevPotentiometer(port: Int, hub: RevHub) {
     private val delegate = OptimumAnalogInput(port, hub)
 
+    @Throws(InterruptedException::class)
     fun getDegrees() = delegate.getVoltage() * SCALER
+    @Throws(InterruptedException::class)
     fun getRadians() = Math.toRadians(getDegrees())
 
     companion object {

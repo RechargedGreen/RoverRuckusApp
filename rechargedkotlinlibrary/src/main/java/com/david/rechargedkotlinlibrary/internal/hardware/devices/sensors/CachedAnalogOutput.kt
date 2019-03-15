@@ -11,18 +11,21 @@ class CachedAnalogOutput(robot: RobotTemplate, config: String) {
     private var m: Byte = 0
     private var f: Int = 0
     private var v: Int = 0
+    @Throws(InterruptedException::class)
     fun setMode(mode: Byte) {
         if (mode != m)
             delegate.setAnalogOutputMode(mode)
         m = mode
     }
 
+    @Throws(InterruptedException::class)
     fun setFreq(freq: Int) {
         if (freq != f)
             delegate.setAnalogOutputFrequency(freq)
         f = freq
     }
 
+    @Throws(InterruptedException::class)
     fun setVoltage(voltage: Int) {
         if (voltage != v)
             delegate.setAnalogOutputVoltage(voltage)

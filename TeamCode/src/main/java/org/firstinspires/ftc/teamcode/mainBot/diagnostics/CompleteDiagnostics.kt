@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.mainBot.teleOp.PracticeJVoExtension
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class CompleteDiagnostics : PracticeJVoExtension() {
+    @Throws(InterruptedException::class)
     override fun onStart() {
         super.onStart()
         robot.sensors.lineDetector.enabled = true
@@ -13,6 +14,7 @@ class CompleteDiagnostics : PracticeJVoExtension() {
         robot.sensors.craterRimDetector.enabled = true
     }
 
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         super.onLoop()
         telemetry.addData("leftRed", robot.superSystem.bucketSense.leftRed)

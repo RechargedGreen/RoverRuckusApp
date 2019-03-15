@@ -18,6 +18,7 @@ class ServosTesting : LinearOpMode() {
     private val servos = LinkedList<Servo>()
     private var lastBState = false
     private var lastAState = false
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
         while (!(isStarted || isStopRequested)) {
             telemetry.addLine("a adds servo")

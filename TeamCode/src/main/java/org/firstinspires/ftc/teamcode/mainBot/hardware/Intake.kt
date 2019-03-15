@@ -33,7 +33,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     private val intakeFlipL = HardwareMaker.Servo.make(robot.hMap, "intakeFlipL")
     var flipState = FlipState.INTAKE
 
-    fun doMarker(){
+    @Throws(InterruptedException::class)
+    fun doMarker() {
         intakeState = IntakeState.MARKER
         robot.opMode.sleepSeconds(0.5)
         intakeState = IntakeState.STOP
@@ -78,15 +79,22 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     private var manualExtensionPower = 0.0
 
+    @Throws(InterruptedException::class)
     fun manualPowerExtension(power: Double, useFailSafe: Boolean) {
         manualExtensionPower = power
         extensionControlState = if (useFailSafe) ExtensionControlState.MANUAL_SAFE else ExtensionControlState.MANUAL_DANGER
     }
 
+    @Throws(InterruptedException::class)
     fun extensionTicks() = extensionMotor.encoder.getRawTicks()
+
+    @Throws(InterruptedException::class)
     fun extensionInches() = (extensionReset - extensionTicks()) / ticksPerInch()
+
+    @Throws(InterruptedException::class)
     fun ticksPerInch() = gearRatio * cpr / spoolSize
 
+    @Throws(InterruptedException::class)
     fun hitSample() {
         val timer = ElapsedTime()
         extensionState = IntakeExtensionState.OUT
@@ -97,6 +105,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     private var extensionReset = 0
 
+    @Throws(InterruptedException::class)
     override fun update() {
         extensionMotor.zeroPowerBehavior = if (brakingExtension) DcMotor.ZeroPowerBehavior.BRAKE else DcMotor.ZeroPowerBehavior.FLOAT
         if (extensionIn())
@@ -110,18 +119,22 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         internalSetIntakeFlipPos(flipState.pos)
     }
 
+    @Throws(InterruptedException::class)
     fun internalSetIntakeFlipPos(position: Double) {
         intakeFlipR.position = position
         intakeFlipL.position = 1.0 - position
     }
 
+    @Throws(InterruptedException::class)
     override fun start() {
     }
 
+    @Throws(InterruptedException::class)
     private fun internalPowerIntake(power: Double) {
         intakeMotor.power = power
     }
 
+    @Throws(InterruptedException::class)
     private fun internalPowerExtension(power: Double, useFailSafe: Boolean) {
         extensionMotor.power = Range.clip(power, if (useFailSafe && extensionIn()) 0.0 else -1.0, if (useFailSafe && extensionOut()) 0.0 else 1.0)
     }
@@ -131,7 +144,9 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     private val inTouch = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 5))
-
+    @Throws(InterruptedException::class)
     fun extensionIn() = inTouch.pressed()
+
+    @Throws(InterruptedException::class)
     fun extensionOut() = false
 }

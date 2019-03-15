@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.iterative.lib.subsystems.SubsystemManager
 abstract class IterativeOpMode<Bot : IterativeBotTemplate>(val bot: Bot, val autonomous: Boolean) : LinearOpMode() {
     val commandScheduler = CommandSchedulerImpl()
 
+    @Throws(InterruptedException::class)
     open fun eventLoop() {
         commandScheduler.periodic()
         if (!commandScheduler.isRunningCommands())
@@ -16,6 +17,7 @@ abstract class IterativeOpMode<Bot : IterativeBotTemplate>(val bot: Bot, val aut
 
     val subsystemManager = SubsystemManager()
 
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
         telemetry.addLine("initiating bot")
         telemetry.update()
@@ -44,6 +46,7 @@ abstract class IterativeOpMode<Bot : IterativeBotTemplate>(val bot: Bot, val aut
         end()
     }
 
+    @Throws(InterruptedException::class)
     fun end() {
         requestOpModeStop()
         onStop()
@@ -53,14 +56,17 @@ abstract class IterativeOpMode<Bot : IterativeBotTemplate>(val bot: Bot, val aut
             subsystemManager.teleOpEnd()
     }
 
+    @Throws(InterruptedException::class)
     open fun onStop() {
 
     }
 
+    @Throws(InterruptedException::class)
     open fun onStart() {
 
     }
 
+    @Throws(InterruptedException::class)
     private fun startEventLoop() {
         while (opModeIsActive()) {
             telemetry.addData("status", "eventLoop")
@@ -70,6 +76,7 @@ abstract class IterativeOpMode<Bot : IterativeBotTemplate>(val bot: Bot, val aut
         }
     }
 
+    @Throws(InterruptedException::class)
     override fun waitForStart() {
         while (waitingForStart()) {
             tillStart()
@@ -79,8 +86,10 @@ abstract class IterativeOpMode<Bot : IterativeBotTemplate>(val bot: Bot, val aut
         }
     }
 
+    @Throws(InterruptedException::class)
     fun waitingForStart() = !(isStarted || isStopRequested)
 
+    @Throws(InterruptedException::class)
     open fun tillStart() {
         telemetry.addData("status", "waitForStart")
     }

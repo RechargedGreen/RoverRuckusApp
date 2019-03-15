@@ -15,17 +15,21 @@ class BackIntoWallDetector(robot: HardwareClass) : MTSubsystem {
     var lastKnownDistance: Double? = null
     var enabled = false
 
+    @Throws(InterruptedException::class)
     fun close(): Boolean {
         val cache = lastKnownDistance
         return cache != null && cache < threshold
     }
 
+    @Throws(InterruptedException::class)
     fun far() = !close()
 
+    @Throws(InterruptedException::class)
     override fun update() {
         //  lastKnownDistance = if (enabled) sensor.cmUltrasonic() / 2.54 else null
     }
 
+    @Throws(InterruptedException::class)
     override fun start() {}
 
     init {

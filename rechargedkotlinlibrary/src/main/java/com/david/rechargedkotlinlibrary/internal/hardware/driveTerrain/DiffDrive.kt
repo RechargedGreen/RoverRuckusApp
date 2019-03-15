@@ -63,16 +63,16 @@ abstract class DiffDrive(
     private data class MPData(val inches: Double, val heading: Double, val maxVel: Double, val maxAccel: Double, val kV: Double, val threshold: Double, val headingController: PIDController, var currVel: Double = 0.0, var inchesTraveled: Double = 0.0, val timer: DeltaTimer = DeltaTimer())
 
     private var mpData = MPData(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()))
+    @Throws(InterruptedException::class)
     fun mp(inches: Double, heading: Double, maxVel: Double, maxAccel: Double, kV: Double, threshold: Double, headingController: PIDController) {
         mpData = MPData(inches, heading, maxVel, maxAccel, kV, threshold, headingController)
         getDistanceUpdate()
         controlState = ControlLoopStates.MP
     }
-
+    @Throws(InterruptedException::class)
     fun isMP() = controlState == ControlLoopStates.MP
-
+    @Throws(InterruptedException::class)
     abstract fun getDistanceUpdate(): Double
-
     enum class ControlLoopStates {
         OPEN_LOOP,
         DRIVING_AT_ANGLE,
@@ -80,7 +80,7 @@ abstract class DiffDrive(
     }
 
     private var controlState = ControlLoopStates.OPEN_LOOP
-
+    @Throws(InterruptedException::class)
     override fun update() {
         imu.clearCaches()
         imu.checkAngleCache()
@@ -147,55 +147,55 @@ abstract class DiffDrive(
             }
         }
     }
-
+    @Throws(InterruptedException::class)
     private fun internalArcade(x: Double, heading: Double) {
         val left = x - heading
         val right = x + heading
         val max = Collections.max(listOf(left.absoluteValue, right.absoluteValue, 1.0))
         setMotorPowers(left / max, right / max)
     }
-
+    @Throws(InterruptedException::class)
     fun setMotorPowers(left: Double, right: Double) {
         leftMotors.forEach { it.power = left }
         rightMotors.forEach { it.power = right }
     }
-
+    @Throws(InterruptedException::class)
     fun leftRawTicks(): Int {
         var sum = 0
         leftMotors.forEach { sum += it.encoder.getRawTicks() }
         return sum / leftMotors.size
     }
-
+    @Throws(InterruptedException::class)
     fun rightRawTicks(): Int {
         var sum = 0
         rightMotors.forEach { sum += it.encoder.getRawTicks() }
         return sum / rightMotors.size
     }
-
+    @Throws(InterruptedException::class)
     fun leftTicks(): Int {
         var sum = 0
         leftMotors.forEach { sum += it.encoder.getTicks() }
         return sum / leftMotors.size
     }
-
+    @Throws(InterruptedException::class)
     fun rightTicks(): Int {
         var sum = 0
         rightMotors.forEach { sum += it.encoder.getTicks() }
         return sum / rightMotors.size
     }
-
+    @Throws(InterruptedException::class)
     fun resetRightEncoders() = rightMotors.forEach { it.encoder.reset() }
-
+    @Throws(InterruptedException::class)
     fun resetLeftEncoders() = leftMotors.forEach { it.encoder.reset() }
-
+    @Throws(InterruptedException::class)
     fun resetEncoders() {
         resetLeftEncoders()
         resetRightEncoders()
     }
-
+    @Throws(InterruptedException::class)
     override fun start() {
     }
-
+    @Throws(InterruptedException::class)
     fun stop() = openLoopPowerWheels(0.0, 0.0)
 
 
@@ -207,7 +207,7 @@ abstract class DiffDrive(
         TURN_AROUND_RIGHT,
         STRAIGHT
     }
-
+    @Throws(InterruptedException::class)
     fun openLoopPowerWheels(l: Double, r: Double) {
         controlState = ControlLoopStates.OPEN_LOOP
         openLoopWheelPowers = SidePowers(l = l, r = r)
@@ -216,7 +216,7 @@ abstract class DiffDrive(
     private var openLoopWheelPowers = SidePowers(l = 0.0, r = 0.0)
 
     private data class SidePowers(val l: Double, val r: Double)
-
+    @Throws(InterruptedException::class)
     fun openLoopArcade(x: Double = 0.0, heading: Double = 0.0) {
         val l = x - heading
         val r = x + heading
@@ -228,7 +228,7 @@ abstract class DiffDrive(
     private var followAngleData = FollowAngleData(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients()), 0.0, 0.0, AnglePIDType.STRAIGHT, 1.0)
 
     data class FollowAngleData(val controller: PIDController, val power: Double, val angle: Double, val type: AnglePIDType, val maxTurnPower: Double)
-
+    @Throws(InterruptedException::class)
     fun startFollowingAngle(controller: PIDController, power: Double = 0.0, angle: Double, type: AnglePIDType, maxTurnPower: Double = 1.0) {
         followAngleData = FollowAngleData(controller = controller, power = power, angle = angle, type = type, maxTurnPower = maxTurnPower)
         controlState = ControlLoopStates.DRIVING_AT_ANGLE

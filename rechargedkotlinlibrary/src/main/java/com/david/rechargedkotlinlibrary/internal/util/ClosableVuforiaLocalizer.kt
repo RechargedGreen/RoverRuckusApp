@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl
  */
 class ClosableVuforiaLocalizer(parameters: VuforiaLocalizer.Parameters) : VuforiaLocalizerImpl(parameters) {
     var closed: Boolean = false
+    @Throws(InterruptedException::class)
     override fun close() {
         if (!closed)
             super.close()

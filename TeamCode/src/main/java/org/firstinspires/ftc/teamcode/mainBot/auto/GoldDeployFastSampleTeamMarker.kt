@@ -5,5 +5,6 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @Autonomous(group = OpModeGroups.AUTO)
 class GoldDeployFastSampleTeamMarker : RR2Auto(StartingPositions.GOLD_HANG) {
+    @Throws(InterruptedException::class)
     override fun postDeploy() = sample(SampleCollectionType.LANDER_DRIVE_FAST_TEAM_MARKER)
 }

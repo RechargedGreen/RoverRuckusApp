@@ -5,5 +5,6 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @Autonomous(group = OpModeGroups.BACKUP_AUTO)
 class DeployAndPark : RR2Auto(StartingPositions.SILVER_HANG) {
+    @Throws(InterruptedException::class)
     override fun postDeploy() = park(StartingPositions.SILVER_HANG.angle)
 }

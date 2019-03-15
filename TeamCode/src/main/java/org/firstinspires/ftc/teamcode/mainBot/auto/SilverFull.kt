@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @Autonomous(group = OpModeGroups.MAIN_AUTO)
 class SilverFull : RR2Auto(StartingPositions.SILVER_HANG) {
+    @Throws(InterruptedException::class)
     override fun postDeploy() {
         sample(SampleCollectionType.DRIVE_SILVER)
         silverSampleWallLinup()

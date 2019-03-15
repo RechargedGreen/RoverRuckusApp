@@ -19,6 +19,7 @@ object IterativeBot : Updatable, IterativeBotTemplate {
 
     lateinit var extensionMotorTempBraker: DcMotor
 
+    @Throws(InterruptedException::class)
     override fun initHardware(hMap: HardwareMap, autonomous: Boolean, subsystemManager: SubsystemManager) {
         subsystemManager.addUpdatable(this)
 
@@ -31,6 +32,7 @@ object IterativeBot : Updatable, IterativeBotTemplate {
         extensionMotorTempBraker = hMap.dcMotor.get("extension")
     }
 
+    @Throws(InterruptedException::class)
     override fun update() {
         leftHub.pull()
         rightHub.pull()

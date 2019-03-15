@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class TurnTest : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+    @Throws(InterruptedException::class)
     override fun run() {
         robot.drive.pidTurn(90.0)
         sleepSeconds(1.0)

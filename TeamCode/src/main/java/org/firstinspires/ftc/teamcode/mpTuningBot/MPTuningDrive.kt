@@ -32,10 +32,12 @@ class MPTuningDrive(private val opMode: LinearOpMode) : TankDrive(DriveConstants
 
     val imu = HardwareMaker.BNO055IMU.make(opMode.hardwareMap.get(LynxModule::class.java, "imu"), 0, true, BNO055IMU.SensorMode.IMU)
 
+    @Throws(InterruptedException::class)
     override fun getWheelPositions() = listOf(
             DriveConstants.encoderTicksToInches(lf.currentPosition),
             DriveConstants.encoderTicksToInches(rf.currentPosition))
 
+    @Throws(InterruptedException::class)
     override fun setMotorPowers(left: Double, right: Double) {
         opMode.telemetry.addData("left", left)
         opMode.telemetry.addData("right", right)
@@ -46,6 +48,6 @@ class MPTuningDrive(private val opMode: LinearOpMode) : TankDrive(DriveConstants
         rb.power = right
     }
 
-
+    @Throws(InterruptedException::class)
     override fun getExternalHeading() = imu.angularOrientation.firstAngle.toDouble()
 }

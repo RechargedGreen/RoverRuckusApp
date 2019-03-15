@@ -7,11 +7,13 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_MISC)
 class VisionTest : FluidAuto<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+    @Throws(InterruptedException::class)
     override fun tillStart() {
         telemetry.addData("Order", robot.vision.tfLite.lastKnownSampleOrder)
         telemetry.update()
     }
 
+    @Throws(InterruptedException::class)
     override fun run() {
     }
 }

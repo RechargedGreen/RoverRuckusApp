@@ -13,8 +13,12 @@ class FollowTrajectoryCommand(private val createTrajectory: () -> Trajectory) : 
     }
 
     val drive = IterativeBot.drive
+    @Throws(InterruptedException::class)
     override fun start() = drive.trajectoryFollower.followTrajectory(createTrajectory())
+    @Throws(InterruptedException::class)
     override fun periodic() = drive.trajectoryFollower.update(drive.poseEstimate)
+    @Throws(InterruptedException::class)
     override fun isComplete(): Boolean = !drive.trajectoryFollower.isFollowing()
+    @Throws(InterruptedException::class)
     override fun end() = drive.stop()
 }

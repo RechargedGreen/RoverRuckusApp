@@ -43,6 +43,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     val dumpTimer = ElapsedTime()
 
+    @Throws(InterruptedException::class)
     override fun update() {
         when (state) {
             DumpState.LOAD -> internalSetFlipPosition(if (robot.lift.getControlState() != Lift.ControlState.MANUAL_DANGER && (robot.lift.state == Lift.State.UP || !robot.lift.isFullyDown())) holdPos else loadPos)
@@ -51,16 +52,22 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         }
     }
 
+    @Throws(InterruptedException::class)
     private fun internalSetFlipPosition(pos: Double) {
         flip.position = pos
     }
 
+    @Throws(InterruptedException::class)
     fun clearingLift() = clearingDown() && clearingUp()
+    @Throws(InterruptedException::class)
     fun clearingUp() = true
+    @Throws(InterruptedException::class)
     fun clearingDown() = state != DumpState.DUMP && state != DumpState.SLIGHT_DUMP && dumpTimer.seconds() > 0.5
 
+    @Throws(InterruptedException::class)
     fun readyToLoad() = true
 
+    @Throws(InterruptedException::class)
     override fun start() {
     }
 

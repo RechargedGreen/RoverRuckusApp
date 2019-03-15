@@ -9,6 +9,7 @@ import kotlin.math.absoluteValue
 
 @TeleOp(group = OpModeGroups.TELE_MISC)
 class LiftTest : LinearOpMode() {
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
         val l = hardwareMap.dcMotor.get("liftL")
         val r = hardwareMap.dcMotor.get("liftR")

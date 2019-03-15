@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(name = Competition.NAME, group = OpModeGroups.TELEOP)
 class Competition : PracticeJVoExtension() {
+    @Throws(InterruptedException::class)
     override fun onStart() {
         practice = false
         super.onStart()

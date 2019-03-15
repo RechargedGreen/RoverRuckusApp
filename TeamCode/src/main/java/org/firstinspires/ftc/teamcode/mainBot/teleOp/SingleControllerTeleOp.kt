@@ -13,6 +13,7 @@ class SingleControllerTeleOp : PracticeTeleOp<HardwareClass>({ opMode -> Hardwar
     val stateToggle = BooleanToggle(false)
     var flipState = Intake.FlipState.LOAD
     var theshold = 0.05
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         var leftWheels = c1.ly
         var rightWheels = c1.ry

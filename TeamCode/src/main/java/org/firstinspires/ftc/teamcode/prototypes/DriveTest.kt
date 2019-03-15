@@ -11,6 +11,7 @@ import kotlin.math.absoluteValue
 class DriveTest : LinearOpMode() {
     val deadBand = 0.05
     val turnSensitivity = 1.0
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
         val lf = hardwareMap.dcMotor.get("lf")
         val lb = hardwareMap.dcMotor.get("lb")

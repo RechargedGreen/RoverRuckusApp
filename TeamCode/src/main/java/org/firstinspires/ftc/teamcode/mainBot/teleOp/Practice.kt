@@ -22,6 +22,7 @@ open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(op
 
     private var liftMode = Mode.AUTO
 
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         val l = c1.ly * (1.0 - c1.lt)
         val r = c1.ry * (1.0 - c1.rt)

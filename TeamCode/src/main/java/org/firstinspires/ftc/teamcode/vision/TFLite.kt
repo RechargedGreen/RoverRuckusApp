@@ -17,6 +17,7 @@ class TFLite(private val master: MasterVision) {
     private val tfodMoniterViewId = master.hMap.appContext.resources.getIdentifier("tfodMonitorViewId", "id", master.hMap.appContext.packageName)
     private val parameters = TFObjectDetector.Parameters(tfodMoniterViewId)
 
+    @Throws(InterruptedException::class)
     fun init() {
         if (tfod == null) {
             tfod = ClassFactory.getInstance().createTFObjectDetector(parameters, master.vuforiaLocalizer)
@@ -26,6 +27,7 @@ class TFLite(private val master: MasterVision) {
 
     var lastKnownSampleOrder = SampleRandomizedPositions.UNKNOWN
 
+    @Throws(InterruptedException::class)
     internal fun updateSampleOrder() {
         if (tfod != null) {
             val updatedRecognitions = tfod?.updatedRecognitions
@@ -83,14 +85,17 @@ class TFLite(private val master: MasterVision) {
         }
     }
 
+    @Throws(InterruptedException::class)
     fun enable() {
         tfod?.activate()
     }
 
+    @Throws(InterruptedException::class)
     fun disable() {
         tfod?.deactivate()
     }
 
+    @Throws(InterruptedException::class)
     fun shutdown() {
         tfod?.shutdown()
     }

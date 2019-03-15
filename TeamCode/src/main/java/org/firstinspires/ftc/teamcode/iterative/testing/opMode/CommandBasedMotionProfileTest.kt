@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.iterative.testing.commands.FollowTrajector
  * Created by David Lukens on 2/15/2019.
  */
 class CommandBasedMotionProfileTest : IterativeOpMode<IterativeBot>(IterativeBot, true) {
+    @Throws(InterruptedException::class)
     override fun onStart() = commandScheduler.run(
             FollowTrajectoryCommand(
                     {

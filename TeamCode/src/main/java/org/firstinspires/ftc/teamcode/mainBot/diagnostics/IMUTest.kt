@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class IMUTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         telemetry.addData("raw z", robot.drive.imu.getRawZ())
         telemetry.addData("raw x", robot.drive.imu.getRawX())

@@ -16,9 +16,11 @@ class ThreadedAnalogOutput(robot: RobotTemplate, config: String) : ThreadedSubsy
     private var v: Int = 0
     private var lv: Int = 0
 
+    @Throws(InterruptedException::class)
     override fun start() {
     }
 
+    @Throws(InterruptedException::class)
     override fun update() {
         val mc: Byte = m
         if (mc != lm)
@@ -34,14 +36,17 @@ class ThreadedAnalogOutput(robot: RobotTemplate, config: String) : ThreadedSubsy
         lv = vc
     }
 
+    @Throws(InterruptedException::class)
     fun setMode(mode: Byte) {
         m = mode
     }
 
+    @Throws(InterruptedException::class)
     fun setFreq(freq: Int) {
         f = freq
     }
 
+    @Throws(InterruptedException::class)
     fun setVoltage(voltage: Int) {
         v = voltage
     }

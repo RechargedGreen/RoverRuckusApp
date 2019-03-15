@@ -14,20 +14,24 @@ open class IterativeEncoder(private val HUB: IterativeRevHub, private val PORT: 
         setDirection(direction)
         reset()
     }
-
+    @Throws(InterruptedException::class)
     fun getRawTicks() = HUB.getEncoder(PORT) * secant
+    @Throws(InterruptedException::class)
     fun reset() {
         resetTicks = getRawTicks()
     }
 
+    @Throws(InterruptedException::class)
     fun getTicks() = getRawTicks() - resetTicks
+    @Throws(InterruptedException::class)
     fun getRadians() = toRadians(getTicks())
+    @Throws(InterruptedException::class)
     fun getRawRadians() = toRadians(getRawTicks())
-
+    @Throws(InterruptedException::class)
     fun toRadians(ticks: Int): Double {
         return (ticks.toDouble() / PPR.toDouble()) * MathUtil.TAU
     }
-
+    @Throws(InterruptedException::class)
     fun setDirection(direction: DcMotorSimple.Direction) {
         secant = when (direction) {
             DcMotorSimple.Direction.REVERSE -> 1
@@ -36,14 +40,14 @@ open class IterativeEncoder(private val HUB: IterativeRevHub, private val PORT: 
     }
 
     private var lastTicks: Int? = null
-
+    @Throws(InterruptedException::class)
     fun tickChange(): Int? {
         var ticks = getTicks()
         var change: Int? = if (lastTicks != null) ticks - lastTicks!! else null
         lastTicks = ticks
         return change
     }
-
+    @Throws(InterruptedException::class)
     fun radiansChange(): Double? {
         val change = tickChange()
         return if (change != null) toRadians(change) else null

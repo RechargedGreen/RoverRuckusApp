@@ -37,6 +37,7 @@ class SilverSampleTesting : RR2Auto(StartingPositions.SILVER_HANG) {
         var rightPostDistance = 1000
     }
 
+    @Throws(InterruptedException::class)
     override fun postDeploy() {
         val degree = StartingPositions.SILVER_HANG.angle
         when (ORDER) {

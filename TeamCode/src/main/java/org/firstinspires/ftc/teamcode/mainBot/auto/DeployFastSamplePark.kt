@@ -8,5 +8,6 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
  */
 @Autonomous(group = OpModeGroups.AUTO)
 class DeployFastSamplePark : RR2Auto(StartingPositions.SILVER_HANG) {
+    @Throws(InterruptedException::class)
     override fun postDeploy() = sample(SampleCollectionType.LANDER_DRIVE_FAST_PARK)
 }

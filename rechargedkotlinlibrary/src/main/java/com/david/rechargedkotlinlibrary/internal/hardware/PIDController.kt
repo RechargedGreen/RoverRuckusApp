@@ -8,7 +8,7 @@ class PIDController(val coeffs: PIDCoefficients) {
     var lastError: Double? = null
 
     var u = 0.0
-
+    @Throws(InterruptedException::class)
     fun update(error: Double): Double {
         val currTime = System.currentTimeMillis()
         val lastTimeCache = lastTime

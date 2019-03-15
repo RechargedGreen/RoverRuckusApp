@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.iterative.lib.commandLib
 class SequentialCommandGroup(private vararg val commands: Command) : Command {
     private var currentIndex = 0
 
+    @Throws(InterruptedException::class)
     override fun start() = commands[0].start()
 
+    @Throws(InterruptedException::class)
     override fun periodic() {
         if (currentIndex < commands.size) {
             val currentCommand = commands[currentIndex]
@@ -20,7 +22,9 @@ class SequentialCommandGroup(private vararg val commands: Command) : Command {
         }
     }
 
+    @Throws(InterruptedException::class)
     override fun isComplete(): Boolean = currentIndex >= commands.size
 
+    @Throws(InterruptedException::class)
     override fun end() = commands[currentIndex].end()
 }

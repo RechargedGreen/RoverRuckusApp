@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class TimeOfFlightTest : LinearOpMode() {
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
         val sensor = hardwareMap.get(DistanceSensor::class.java, "tof") as Rev2mDistanceSensor
         waitForStart()

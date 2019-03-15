@@ -19,15 +19,17 @@ abstract class RobotTemplate(val opMode: RechargedLinearOpMode<out RobotTemplate
     init {
         revHubNames.forEach { revHubs.addLast(RevHub(this, it)) }
     }
-
+    @Throws(InterruptedException::class)
     fun getHub(index: Int) = revHubs[index]
-
+    @Throws(InterruptedException::class)
     open fun onStart() {}
+    @Throws(InterruptedException::class)
     abstract fun autoPostInit()
-
+    @Throws(InterruptedException::class)
     open fun onPressingAutoPlay() {}
+    @Throws(InterruptedException::class)
     open fun onPressingTeleOpPlay() {}
-
+    @Throws(InterruptedException::class)
     fun start() {
         thread.start()
         sameThreadSubsystems.forEach({ it.start() })

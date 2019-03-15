@@ -6,13 +6,19 @@ package com.david.rechargedkotlinlibrary.internal.hardware.management
 
 class HardwareThread(val robot: RobotTemplate) : Thread() {
     private val components = LinkedHashSet<MTSubsystem>()
+    @Throws(InterruptedException::class)
     fun addSubsystem(subsystem: MTSubsystem) = components.add(subsystem)
     override fun run() {
-        components.forEach({ it.start() })
-        while (!robot.opMode.isStopRequested) {
-            robot.revHubs.forEach({ it.pull() })
-            components.forEach({ it.update() })
-            robot.revHubs.forEach({ it.push() })
+        try {
+            components.forEach({ it.start() })
+            while (!robot.opMode.isStopRequested) {
+                robot.revHubs.forEach({ it.pull() })
+                components.forEach({ it.update() })
+                robot.revHubs.forEach({ it.push() })
+            }
+        }
+        catch (e:InterruptedException){
+            currentThread().interrupt()
         }
     }
 }

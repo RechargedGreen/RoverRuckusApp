@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class IterativeTest : IterativeOpMode<IterativeBot>(IterativeBot, true) {
+    @Throws(InterruptedException::class)
     override fun onStart() =
             commandScheduler.run(SequentialCommandGroup(
                     ParallelCommandGroup(

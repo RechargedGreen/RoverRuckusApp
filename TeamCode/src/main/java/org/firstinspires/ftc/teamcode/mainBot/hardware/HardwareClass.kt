@@ -16,6 +16,7 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
     val vision: MasterVision = MasterVision(VisionConstants.vuforiaLocalizerParameters, hMap, opMode.isAutonomous(), MasterVision.TFLiteAlgorithm.INFER_RIGHT)
     val sensors = Sensors(this)
 
+    @Throws(InterruptedException::class)
     override fun autoPostInit() {
         if (Static.transitionOnAutoEnd)
             AutoTransitionerKotlin.transitionOnStop(opMode, PracticeJVoExtension.NAME)
@@ -23,6 +24,7 @@ class HardwareClass(opMode: RechargedLinearOpMode<HardwareClass>) : RobotTemplat
         vision.enable()
     }
 
+    @Throws(InterruptedException::class)
     override fun onPressingAutoPlay() {
         vision.shutdown()
     }

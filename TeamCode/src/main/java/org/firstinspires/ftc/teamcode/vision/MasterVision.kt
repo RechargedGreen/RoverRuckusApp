@@ -19,24 +19,27 @@ class MasterVision(private val parameters: VuforiaLocalizer.Parameters, val hMap
         INFER_NONE
     }
 
-
+    @Throws(InterruptedException::class)
     fun init() {
         if (vuforiaLocalizer == null)
             vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters)
         tfLite.init()
     }
 
+    @Throws(InterruptedException::class)
     fun enable() {
         init()
         tfLite.enable()
         CameraDevice.getInstance().setFlashTorchMode(useFlash)
     }
 
+    @Throws(InterruptedException::class)
     fun disable() {
         tfLite.disable()
         CameraDevice.getInstance().setFlashTorchMode(false)
     }
 
+    @Throws(InterruptedException::class)
     fun shutdown() {
         disable()
         tfLite.shutdown()
@@ -44,7 +47,7 @@ class MasterVision(private val parameters: VuforiaLocalizer.Parameters, val hMap
 
     override fun run() {
         try {
-            while (true) {
+            while (!currentThread().isInterrupted) {
                 tfLite.updateSampleOrder()
             }
         } catch (ex: InterruptedException) {

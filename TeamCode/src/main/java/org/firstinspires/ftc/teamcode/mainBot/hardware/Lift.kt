@@ -15,6 +15,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
             field = value
         }
 
+    @Throws(InterruptedException::class)
     fun deploy() {
         state = State.UP
         robot.opMode.waitTill { isFullyUp() }
@@ -28,6 +29,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     private val latch = HardwareMaker.Servo.make(robot.hMap, "latch")
 
+    @Throws(InterruptedException::class)
     private fun internalSetMotorPowers(power: Double, safe: Boolean) {
         val power = if (safe) Range.clip(power, if (isFullyDown() || !robot.dumper.clearingDown()) 0.0 else -1.0, if (isFullyUp() || !robot.dumper.clearingUp()) 0.0 else 1.0) else power
         motorL.power = power
@@ -35,7 +37,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     }
 
     private var openLoop = 0.0
-
+    @Throws(InterruptedException::class)
     fun getControlState() = controlState
 
     enum class ControlState {
@@ -45,7 +47,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     }
 
     private var controlState = ControlState.AUTO
-
+    @Throws(InterruptedException::class)
     fun setOpenLoopPower(power: Double, useFailSafes: Boolean = true) {
         openLoop = power
         controlState = if (useFailSafes) ControlState.MANUAL_SAFE else ControlState.MANUAL_DANGER
@@ -56,7 +58,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         UP,
         LATCH_ENGAGED
     }
-
+    @Throws(InterruptedException::class)
     override fun update() {
         setInternalLatchState(if (state == State.LATCH_ENGAGED) InternalLatchState.LATCHED else InternalLatchState.FREE)
         when (controlState) {
@@ -69,7 +71,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
             ControlState.MANUAL_SAFE -> internalSetMotorPowers(openLoop, true)
         }
     }
-
+    @Throws(InterruptedException::class)
     private fun setInternalLatchState(state: InternalLatchState) {
         latch.position = state.pos
     }
@@ -86,10 +88,11 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     }
 
     private fun setInternalState(state: InternalState) = internalSetMotorPowers(state.power, true)
-
+    @Throws(InterruptedException::class)
     fun isFullyDown(): Boolean = downSensor.pressed()
+    @Throws(InterruptedException::class)
     fun isFullyUp(): Boolean = upSensor.pressed()
-
+    @Throws(InterruptedException::class)
     override fun start() {
     }
 

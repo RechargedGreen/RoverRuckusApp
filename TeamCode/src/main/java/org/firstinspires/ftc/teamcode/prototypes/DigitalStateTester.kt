@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_MISC)
 class DigitalStateTester : LinearOpMode() {
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
         val d = hardwareMap.digitalChannel.get("d0")
         waitForStart()

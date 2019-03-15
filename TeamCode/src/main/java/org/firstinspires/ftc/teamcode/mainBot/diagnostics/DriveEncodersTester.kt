@@ -8,11 +8,13 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
 class DriveEncodersTester : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
+    @Throws(InterruptedException::class)
     override fun onStart() {
         super.onStart()
         robot.drive.imu.setZBias(45.0, AngleUnit.DEGREES)
     }
 
+    @Throws(InterruptedException::class)
     override fun onLoop() {
         telemetry.addData("lf", robot.getHub(0).getEncoder(0))
         telemetry.addData("lb", robot.getHub(0).getEncoder(1))

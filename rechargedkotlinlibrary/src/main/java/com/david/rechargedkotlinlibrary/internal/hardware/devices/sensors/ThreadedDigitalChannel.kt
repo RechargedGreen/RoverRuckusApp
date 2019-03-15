@@ -19,7 +19,9 @@ class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSub
     private var lastModeCache = DigitalChannel.Mode.INPUT
 
     private var frozenRead: Boolean = false
+    @Throws(InterruptedException::class)
     fun getFrozenRead(): Boolean = frozenRead
+    @Throws(InterruptedException::class)
     fun setFrozenRead(value: Boolean) {
         frozenRead = value
     }
@@ -29,9 +31,11 @@ class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSub
         delegate.mode = modeCache
     }
 
+    @Throws(InterruptedException::class)
     override fun start() {
     }
 
+    @Throws(InterruptedException::class)
     override fun update() {
         val mc = modeCache
         if (mc != lastModeCache)
@@ -49,10 +53,12 @@ class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSub
         }
     }
 
+    @Throws(InterruptedException::class)
     override fun setState(state: Boolean) {
         stateCache = state
     }
 
+    @Throws(InterruptedException::class)
     override fun setMode(mode: DigitalChannel.Mode?) {
         when (mode) {
             DigitalChannel.Mode.INPUT -> modeCache = DigitalChannel.Mode.INPUT
@@ -60,6 +66,7 @@ class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSub
         }
     }
 
+    @Throws(InterruptedException::class)
     override fun setMode(mode: DigitalChannelController.Mode?) {
         when (mode) {
             DigitalChannelController.Mode.INPUT -> modeCache = DigitalChannel.Mode.INPUT
@@ -67,13 +74,21 @@ class ThreadedDigitalChannel(robot: RobotTemplate, config: String) : ThreadedSub
         }
     }
 
+    @Throws(InterruptedException::class)
     override fun getMode(): DigitalChannel.Mode = modeCache
+    @Throws(InterruptedException::class)
     override fun getState(): Boolean = rState
 
+    @Throws(InterruptedException::class)
     override fun resetDeviceConfigurationForOpMode() = delegate.resetDeviceConfigurationForOpMode()
+    @Throws(InterruptedException::class)
     override fun getDeviceName(): String = delegate.deviceName
+    @Throws(InterruptedException::class)
     override fun getConnectionInfo(): String = delegate.connectionInfo
+    @Throws(InterruptedException::class)
     override fun getVersion(): Int = delegate.version
+    @Throws(InterruptedException::class)
     override fun close() = delegate.close()
+    @Throws(InterruptedException::class)
     override fun getManufacturer(): HardwareDevice.Manufacturer = delegate.manufacturer
 }

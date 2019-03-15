@@ -18,6 +18,7 @@ object AutoTransitionerKotlin : Thread() {
     private var transitionTo: String? = null
     private var opModeManager: OpModeManagerImpl? = null
 
+    @Throws(InterruptedException::class)
     override fun run() {
         try {
             while (true) {
@@ -35,12 +36,14 @@ object AutoTransitionerKotlin : Thread() {
         }
     }
 
+    @Throws(InterruptedException::class)
     private fun reset() {
         onStop = null
         transitionTo = null
         opModeManager = null
     }
 
+    @Throws(InterruptedException::class)
     private fun setNewTransition(onStop: OpMode, transitionTo: String) {
         synchronized(this) {
             this.onStop = onStop
@@ -48,7 +51,7 @@ object AutoTransitionerKotlin : Thread() {
             this.opModeManager = onStop.internalOpModeServices as OpModeManagerImpl
         }
     }
-
+    @Throws(InterruptedException::class)
     fun transitionOnStop(onStop: OpMode, transitionTo: String) {
         setNewTransition(onStop, transitionTo)
     }

@@ -16,6 +16,7 @@ object SuperFastGoldSample {
     @JvmField
     var sideOffsetToDepotIntoWall = 0
 
+    @Throws(InterruptedException::class)
     fun doStuff(opMode:RR2Auto){
         var startAngle = RR2Auto.StartingPositions.GOLD_HANG.angle
         when(opMode.ORDER){

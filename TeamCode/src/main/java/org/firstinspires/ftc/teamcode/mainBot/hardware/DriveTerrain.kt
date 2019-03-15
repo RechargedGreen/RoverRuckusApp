@@ -48,6 +48,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     private var lastLeftTicks = 0
     private var lastRightTicks = 0
 
+    @Throws(InterruptedException::class)
     override fun getDistanceUpdate(): Double {
         val leftTicks = leftRawTicks()
         val rightTicks = rightRawTicks()
@@ -58,6 +59,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         return (rightInches + leftInches) / 2.0
     }
 
+    @Throws(InterruptedException::class)
     fun toInches(ticks: Int): Double = RADIUS * 2.0 * Math.PI * ticks.toDouble() / TICKS_PER_REV
 
     private enum class FollowingLineState {
@@ -65,6 +67,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         UNDER
     }
 
+    @Throws(InterruptedException::class)
     fun drive(inches: Double, angle: Double, maxVel: Double = 40.0, maxAccel: Double = maxAcceleration, threshold: Double = 1.0) {
         mp(inches, angle, maxVel, maxAccel, kV, threshold, PIDController(mpAnglePID))
         robot.opMode.waitWhile { isMP() }
@@ -129,10 +132,12 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         STRAFE(PIDController(com.qualcomm.robotcore.hardware.PIDCoefficients(0.005, 0.0, 0.001)), 0.0)
     }
 
+    @Throws(InterruptedException::class)
     fun startFollowingAngle_setConstants(angleFollowSpeed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, angle: Double, reverse: Boolean = false, type: AnglePIDType, maxTurnPower: Double = 1.0) {
         startFollowingAngle(angleFollowSpeed.controller, if (reverse) -angleFollowSpeed.speed else angleFollowSpeed.speed, angle, type, maxTurnPower)
     }
 
+    @Throws(InterruptedException::class)
     fun pidTurn(target: Double, threshold: Double = 2.0, stop: Boolean = true, maxTurnPower: Double = 1.0) {
         startFollowingAngle_setConstants(AngleFollowSpeeds.TURN, target, false, AnglePIDType.POINT_TURN, maxTurnPower)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
@@ -140,6 +145,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             stop()
     }
 
+    @Throws(InterruptedException::class)
     fun deadReckonPID(ticks: Int, angle: Double, speed: AngleFollowSpeeds = AngleFollowSpeeds.FAST, stop: Boolean = true) {
         if (ticks != 0) {
             val reverse = ticks < 0
@@ -154,6 +160,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             stop()
     }
 
+    @Throws(InterruptedException::class)
     fun strafeAroundLeft(target: Double, threshold: Double = 2.0, stop: Boolean = true, maxTurnPower: Double = 1.0) {
         startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_LEFT, maxTurnPower)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
@@ -161,6 +168,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             stop()
     }
 
+    @Throws(InterruptedException::class)
     fun strafeAroundRight(target: Double, threshold: Double = 2.0, stop: Boolean = true, maxTurnPower: Double = 1.0) {
         startFollowingAngle_setConstants(AngleFollowSpeeds.STRAFE, target, false, AnglePIDType.TURN_AROUND_RIGHT, maxTurnPower)
         robot.opMode.waitTill { (imu.getZ(AngleUnit.DEGREES) - target).absoluteValue < threshold }
@@ -168,6 +176,7 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
             stop()
     }
 
+    @Throws(InterruptedException::class)
     fun runTime(power: Double, seconds: Double, stop: Boolean = true) {
         if (seconds != 0.0) {
             openLoopArcade(power)
