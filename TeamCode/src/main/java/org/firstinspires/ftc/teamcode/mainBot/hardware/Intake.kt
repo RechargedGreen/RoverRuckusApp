@@ -23,7 +23,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     enum class IntakeState(internal val power: Double) {
         IN(1.0),
         OUT(-1.0),
-        MARKER(-1.0),
+        MARKER(OUT.power * 0.5),
         STOP(0.0)
     }
 

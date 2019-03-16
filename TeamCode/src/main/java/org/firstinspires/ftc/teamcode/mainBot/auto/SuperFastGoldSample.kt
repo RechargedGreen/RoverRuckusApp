@@ -6,20 +6,21 @@ import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 @Config
 object SuperFastGoldSample {
     @JvmField
-    var centerToMineralTicks = 0
+    var centerToMineralTicks: Int = 4000
     @JvmField
-    var sideToMineralTicks = 0
+    var sideToMineralTicks: Int = 1750
     @JvmField
-    var sideToDepotTicks = 0
+    var sideToDepotTicks: Int = 1500
     @JvmField
-    var sideOffsetToMineral = 0
+    var sideOffsetToMineral: Double = 33.0
     @JvmField
-    var sideOffsetToDepotIntoWall = 0
+    var sideOffsetToDepotIntoWall: Double = 3.0
 
     @Throws(InterruptedException::class)
     fun doStuff(opMode: RR2Auto) {
         var startAngle = RR2Auto.StartingPositions.GOLD_HANG.angle
-        when (opMode.ORDER) {
+        val ORDER = opMode.ORDER
+        when (ORDER) {
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> opMode.robot.drive.deadReckonPID(centerToMineralTicks, RR2Auto.StartingPositions.GOLD_HANG.angle)
             SampleRandomizedPositions.LEFT -> {
                 var degree = startAngle + sideOffsetToMineral
@@ -40,15 +41,17 @@ object SuperFastGoldSample {
                 opMode.robot.drive.deadReckonPID(sideToDepotTicks, degree)
             }
         }
+        if (ORDER == SampleRandomizedPositions.LEFT || ORDER == SampleRandomizedPositions.RIGHT)
+            opMode.robot.drive.pidTurn(RR2Auto.CompassDirection.NORTH_EAST.degrees)
         opMode.robot.intake.doMarker()
         goOutOfDepot(opMode)
     }
 
 
     @JvmField
-    var intoWallOutOfDepotTicks = 0
+    var intoWallOutOfDepotTicks: Int = 1000
     @JvmField
-    var intoWallOutOfDepotOffset = 5.0
+    var intoWallOutOfDepotOffset: Double = 15.0
 
     @Throws(InterruptedException::class)
     private fun goOutOfDepot(opMode: RR2Auto) {
