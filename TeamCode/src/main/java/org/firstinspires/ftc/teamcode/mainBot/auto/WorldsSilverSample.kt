@@ -27,18 +27,24 @@ object WorldsSilverSample {
 
     private lateinit var opMode: RR2Auto
     private val SPEED = DriveTerrain.AngleFollowSpeeds.SLOW
-    private fun drive(ticks:Int, angle:Double) = opMode.robot.drive.deadReckonPID(ticks, angle, SPEED)
-    private fun turn(angle:Double) = opMode.robot.drive.pidTurn(angle)
 
-    fun doStuff(opMode:RR2Auto){
+    @Throws(InterruptedException::class)
+    private fun drive(ticks: Int, angle: Double) = opMode.robot.drive.deadReckonPID(ticks, angle, SPEED)
+
+    @Throws(InterruptedException::class)
+    private fun turn(angle: Double) = opMode.robot.drive.pidTurn(angle)
+
+    @Throws(InterruptedException::class)
+    fun doStuff(opMode: RR2Auto) {
         this.opMode = opMode
         sample()
         toWall()
     }
 
-    private fun sample(){
+    @Throws(InterruptedException::class)
+    private fun sample() {
         val start = RR2Auto.StartingPositions.SILVER_HANG.angle
-        when(opMode.ORDER){
+        when (opMode.ORDER) {
             SampleRandomizedPositions.LEFT -> {
                 val angle = start + sideOffset
                 drive(sideStartTicks, start)
@@ -55,7 +61,9 @@ object WorldsSilverSample {
             }
         }
     }
-    private fun toWall(){
+
+    @Throws(InterruptedException::class)
+    private fun toWall() {
         val angle = RR2Auto.CompassDirection.NORTH_EAST.degrees
         turn(angle.absoluteValue)
         drive(toWallTicks, angle)
