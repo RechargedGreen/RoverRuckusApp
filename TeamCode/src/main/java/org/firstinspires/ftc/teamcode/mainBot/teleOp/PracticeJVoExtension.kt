@@ -33,8 +33,15 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
     private val hasBeenLoadedTime = ElapsedTime()
     private val hasBeenEmptyTime = ElapsedTime()
 
+    private var dumpingKeepsLiftUp = false
+
     @Throws(InterruptedException::class)
     override fun onLoop() {
+        if(robot.lift.isFullyUp())
+            dumpingKeepsLiftUp = true
+        if(robot.lift.isFullyDown())
+            dumpingKeepsLiftUp = false
+
         val l = c1.ly
         val r = c1.ry
         robot.drive.openLoopPowerWheels(if (l.absoluteValue > deadBand) l else 0.0, if (r.absoluteValue > deadBand) r else 0.0)
@@ -45,7 +52,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
             hasBeenLoadedTime.reset()
         else
             hasBeenEmptyTime.reset()
-        if (hasBeenLoadedTime.seconds() > 0.01 || (c1.lb && robot.lift.getControlState() == Lift.ControlState.AUTO))
+        if (hasBeenLoadedTime.seconds() > 0.01 || (c1.lb && dumpingKeepsLiftUp && robot.lift.getControlState() == Lift.ControlState.AUTO))
             autoRaise = true
         else if (hasBeenEmptyTime.seconds() > 0.25)
             autoRaise = false
