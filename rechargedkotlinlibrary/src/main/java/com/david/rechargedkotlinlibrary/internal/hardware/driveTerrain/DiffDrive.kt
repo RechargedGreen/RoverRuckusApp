@@ -22,8 +22,8 @@ import kotlin.math.sign
  */
 abstract class DiffDrive(
         private val robot: RobotTemplate,
-        private val leftMotors: Array<CachedDcMotorEx>,
-        private val rightMotors: Array<CachedDcMotorEx>,
+        val leftMotors: Array<CachedDcMotorEx>,
+        val rightMotors: Array<CachedDcMotorEx>,
         mode: DcMotor.RunMode = DcMotor.RunMode.RUN_USING_ENCODER,
         zeroPowerBehavior: DcMotor.ZeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE,
         val imu: SimplifiedBNO055,

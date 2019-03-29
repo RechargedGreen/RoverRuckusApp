@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainBot.teleOp
 
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
 import com.david.rechargedkotlinlibrary.internal.util.BooleanToggle
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.hardware.Dumper
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
 @TeleOp(name = Practice.NAME, group = OpModeGroups.TELEOP)
+@Disabled
 open class Practice : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     val deadBand = 0.05
     val liftFailSafesToggle = BooleanToggle(true)

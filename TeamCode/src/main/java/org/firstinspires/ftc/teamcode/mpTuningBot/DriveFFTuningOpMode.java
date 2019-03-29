@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mpTuningBot;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @Config
 @TeleOp(group = OpModeGroups.TELE_TUNERS)
+@Disabled
 public class DriveFFTuningOpMode extends LinearOpMode {
     private static final double EPSILON = 1e-2;
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.prototypes
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 import kotlin.math.absoluteValue
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
+@Disabled
 class DriveTest : LinearOpMode() {
     val deadBand = 0.05
     val turnSensitivity = 1.0

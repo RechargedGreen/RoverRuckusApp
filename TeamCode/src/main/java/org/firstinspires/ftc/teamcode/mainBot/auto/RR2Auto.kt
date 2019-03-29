@@ -105,7 +105,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     @Throws(InterruptedException::class)
     fun intoDepotSilver() {
         robot.sensors.lineDetector.enabled = true
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.LINE_DETECT, CompassDirection.SOUTH.degrees, true, DiffDrive.AnglePIDType.STRAIGHT)
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.LINE_DETECT, CompassDirection.NORTH.degrees, false, DiffDrive.AnglePIDType.STRAIGHT)
         robot.lift.state = Lift.State.UP
         waitTill { robot.sensors.lineDetector.hasHit }
         robot.drive.stop()
@@ -164,12 +164,9 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     @Throws(InterruptedException::class)
     fun teamMarker(stayStill: Boolean) {
         if (stayStill) {
-            robot.lift.state = Lift.State.UP
-            robot.dumper.state = Dumper.DumpState.DUMP
-            waitTill { robot.lift.isFullyUp() }
+            robot.intake.intakeState = Intake.IntakeState.OUT
             sleepSeconds(1.0)
-            robot.dumper.state = Dumper.DumpState.HOLD
-            robot.lift.state = Lift.State.DOWN
+            robot.intake.intakeState = Intake.IntakeState.STOP
         } else {
             if (ORDER != SampleRandomizedPositions.CENTER && ORDER != SampleRandomizedPositions.UNKNOWN)
                 robot.drive.pidTurn(CompassDirection.NORTH_EAST.degrees)
@@ -194,9 +191,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     fun silverSampleWallLinup() {
         /*robot.drive.pidTurn(CompassDirection.SOUTH_WEST.degrees, maxTurnPower = 0.3)
         robot.drive.deadReckonPID(-silverSampleWallLinupDistance, CompassDirection.SOUTH_WEST.degrees, DriveTerrain.AngleFollowSpeeds.FAST)*/
-        robot.drive.pidTurn(CompassDirection.SOUTH.degrees - intoWallOffsetSilverSample)
-        robot.drive.deadReckonPID(-intoWallTicksSilverSample, CompassDirection.SOUTH.degrees - intoWallOffsetSilverSample, DriveTerrain.AngleFollowSpeeds.SLOW)
-        robot.drive.pidTurn(CompassDirection.SOUTH.degrees)
+        val degree = CompassDirection.NORTH.degrees - intoWallOffsetSilverSample
+        robot.drive.pidTurn(degree)
+        robot.drive.deadReckonPID(intoWallTicksSilverSample, degree, DriveTerrain.AngleFollowSpeeds.SLOW)
+        robot.drive.pidTurn(CompassDirection.NORTH.degrees)
     }
 
     enum class SampleCollectionType {
@@ -377,12 +375,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
     }
 
     @Throws(InterruptedException::class)
-    fun park(angle: Double, turnFirst: Boolean = true) {
+    fun park(angle: Double, turnFirst: Boolean = true, reverse:Boolean = false) {
         robot.intake.flipState = Intake.FlipState.LOAD
         if (turnFirst)
             robot.drive.pidTurn(angle)
         prepCraterSense()
-        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, false, DiffDrive.AnglePIDType.STRAIGHT)
+        robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, angle, reverse, DiffDrive.AnglePIDType.STRAIGHT)
         waitTill { hittingCrater() }
         robot.drive.stop()
         sleepSeconds(2.0)

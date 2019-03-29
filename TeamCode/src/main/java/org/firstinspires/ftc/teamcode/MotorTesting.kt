@@ -4,6 +4,7 @@ import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import kotlin.math.absoluteValue
 
 @TeleOp
 class MotorTesting : LinearOpMode() {
@@ -36,18 +37,21 @@ class MotorTesting : LinearOpMode() {
             val intakeSignal = -gamepad2.left_stick_y.toDouble()
             val extensionSignal = -gamepad2.right_stick_y.toDouble()
 
-            lf.power = leftSignal
-            lb.power = leftSignal
-            rf.power = rightSignal
-            rb.power = rightSignal
+            lf.power = leftSignal.clipMainThreshold()
+            lb.power = leftSignal.clipMainThreshold()
+            rf.power = rightSignal.clipMainThreshold()
+            rb.power = rightSignal.clipMainThreshold()
 
-            liftL.power = liftSignal
-            liftR.power = liftSignal
+            liftL.power = liftSignal.clipMainThreshold()
+            liftR.power = liftSignal.clipMainThreshold()
 
-            intake.power = intakeSignal
-            extension.power = extensionSignal
+            intake.power = intakeSignal.clipMainThreshold()
+            extension.power = extensionSignal.clipMainThreshold()
 
             telemetry.update()
         }
     }
 }
+
+fun Double.clipMainThreshold() = clipThreshold(0.1)
+fun Double.clipThreshold(threshold: Double) = if (this.absoluteValue < threshold) 0.0 else this

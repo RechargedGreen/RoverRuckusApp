@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.prototypes
 
 import com.david.rechargedkotlinlibrary.internal.opMode.PracticeTeleOp
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.hardware.HardwareClass
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_MISC)
+@Disabled
 class DashTest : PracticeTeleOp<HardwareClass>({ opMode -> HardwareClass(opMode) }) {
     @Throws(InterruptedException::class)
     override fun onLoop() {

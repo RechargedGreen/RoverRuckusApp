@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainBot.teleOp
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
  */
 
 @TeleOp(name = Competition.NAME, group = OpModeGroups.TELEOP)
+@Disabled
 class Competition : PracticeJVoExtension() {
     @Throws(InterruptedException::class)
     override fun onStart() {

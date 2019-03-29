@@ -110,7 +110,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
     }
 
     companion object {
-        const val NAME = "PracticeJVoExtension"
+        const val NAME = "MainTeleOp"
         var holdInPower = 0.1
     }
 }

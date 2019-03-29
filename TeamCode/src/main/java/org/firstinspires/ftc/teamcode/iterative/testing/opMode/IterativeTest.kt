@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.iterative.testing.opMode
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.iterative.lib.IterativeOpMode
 import org.firstinspires.ftc.teamcode.iterative.lib.commandLib.ParallelCommandGroup
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.iterative.testing.commands.PIDTurnCommand
 import org.firstinspires.ftc.teamcode.mainBot.misc.OpModeGroups
 
 @TeleOp(group = OpModeGroups.TELE_DIAGNOSTICS)
+@Disabled
 class IterativeTest : IterativeOpMode<IterativeBot>(IterativeBot, true) {
     @Throws(InterruptedException::class)
     override fun onStart() =
