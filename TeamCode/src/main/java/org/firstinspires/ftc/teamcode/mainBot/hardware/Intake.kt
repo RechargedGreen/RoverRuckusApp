@@ -75,7 +75,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         }
 
     private val intakeMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE), robot.getHub(0))
-    private val extensionMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "extension", zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE), robot.getHub(1))
+    private val extensionMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "extension", zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE, direction = DcMotorSimple.Direction.REVERSE), robot.getHub(1))
 
     private var manualExtensionPower = 0.0
 

@@ -19,13 +19,12 @@ class LineDetector(robot: HardwareClass) : MTSubsystem {
     private val redThreshold = 65
     private val blueThreshold = 60
 
-    private val colorFront = /*LynxOptimizedI2cFactory.createLynxI2cColorRangeSensor(robot.getHub(0).delegate, 0)*/ robot.hMap.get(ColorSensor::class.java, "colorFront")
-    private val colorBack = /*LynxOptimizedI2cFactory.createLynxI2cColorRangeSensor(robot.getHub(0).delegate, 1)*/ robot.hMap.get(ColorSensor::class.java, "colorBack")
+    private val sensor = robot.hMap.get(ColorSensor::class.java, "lineSensor")
 
     @Throws(InterruptedException::class)
     override fun update() {
         if (enabled) {
-            onLine = check(colorFront, 0) || check(colorBack, 1)
+            onLine = check(sensor, 1)
             if (onLine)
                 hasHit = true
         }
