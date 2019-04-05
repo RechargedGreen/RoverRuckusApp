@@ -107,7 +107,6 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
 
     @Throws(InterruptedException::class)
     override fun update() {
-        extensionMotor.zeroPowerBehavior = if (brakingExtension) DcMotor.ZeroPowerBehavior.BRAKE else DcMotor.ZeroPowerBehavior.FLOAT
         if (extensionIn())
             extensionReset = extensionTicks()
         internalPowerIntake(intakePower)
