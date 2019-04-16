@@ -17,13 +17,14 @@ class CompleteDiagnostics : PracticeJVoExtension() {
     @Throws(InterruptedException::class)
     override fun onLoop() {
         super.onLoop()
+        telemetry.addData("extension ticks", robot.intake.extensionTicks())
         telemetry.addData("lf", robot.drive.leftMotors[0].encoder.getRawTicks())
         telemetry.addData("lb", robot.drive.leftMotors[1].encoder.getRawTicks())
         telemetry.addData("rf", robot.drive.rightMotors[0].encoder.getRawTicks())
         telemetry.addData("rb", robot.drive.rightMotors[1].encoder.getRawTicks())
         telemetry.addLine()
-        telemetry.addData("leftAlpha", robot.superSystem.bucketSense.leftAlpha)
-        telemetry.addData("rightAlpha", robot.superSystem.bucketSense.rightAlpha)
+        telemetry.addData("leftAlpha", robot.superSystem.bucketSense.leftARGB)
+        telemetry.addData("rightAlpha", robot.superSystem.bucketSense.rightARGB)
         telemetry.addData("leftSensed", robot.superSystem.bucketSense.left())
         telemetry.addData("rightSensed", robot.superSystem.bucketSense.right())
         telemetry.addLine()
@@ -40,8 +41,5 @@ class CompleteDiagnostics : PracticeJVoExtension() {
         robot.sensors.lineDetector.blues.forEach { telemetry.addData("blues", it) }
         telemetry.addData("blues", robot.sensors.lineDetector.blues)
         telemetry.addData("On line", robot.sensors.lineDetector.onLine)
-        telemetry.addLine()
-        telemetry.addData("extensionTicks", robot.intake.extensionTicks())
-        telemetry.addData("extensionInches", robot.intake.extensionInches())
     }
 }

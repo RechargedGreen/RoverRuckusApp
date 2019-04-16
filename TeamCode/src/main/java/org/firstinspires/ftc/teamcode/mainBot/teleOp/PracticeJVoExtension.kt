@@ -35,6 +35,8 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
 
     private var dumpingKeepsLiftUp = false
 
+    private var c1lbLastIteration = false
+
     @Throws(InterruptedException::class)
     override fun onLoop() {
         if(robot.lift.isFullyUp())
@@ -54,8 +56,9 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
             hasBeenEmptyTime.reset()
         if (hasBeenLoadedTime.seconds() > 0.01 || (c1.lb && dumpingKeepsLiftUp && robot.lift.getControlState() == Lift.ControlState.AUTO))
             autoRaise = true
-        else if (hasBeenEmptyTime.seconds() > 0.25)
+        else if (hasBeenEmptyTime.seconds() > 1.0 || (c1lbLastIteration && !c1.lb))
             autoRaise = false
+        c1lbLastIteration = c1.lb
 
         liftFailSafesToggle.update(c2.x)
         val lift = c2.ly

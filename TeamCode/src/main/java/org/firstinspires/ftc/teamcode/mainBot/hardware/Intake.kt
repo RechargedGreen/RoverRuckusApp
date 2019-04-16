@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainBot.hardware
 
+import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.hardware.HardwareMaker
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.CachedDcMotorEx
 import com.david.rechargedkotlinlibrary.internal.hardware.devices.sensors.OptimumDigitalInput
@@ -10,14 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 
+@Config
 class Intake(val robot: HardwareClass) : MTSubsystem {
 
     var brakingExtension = true
 
     companion object {
-        var spoolSize = 1.25
-        var gearRatio = 28.0 / 44.0
-        var cpr = 560.0
+       @JvmField
+       var parkTicks:Int = 500
     }
 
     enum class IntakeState(internal val power: Double) {
@@ -41,8 +42,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     enum class FlipState(internal val pos: Double) {
-        LOAD(1.0),
-        INTAKE(0.0)
+        LOAD(0.2),
+        INTAKE(0.8)
     }
 
     enum class ExtensionState {
@@ -74,7 +75,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
             extensionControlState = ExtensionControlState.AUTO
         }
 
-    private val intakeMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "intake", DcMotorSimple.Direction.REVERSE), robot.getHub(0))
+    private val intakeMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "intake"), robot.getHub(0))
     private val extensionMotor = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "extension", zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE, direction = DcMotorSimple.Direction.REVERSE), robot.getHub(1))
 
     private var manualExtensionPower = 0.0
@@ -86,13 +87,9 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     }
 
     @Throws(InterruptedException::class)
-    fun extensionTicks() = extensionMotor.encoder.getRawTicks()
+    fun extensionRawTicks() = -extensionMotor.encoder.getRawTicks()
 
-    @Throws(InterruptedException::class)
-    fun extensionInches() = (extensionReset - extensionTicks()) / ticksPerInch()
-
-    @Throws(InterruptedException::class)
-    fun ticksPerInch() = gearRatio * cpr / spoolSize
+    fun extensionTicks() = extensionRawTicks() - extensionReset
 
     @Throws(InterruptedException::class)
     fun hitSample() {
@@ -108,7 +105,7 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
     @Throws(InterruptedException::class)
     override fun update() {
         if (extensionIn())
-            extensionReset = extensionTicks()
+            extensionReset = extensionRawTicks()
         internalPowerIntake(intakePower)
         internalPowerExtension(when (extensionControlState) {
             ExtensionControlState.AUTO -> extensionState.power

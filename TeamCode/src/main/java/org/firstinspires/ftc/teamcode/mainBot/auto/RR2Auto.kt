@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mainBot.auto
 import com.acmerobotics.dashboard.config.Config
 import com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain.DiffDrive
 import com.david.rechargedkotlinlibrary.internal.opMode.FluidAuto
+import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.mainBot.hardware.*
@@ -23,7 +24,7 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
 
     companion object {
         @JvmField
-        var parkThreshold = 4.0
+        var parkThreshold = 3.0
         //////// silver sample
         @JvmField
         var leftOffsetSilverSample = 32.0
@@ -384,5 +385,10 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         waitTill { hittingCrater() }
         robot.drive.stop()
         sleepSeconds(2.0)
+
+        val timeout = ElapsedTime()
+        robot.intake.extensionState = Intake.IntakeExtensionState.OUT
+        waitTill { robot.intake.extensionTicks() >  Intake.parkTicks || timeout.seconds() > 2.0 }
+        robot.intake.extensionState = Intake.IntakeExtensionState.STOP
     }
 }

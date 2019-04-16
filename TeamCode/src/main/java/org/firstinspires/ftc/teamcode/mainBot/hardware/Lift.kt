@@ -17,15 +17,17 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     @Throws(InterruptedException::class)
     fun deploy() {
+        state = State.STOP
+        robot.opMode.sleepSeconds(0.25)
         state = State.UP
         robot.opMode.waitTill { isFullyUp() }
     }
 
-    private val downSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 1))// channel 2
-    private val upSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 3))// channel 1
+    private val downSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 1))
+    private val upSensor = RevTouchSensor(OptimumDigitalInput(robot.getHub(1), 7))
 
-    private val motorL = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftL", DcMotorSimple.Direction.REVERSE), robot.getHub(1))
-    private val motorR = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftR"), robot.getHub(1))
+    private val motorL = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftL"), robot.getHub(1))
+    private val motorR = CachedDcMotorEx(HardwareMaker.DcMotorEx.make(robot.hMap, "liftR", DcMotorSimple.Direction.REVERSE), robot.getHub(1))
 
     private val latch = HardwareMaker.Servo.make(robot.hMap, "latch")
 
@@ -56,7 +58,8 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     enum class State {
         DOWN,
         UP,
-        LATCH_ENGAGED
+        LATCH_ENGAGED,
+        STOP
     }
 
     @Throws(InterruptedException::class)
@@ -66,7 +69,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
             ControlState.AUTO -> when (state) {
                 State.UP -> setInternalState(if (isFullyUp()) InternalState.STOP else InternalState.GO_UP)
                 State.DOWN -> setInternalState(if (isFullyDown() || !robot.dumper.clearingLift()) InternalState.STOP else InternalState.GO_DOWN)
-                State.LATCH_ENGAGED -> setInternalState(InternalState.STOP)
+                State.LATCH_ENGAGED, State.STOP -> setInternalState(InternalState.STOP)
             }
             ControlState.MANUAL_DANGER -> internalSetMotorPowers(openLoop, false)
             ControlState.MANUAL_SAFE -> internalSetMotorPowers(openLoop, true)
@@ -79,8 +82,8 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     }
 
     private enum class InternalLatchState(val pos: Double) {
-        LATCHED(1.0),
-        FREE(0.55)
+        LATCHED(0.0),
+        FREE(0.45)
     }
 
     private enum class InternalState(val power: Double) {

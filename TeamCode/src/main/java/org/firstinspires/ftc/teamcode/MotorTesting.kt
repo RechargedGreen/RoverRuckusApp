@@ -14,8 +14,8 @@ class MotorTesting : LinearOpMode() {
         val rf = HardwareMaker.DcMotorEx.make(hardwareMap, "rf", DcMotorSimple.Direction.REVERSE)
         val rb = HardwareMaker.DcMotorEx.make(hardwareMap, "rb", DcMotorSimple.Direction.REVERSE)
 
-        val liftL = HardwareMaker.DcMotorEx.make(hardwareMap, "liftL", DcMotorSimple.Direction.REVERSE)
-        val liftR = HardwareMaker.DcMotorEx.make(hardwareMap, "liftR")
+        val liftL = HardwareMaker.DcMotorEx.make(hardwareMap, "liftL")
+        val liftR = HardwareMaker.DcMotorEx.make(hardwareMap, "liftR", DcMotorSimple.Direction.REVERSE)
 
         val extension = HardwareMaker.DcMotorEx.make(hardwareMap, "extension", DcMotorSimple.Direction.REVERSE)
         val intake = HardwareMaker.DcMotorEx.make(hardwareMap, "intake", DcMotorSimple.Direction.REVERSE)
