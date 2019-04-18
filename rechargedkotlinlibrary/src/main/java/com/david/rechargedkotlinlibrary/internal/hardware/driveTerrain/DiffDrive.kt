@@ -1,5 +1,6 @@
 package com.david.rechargedkotlinlibrary.internal.hardware.driveTerrain
 
+import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.david.rechargedkotlinlibrary.internal.hardware.PIDController
@@ -59,6 +60,8 @@ abstract class DiffDrive(
         controlState = ControlLoopStates.MP
     }
 
+    fun isFollowingSource() = controlState == DiffDrive.ControlLoopStates.DESIRE_SOURCE
+
     @Throws(InterruptedException::class)
     fun isMP() = controlState == ControlLoopStates.MP
 
@@ -68,7 +71,8 @@ abstract class DiffDrive(
     enum class ControlLoopStates {
         OPEN_LOOP,
         DRIVING_AT_ANGLE,
-        MP
+        MP,
+        DESIRE_SOURCE
     }
 
     private var controlState = ControlLoopStates.OPEN_LOOP
@@ -79,6 +83,15 @@ abstract class DiffDrive(
         if (controlState != ControlLoopStates.DRIVING_AT_ANGLE)
             lastAngleFollowerError = null
         when (controlState) {
+            ControlLoopStates.DESIRE_SOURCE -> {
+                val source = desiredSource
+                if(source.isComplete())
+                    openLoopArcade(0.0, 0.0)
+                else {
+                    val vel = source.getVel()
+                    internalArcade(vel.x, vel.counterClockwise)
+                }
+            }
             ControlLoopStates.OPEN_LOOP -> {
                 val powers = openLoopWheelPowers.copy()
                 setMotorPowers(powers.l, powers.r)
@@ -239,4 +252,17 @@ abstract class DiffDrive(
         followAngleData = FollowAngleData(controller = controller, power = power, angle = angle, type = type, maxTurnPower = maxTurnPower)
         controlState = ControlLoopStates.DRIVING_AT_ANGLE
     }
+
+    private lateinit var desiredSource:DriveSource
+    fun attachDriveSource(source:DriveSource){
+        desiredSource = source
+        controlState = ControlLoopStates.DESIRE_SOURCE
+    }
+
+    abstract class DriveSource{
+        abstract fun getVel():Velocity
+        abstract fun isComplete():Boolean
+    }
+
+    class Velocity(val x:Double, val counterClockwise:Double)
 }

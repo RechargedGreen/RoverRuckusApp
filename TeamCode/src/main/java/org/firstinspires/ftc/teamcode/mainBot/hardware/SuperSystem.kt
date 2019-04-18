@@ -12,10 +12,19 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     val bucketSense = BucketSense(robot.hMap)
 
     enum class State {
-        UNKNOWN
+        UNKNOWN,
+        FOLLOWING_FSM
     }
 
     val timeAfterStateChange = ElapsedTime()
+
+    var fsm:SuperStructureFSM? = null
+        set(value){
+            field = value
+            state = State.FOLLOWING_FSM
+        }
+
+    fun waitOnFSM() = robot.opMode.waitWhile { isFollowingFSM() }
 
     var state = State.UNKNOWN
         set(value) {
@@ -29,6 +38,13 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
             bucketSense.updateCache()
         when (state) {
             State.UNKNOWN -> {
+            }
+            State.FOLLOWING_FSM -> {
+                val fsm = fsm
+                if(fsm == null || fsm.isComplete())
+                    state = State.UNKNOWN
+                else
+                    fsm.update()
             }
         }
         if (robot.opMode.isAutonomous() && robot.opMode.isStarted) {
@@ -49,4 +65,11 @@ class SuperSystem(val robot: HardwareClass) : MTSubsystem {
     init {
         robot.thread.addSubsystem(this)
     }
+
+    fun isFollowingFSM() = state == State.FOLLOWING_FSM
+}
+
+abstract class SuperStructureFSM(protected val robot:HardwareClass){
+    abstract fun update()
+    abstract fun isComplete():Boolean
 }

@@ -7,5 +7,12 @@ enum class SampleRandomizedPositions {
     LEFT,
     CENTER,
     RIGHT,
-    UNKNOWN
+    UNKNOWN;
+
+    fun isSide() = left() || right()
+
+    fun right() = this == RIGHT
+    fun left() = this == LEFT
+    fun center() = this == CENTER
+    fun unknown() = this == UNKNOWN
 }

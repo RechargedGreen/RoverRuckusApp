@@ -8,7 +8,7 @@ class BucketSense(hMap: HardwareMap) {
 
     companion object {
         @JvmField
-        var threshold = 50000
+        var threshold = 100000000 // 50000 was old bucket
     }
 
     private val left = hMap.colorSensor.get("leftBucketColor")

@@ -18,11 +18,11 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     companion object {
         // full pwm signal messes with savox servos
         @JvmField
-        var loadPos = 0.7
+        var loadPos = 0.65
         @JvmField
         var dumpPos = 0.1
         @JvmField
-        var holdPos = 0.65
+        var holdPos = 0.53
         @JvmField
         var slightDumpPos = 0.3
     }
@@ -47,7 +47,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
     override fun update() {
         when (state) {
             DumpState.LOAD -> internalSetFlipPosition(if (robot.lift.getControlState() != Lift.ControlState.MANUAL_DANGER && (robot.lift.state == Lift.State.UP || !robot.lift.isFullyDown())) holdPos else loadPos)
-            DumpState.DUMP, DumpState.SLIGHT_DUMP -> internalSetFlipPosition(if (robot.lift.isFullyUp() || robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER) (if (state == DumpState.SLIGHT_DUMP) slightDumpPos else dumpPos) else holdPos)
+            DumpState.DUMP, DumpState.SLIGHT_DUMP -> internalSetFlipPosition(if (robot.lift.dumpSafe || robot.lift.getControlState() == Lift.ControlState.MANUAL_DANGER) (if (state == DumpState.SLIGHT_DUMP) slightDumpPos else dumpPos) else holdPos)
             DumpState.HOLD -> internalSetFlipPosition(holdPos)
         }
     }

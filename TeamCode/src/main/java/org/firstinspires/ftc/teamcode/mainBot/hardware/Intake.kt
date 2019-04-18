@@ -10,15 +10,18 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.teamcode.mainBot.auto.hydra.LoadOne
 
 @Config
 class Intake(val robot: HardwareClass) : MTSubsystem {
 
+    private var needsReset = robot.opMode.isAutonomous()
+
     var brakingExtension = true
 
     companion object {
-       @JvmField
-       var parkTicks:Int = 500
+        @JvmField
+        var parkTicks: Int = 500
     }
 
     enum class IntakeState(internal val power: Double) {
@@ -107,12 +110,49 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         if (extensionIn())
             extensionReset = extensionRawTicks()
         internalPowerIntake(intakePower)
-        internalPowerExtension(when (extensionControlState) {
-            ExtensionControlState.AUTO -> extensionState.power
-            ExtensionControlState.MANUAL_DANGER, ExtensionControlState.MANUAL_SAFE -> manualExtensionPower
-        }, extensionControlState != ExtensionControlState.MANUAL_DANGER)
+        if (needsReset) {
+            internalPowerExtension(-1.0, true)
+            if (extensionIn())
+                needsReset = false
+        } else {
+            internalPowerExtension(when (extensionControlState) {
+                ExtensionControlState.AUTO -> extensionState.power
+                ExtensionControlState.MANUAL_DANGER, ExtensionControlState.MANUAL_SAFE -> manualExtensionPower
+            }, extensionControlState != ExtensionControlState.MANUAL_DANGER)
+        }
 
         internalSetIntakeFlipPos(flipState.pos)
+    }
+
+    fun runOut(ticks:Int){
+        extensionState = IntakeExtensionState.OUT
+        robot.opMode.waitTill { extensionTicks() > ticks }
+        extensionState = IntakeExtensionState.STOP
+    }
+
+    fun runIn(ticks: Int){
+        extensionState = IntakeExtensionState.IN
+        robot.opMode.waitTill { extensionTicks() < ticks }
+        extensionState = IntakeExtensionState.STOP
+    }
+
+    @Throws(InterruptedException::class)
+    fun retract() {
+        flipState = FlipState.LOAD
+        extensionState = IntakeExtensionState.IN
+        robot.opMode.waitTill { extensionIn() }
+        extensionState = IntakeExtensionState.STOP
+    }
+
+    fun collectSample(distance: Int, flipDownDelay: Double) {
+        flipState = FlipState.INTAKE
+        intakeState = IntakeState.IN
+        robot.opMode.sleepSeconds(flipDownDelay)
+        extensionState = IntakeExtensionState.OUT
+        robot.opMode.waitTill { extensionTicks() > distance }
+
+        robot.superSystem.fsm = LoadOne(robot, 2.0)
+        robot.opMode.waitWhile { robot.superSystem.isFollowingFSM() }
     }
 
     @Throws(InterruptedException::class)

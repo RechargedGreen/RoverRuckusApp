@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.Range
 
 class Lift(val robot: HardwareClass) : MTSubsystem {
+    var dumpSafe = false
+        private set
+
+    private val liftStallSpeed = 0.0 // 0.1 was nice
+
     var state: State = State.DOWN
         set(value) {
             controlState = ControlState.AUTO
@@ -33,7 +38,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     @Throws(InterruptedException::class)
     private fun internalSetMotorPowers(power: Double, safe: Boolean) {
-        val power = if (safe) Range.clip(power, if (isFullyDown() || !robot.dumper.clearingDown()) 0.0 else -1.0, if (isFullyUp() || !robot.dumper.clearingUp()) 0.0 else 1.0) else power
+        val power = if (safe) Range.clip(power, if (isFullyDown() || !robot.dumper.clearingDown()) 0.0 else -1.0, if (!robot.dumper.clearingUp()) 0.0 else if(isFullyUp()) liftStallSpeed else 1.0) else power
         motorL.power = power
         motorR.power = power
     }
@@ -46,6 +51,11 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
         MANUAL_SAFE,
         MANUAL_DANGER,
         AUTO
+    }
+
+    fun retract() {
+        state = State.DOWN
+        robot.dumper.state = Dumper.DumpState.LOAD
     }
 
     private var controlState = ControlState.AUTO
@@ -64,6 +74,11 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
 
     @Throws(InterruptedException::class)
     override fun update() {
+        if(isFullyUp() &&  state == State.UP)
+            dumpSafe = true
+        if(state != State.UP)
+            dumpSafe = false
+
         setInternalLatchState(if (state == State.LATCH_ENGAGED) InternalLatchState.LATCHED else InternalLatchState.FREE)
         when (controlState) {
             ControlState.AUTO -> when (state) {

@@ -59,6 +59,11 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
         return (rightInches + leftInches) / 2.0
     }
 
+    fun followSource(source:DiffDrive.DriveSource) {
+        attachDriveSource(source)
+        robot.opMode.waitWhile{ isFollowingSource() }
+    }
+
     @Throws(InterruptedException::class)
     fun toInches(ticks: Int): Double = RADIUS * 2.0 * Math.PI * ticks.toDouble() / TICKS_PER_REV
 
