@@ -22,7 +22,10 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         var sideSampleOffset = 45.0
 
         @JvmField
-        var teamMarkerDriveTicks = 500
+        var teamMarkerOffSet = 10.0
+
+        @JvmField
+        var teamMarkerDriveTicks = 800
     }
 
     override fun postDeploy() {
@@ -40,7 +43,7 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
                 robot.intake.collectSample(extensionTicksSide, 0.5)
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
-                //robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle)
+                robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle)
                 robot.intake.collectSample(extensionTicksCenter, 0.5)
             }
             SampleRandomizedPositions.RIGHT -> {
@@ -53,11 +56,14 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         if(ORDER.isSide()) robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle)
         waitTill { robot.lift.isFullyUp() }
 
-        robot.drive.runTime(-0.3, 0.5)
+        robot.drive.runTime(-0.3, 0.65)
+        sleepSeconds(0.5)
         robot.dumper.state = Dumper.DumpState.DUMP
         sleepSeconds(0.75)
 
-        robot.lift.retract()
+        robot.dumper.state = Dumper.DumpState.LOAD
+        sleepSeconds(0.5)
+        robot.lift.state = Lift.State.DOWN
     }
 
     fun toCrater(){
@@ -88,6 +94,8 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
 
     fun teamMarker() {
         robot.drive.deadReckonPID(teamMarkerDriveTicks, StartingPositions.GOLD_HANG.angle, DriveTerrain.AngleFollowSpeeds.FAST)
+        sleepSeconds(0.1)
+        robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle + teamMarkerOffSet)
         robot.superSystem.fsm = ExtendoTeamMarkerOut(robot)
         robot.superSystem.waitOnFSM()
         robot.intake.doMarker()
