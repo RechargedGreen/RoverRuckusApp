@@ -18,6 +18,8 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
     val deadBand = 0.05
     val liftFailSafesToggle = BooleanToggle(true)
 
+    private val raiseToggle = BooleanToggle(true)
+
     private enum class Mode {
         MANUAL,
         AUTO
@@ -39,6 +41,8 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
 
     @Throws(InterruptedException::class)
     override fun onLoop() {
+        raiseToggle.update(c1.b)
+
         if(robot.lift.isFullyUp())
             dumpingKeepsLiftUp = true
         if(robot.lift.isFullyDown())
@@ -59,6 +63,9 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
         else if (hasBeenEmptyTime.seconds() > 1.0 || (c1lbLastIteration && !c1.lb))
             autoRaise = false
         c1lbLastIteration = c1.lb
+
+        if(!raiseToggle.toggled())
+            autoRaise = false
 
         liftFailSafesToggle.update(c2.x)
         val lift = c2.ly
@@ -95,6 +102,7 @@ open class PracticeJVoExtension : PracticeTeleOp<HardwareClass>({ opMode -> Hard
         telemetry.addData("using liftFailSafes", liftFailSafesToggle.toggled())
         telemetry.addData("lift mode", liftMode)
         telemetry.addData("extensionIn", robot.intake.extensionIn())
+        telemetry.addData("autoRaiseToggled", raiseToggle.toggled())
     }
 
     @Throws(InterruptedException::class)

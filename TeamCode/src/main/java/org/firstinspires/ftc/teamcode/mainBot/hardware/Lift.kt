@@ -12,7 +12,7 @@ class Lift(val robot: HardwareClass) : MTSubsystem {
     var dumpSafe = false
         private set
 
-    private val liftStallSpeed = 0.0 // 0.1 was nice
+    private val liftStallSpeed = 0.2 // 0.1 was nice
 
     var state: State = State.DOWN
         set(value) {

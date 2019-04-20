@@ -28,10 +28,11 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
     }
 
     override fun postDeploy() {
+        robot.dumper.state = Dumper.DumpState.LOAD
         teamMarker()
         sample()
         toCrater()
-        collect()
+        finish()
     }
 
     fun sample(){
@@ -158,7 +159,7 @@ abstract class Load(robot: HardwareClass, private val timeout:Double) : SuperStr
     abstract fun loaded():Boolean
 
     final override fun isComplete() : Boolean {
-        if(loaded() || timer.seconds() > timeout){
+        if((loaded() && robot.intake.extensionIn()) || timer.seconds() > timeout){
             robot.intake.intakeState = Intake.IntakeState.STOP
             robot.intake.extensionState = Intake.IntakeExtensionState.STOP
             return true

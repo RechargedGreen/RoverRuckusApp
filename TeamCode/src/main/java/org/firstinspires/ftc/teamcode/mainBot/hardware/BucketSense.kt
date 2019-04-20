@@ -31,13 +31,13 @@ class BucketSense(hMap: HardwareMap) {
         //leftRed = left.red()
         //leftGreen = left.green()
         //leftBlue = left.blue()
-        //leftAlpha = left.alpha()
+        leftAlpha = left.alpha()
         leftARGB = left.argb()
 
         //rightRed = right.red()
         //rightGreen = right.green()
         //rightBlue = right.blue()
-        //rightAlpha = right.alpha()
+        rightAlpha = right.alpha()
         rightARGB = right.argb()
     }
 

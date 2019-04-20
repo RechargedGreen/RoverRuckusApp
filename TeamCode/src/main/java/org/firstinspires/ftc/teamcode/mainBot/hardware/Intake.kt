@@ -155,6 +155,8 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         extensionState = IntakeExtensionState.OUT
         robot.opMode.waitTill { extensionTicks() > distance }
 
+        extensionState = IntakeExtensionState.STOP
+
         robot.opMode.sleepSeconds(collectDelay)
 
         robot.superSystem.fsm = LoadOne(robot, 2.0)
