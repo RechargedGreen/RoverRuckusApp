@@ -9,8 +9,7 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.*
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 @Config
-@Autonomous
-open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
+abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
 
     companion object {
         @JvmField
@@ -44,7 +43,7 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
                 robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle)
-                robot.intake.collectSample(extensionTicksCenter, 0.5)
+                robot.intake.collectSample(extensionTicksCenter, 0.5, 1.0)
             }
             SampleRandomizedPositions.RIGHT -> {
                 robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle - sideSampleOffset)
@@ -56,7 +55,7 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         if(ORDER.isSide()) robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle)
         waitTill { robot.lift.isFullyUp() }
 
-        robot.drive.runTime(-0.3, 0.65)
+        robot.drive.runTimePID(-0.3, 0.65, StartingPositions.GOLD_HANG.angle)
         sleepSeconds(0.5)
         robot.dumper.state = Dumper.DumpState.DUMP
         sleepSeconds(0.75)
@@ -67,11 +66,11 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
     }
 
     fun toCrater(){
-        val angle = 28.0
+        val angle = 23.0
         robot.drive.strafeAroundLeft(angle)
-        robot.drive.deadReckonPID(2000, angle)
+        robot.drive.deadReckonPID(2300, angle)
 
-        val wallAngle = CompassDirection.WEST.degrees - 20.0
+        val wallAngle = CompassDirection.WEST.degrees - 10.0
         robot.drive.pidTurn(wallAngle)
         robot.drive.deadReckonPID(1000, wallAngle, DriveTerrain.AngleFollowSpeeds.SLOW)
         robot.drive.pidTurn(CompassDirection.WEST.degrees)
@@ -79,18 +78,25 @@ open class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         prepCraterSense()
         robot.drive.startFollowingAngle_setConstants(DriveTerrain.AngleFollowSpeeds.SLOW, CompassDirection.WEST.degrees, false, DiffDrive.AnglePIDType.STRAIGHT, 1.0)
         waitTill { hittingCrater() }
-        robot.drive.deadReckonPID(-200, CompassDirection.WEST.degrees)
+        robot.drive.deadReckonPID(-50, CompassDirection.WEST.degrees)
     }
 
     fun collect(){
-        robot.intake.runOut(800)
+        robot.intake.runOut(1000)
         robot.intake.flipState = Intake.FlipState.INTAKE
         robot.intake.intakeState = Intake.IntakeState.IN
-        sleepSeconds(0.25)
-        robot.intake.runIn(600)
+        sleepSeconds(0.35)
+        robot.intake.runIn(900, 0.3, 1.0)
         robot.intake.runOut(1200)
         sleepSeconds(1.0)
     }
+
+    fun collectDefense(){
+        robot.drive.pidTurn(CompassDirection.WEST.degrees + 15.0)
+        robot.intake.runOut(1400)
+    }
+
+    abstract fun finish()
 
     fun teamMarker() {
         robot.drive.deadReckonPID(teamMarkerDriveTicks, StartingPositions.GOLD_HANG.angle, DriveTerrain.AngleFollowSpeeds.FAST)
@@ -162,11 +168,16 @@ abstract class Load(robot: HardwareClass, private val timeout:Double) : SuperStr
 }
 
 @Autonomous
-class HydraFeed : HydraBase(){
-    override fun postDeploy() {
-        super.postDeploy()
-        robot.superSystem.fsm = LoadTwo(robot, 3.0)
-        robot.superSystem.waitOnFSM()
-        robot.intake.runOut(500)
-    }
+class HydraDefense : HydraBase(){
+    override fun finish() = collectDefense()
+}
+
+@Autonomous
+class HydraNoDefense : HydraBase(){
+    override fun finish() = collect()
+}
+
+@Autonomous
+class HydraNoCollect : HydraBase(){
+    override fun finish() = robot.intake.runOut(600)
 }

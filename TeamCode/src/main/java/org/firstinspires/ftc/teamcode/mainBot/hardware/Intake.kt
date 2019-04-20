@@ -124,15 +124,19 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         internalSetIntakeFlipPos(flipState.pos)
     }
 
-    fun runOut(ticks:Int){
-        extensionState = IntakeExtensionState.OUT
+    fun runOut(ticks:Int, power:Double = 1.0){
+        manualPowerExtension(power, true)
         robot.opMode.waitTill { extensionTicks() > ticks }
         extensionState = IntakeExtensionState.STOP
     }
 
-    fun runIn(ticks: Int){
-        extensionState = IntakeExtensionState.IN
-        robot.opMode.waitTill { extensionTicks() < ticks }
+    fun runIn(ticks: Int, power:Double = 1.0, timeout:Double? = null){
+        val timer = ElapsedTime()
+        manualPowerExtension(-power, true)
+        if(timeout == null)
+            robot.opMode.waitTill { extensionTicks() < ticks }
+        else
+            robot.opMode.waitTill { extensionTicks() < ticks || timeout <  timer.seconds()}
         extensionState = IntakeExtensionState.STOP
     }
 
@@ -144,12 +148,14 @@ class Intake(val robot: HardwareClass) : MTSubsystem {
         extensionState = IntakeExtensionState.STOP
     }
 
-    fun collectSample(distance: Int, flipDownDelay: Double) {
+    fun collectSample(distance: Int, flipDownDelay: Double, collectDelay:Double = 0.0) {
         flipState = FlipState.INTAKE
         intakeState = IntakeState.IN
         robot.opMode.sleepSeconds(flipDownDelay)
         extensionState = IntakeExtensionState.OUT
         robot.opMode.waitTill { extensionTicks() > distance }
+
+        robot.opMode.sleepSeconds(collectDelay)
 
         robot.superSystem.fsm = LoadOne(robot, 2.0)
         robot.opMode.waitWhile { robot.superSystem.isFollowingFSM() }

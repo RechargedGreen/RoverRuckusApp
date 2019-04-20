@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import org.firstinspires.ftc.teamcode.mpTuningBot.DriveConstants
+import java.util.zip.DeflaterOutputStream
 import kotlin.math.absoluteValue
 
 @Config
@@ -70,6 +71,12 @@ class DriveTerrain(val robot: RobotTemplate) : DiffDrive(
     private enum class FollowingLineState {
         OVER,
         UNDER
+    }
+
+    fun runTimePID(power:Double, seconds:Double, angle:Double){
+        startFollowingAngle(AngleFollowSpeeds.FAST.controller, power, angle, AnglePIDType.STRAIGHT, 1.0)
+        robot.opMode.sleepSeconds(seconds)
+        stop()
     }
 
     @Throws(InterruptedException::class)

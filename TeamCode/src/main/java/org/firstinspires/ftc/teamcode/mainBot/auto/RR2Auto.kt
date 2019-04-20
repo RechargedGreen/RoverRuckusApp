@@ -150,9 +150,12 @@ abstract class RR2Auto(val startingPosition: StartingPositions, var postDeployWa
         telemetry.update()
     }
 
+    override fun setAngle() = robot.drive.imu.setZ(0.0, AngleUnit.DEGREES)
+        //robot.drive.imu.setZ(startingPosition.angle, AngleUnit.DEGREES)
+
     @Throws(InterruptedException::class)
     override fun run() {
-        robot.drive.imu.setZ(startingPosition.angle, AngleUnit.DEGREES)
+        //robot.drive.imu.setZ(startingPosition.angle, AngleUnit.DEGREES)
         if(flipUpBeforeDeploy)
             robot.intake.flipState = Intake.FlipState.LOAD
         robot.lift.deploy()

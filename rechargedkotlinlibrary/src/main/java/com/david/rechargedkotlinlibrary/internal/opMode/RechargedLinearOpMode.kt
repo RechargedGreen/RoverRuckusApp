@@ -23,6 +23,7 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
         if (autonomous) {
             robot.start()
             robot.autoPostInit()
+            setAngle()
         }
         while (!isStarted && !isStopRequested)
             tillStart()
@@ -39,6 +40,8 @@ abstract class RechargedLinearOpMode<rt : RobotTemplate>(private val autonomous:
             run()
         }
     }
+
+    open fun setAngle(){}
 
     @Throws(InterruptedException::class)
     abstract fun run()
