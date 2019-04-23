@@ -18,7 +18,10 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         var extensionTicksCenter = 500
 
         @JvmField
-        var sideSampleOffset = 45.0
+        var leftSampleOffset = 42.0
+
+        @JvmField
+        var rightSampleOffset = 42.0
 
         @JvmField
         var teamMarkerOffSet = 10.0
@@ -39,7 +42,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         robot.intake.flipState = Intake.FlipState.INTAKE
         when(ORDER){
             SampleRandomizedPositions.LEFT -> {
-                robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle + sideSampleOffset)
+                robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle + leftSampleOffset)
                 robot.intake.collectSample(extensionTicksSide, 0.5)
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
@@ -47,7 +50,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
                 robot.intake.collectSample(extensionTicksCenter, 0.5, 1.0)
             }
             SampleRandomizedPositions.RIGHT -> {
-                robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle - sideSampleOffset)
+                robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle - rightSampleOffset)
                 robot.intake.collectSample(extensionTicksSide, 0.5)
             }
         }
