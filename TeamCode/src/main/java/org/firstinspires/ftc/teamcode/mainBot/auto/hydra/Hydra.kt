@@ -18,10 +18,10 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         var extensionTicksCenter = 500
 
         @JvmField
-        var leftSampleOffset = 42.0
+        var leftSampleOffset = 41.0
 
         @JvmField
-        var rightSampleOffset = 42.0
+        var rightSampleOffset = 41.0
 
         @JvmField
         var teamMarkerOffSet = 10.0
@@ -30,7 +30,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         var teamMarkerDriveTicks = 800
 
         @JvmField
-        var fastTicks = 2100
+        var fastTicks = 1800
     }
 
     override fun postDeploy() {
