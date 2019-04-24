@@ -28,6 +28,9 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
 
         @JvmField
         var teamMarkerDriveTicks = 800
+
+        @JvmField
+        var fastTicks = 2100
     }
 
     override fun postDeploy() {
@@ -72,7 +75,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
     fun toCrater(){
         val angle = 23.0
         robot.drive.strafeAroundLeft(angle)
-        robot.drive.deadReckonPID(2300, angle)
+        robot.drive.deadReckonPID(fastTicks, angle)
 
         val wallAngle = CompassDirection.WEST.degrees - 10.0
         robot.drive.pidTurn(wallAngle)
