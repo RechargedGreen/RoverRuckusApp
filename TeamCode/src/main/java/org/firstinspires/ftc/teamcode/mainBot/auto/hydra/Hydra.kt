@@ -111,6 +111,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle + teamMarkerOffSet)
         robot.superSystem.fsm = ExtendoTeamMarkerOut(robot)
         robot.superSystem.waitOnFSM()
+        sleepSeconds(0.25)
         robot.intake.doMarker()
         robot.intake.flipState = Intake.FlipState.LOAD
         if(ORDER.isSide())
