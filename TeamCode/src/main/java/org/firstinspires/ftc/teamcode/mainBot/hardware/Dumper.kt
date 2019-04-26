@@ -14,7 +14,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
         HOLD,
         SLIGHT_DUMP
     }
-
+                                  
     companion object {
         // full pwm signal messes with savox servos
         @JvmField
