@@ -9,11 +9,11 @@ import org.firstinspires.ftc.teamcode.mainBot.hardware.*
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
 @Config
-abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
+abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 1.0, true) {
 
     companion object {
         @JvmField
-        var extensionTicksSide = 1000
+        var extensionTicksSide = 700 //1000 before tuning for BStem
         @JvmField
         var extensionTicksCenter = 500
 
@@ -46,7 +46,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
         when(ORDER){
             SampleRandomizedPositions.LEFT -> {
                 robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle + leftSampleOffset)
-                robot.intake.collectSample(extensionTicksSide, 0.5)
+                robot.intake.collectSample(extensionTicksSide, 0.5, 1.0)
             }
             SampleRandomizedPositions.CENTER, SampleRandomizedPositions.UNKNOWN -> {
                 robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle)
@@ -54,7 +54,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
             }
             SampleRandomizedPositions.RIGHT -> {
                 robot.drive.pidTurn(StartingPositions.GOLD_HANG.angle - rightSampleOffset)
-                robot.intake.collectSample(extensionTicksSide, 0.5)
+                robot.intake.collectSample(extensionTicksSide, 0.5, 1.0)
             }
         }
 
