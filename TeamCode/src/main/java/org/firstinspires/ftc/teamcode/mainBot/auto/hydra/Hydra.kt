@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.mainBot.auto.RR2Auto
 import org.firstinspires.ftc.teamcode.mainBot.hardware.*
 import org.firstinspires.ftc.teamcode.vision.SampleRandomizedPositions
 
-@Config
-abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 1.0, true) {
+@Config// had 1 second delay in division elims
+abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 0.0, true) {
 
     companion object {
         @JvmField
@@ -30,7 +30,7 @@ abstract class HydraBase : RR2Auto(StartingPositions.GOLD_HANG, 1.0, true) {
         var teamMarkerDriveTicks = 800
 
         @JvmField
-        var fastTicks = 1800
+        var fastTicks = 2250 // 2300 was home, 1800 was Cobo
     }
 
     override fun postDeploy() {
