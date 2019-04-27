@@ -33,8 +33,7 @@ class Dumper(val robot: HardwareClass) : MTSubsystem {
 
     var state = DumpState.HOLD
         set(value) {
-            if (value == DumpState.DUMP && value != field)
-                Static.textToSpeech.speak("Epic gamer moment rmao xd")
+            if (value == DumpState.DUMP && value != field){}
             else if (value == DumpState.SLIGHT_DUMP || value == DumpState.DUMP)
                 dumpTimer.reset()
             lastState = field
